@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Groma">
+  <title>Groma</title>
+  <style>
+    /* The final frame is the plain drawing; every animation only describes where it starts. */
+    svg { color: #171717 }
+    @media (prefers-color-scheme: dark) { svg { color: #fafafa } }
+    .ink { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+    .weight { fill: currentColor }
+    .red { fill: none; stroke: #d92d20; stroke-width: 2; stroke-linecap: round }
+    .staff { stroke-dasharray: 44; animation: draw .6s ease-out both }
+    .arm { stroke-dasharray: 18; animation: draw .3s ease-out .3s both }
+    .plumb { animation: swing .9s cubic-bezier(.3, 0, .2, 1) .6s both }
+    .left { transform-origin: 14px 14px }
+    .right { transform-origin: 50px 14px; animation-name: swing-back }
+    .measure { stroke-dasharray: 36; animation: draw .45s ease-out 1.45s both }
+    .tick { animation: appear .15s ease-out 1.85s both }
+    @keyframes draw { from { stroke-dashoffset: var(--from, 44) } }
+    .arm { --from: 18 } .measure { --from: 36 }
+    @keyframes appear { from { opacity: 0 } }
+    @keyframes swing {
+      0% { opacity: 0; transform: rotate(20deg) }
+      10% { opacity: 1 }
+      32% { transform: rotate(-12deg) }
+      56% { transform: rotate(7deg) }
+      78% { transform: rotate(-3deg) }
+    }
+    @keyframes swing-back {
+      0% { opacity: 0; transform: rotate(-20deg) }
+      10% { opacity: 1 }
+      32% { transform: rotate(12deg) }
+      56% { transform: rotate(-7deg) }
+      78% { transform: rotate(3deg) }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important } }
+  </style>
+  <!-- the measurement, behind the instrument -->
+  <path class="red measure" d="M14 50H50" />
+  <path class="red tick" d="M14 47v6M50 47v6" />
+  <!-- staff, drawn upward -->
+  <path class="ink staff" d="M32 60V14" />
+  <!-- cross bar, drawn outward from the staff -->
+  <path class="ink arm" d="M32 14H14" />
+  <path class="ink arm" d="M32 14H50" />
+  <!-- plumb lines, swinging from the ends of the bar until they hang true -->
+  <g class="plumb left"><path class="ink" d="M14 14V36" /><path class="weight" d="M11 36h6l-3 6z" /></g>
+  <g class="plumb right"><path class="ink" d="M50 14V36" /><path class="weight" d="M47 36h6l-3 6z" /></g>
+</svg>

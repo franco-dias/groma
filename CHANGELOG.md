@@ -8,6 +8,7 @@ All notable changes to this package are recorded here. Versions follow
 Made for any project: nothing about a framework or a design system is
 assumed by default.
 
+- New: a logo (`docs/images/`), animated and static.
 - New: a Reference tab with every shortcut and trick, opened from the »
   menu in the tab bar. "Collapse panel" moved into the same menu.
 - Fixed: the grid only showed on dark boards. It now shows on any

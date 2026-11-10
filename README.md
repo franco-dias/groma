@@ -1,3 +1,5 @@
+<img src="docs/images/groma-logo.svg" width="88" height="88" alt="Groma logo: a surveyor's groma with two plumb lines and a red measuring line" />
+
 # Groma
 
 Survey any design before you build it.
