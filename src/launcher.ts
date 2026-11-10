@@ -6,9 +6,8 @@
 import { h } from "./dom";
 import { icon } from "./icons";
 import { setInspectLock } from "./overlay/hover";
+import { ALT_KEY } from "./platform";
 import { mount, whenBodyExists } from "./root";
-
-const ALT_KEY = /Mac|iPhone|iPad/.test(navigator.platform) ? "⌥" : "Alt";
 
 export function startLauncher(): void {
   whenBodyExists(() => {

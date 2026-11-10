@@ -3,6 +3,7 @@ import { readStore, writeStore } from "../edits/storage";
 import { options } from "../options";
 
 const LAYOUT_KEY = "__groma_panel";
+/** The tabs worth reopening on. The Reference tab is a detour, not a place to start. */
 const TAB_IDS = ["specs", "css", "layers", "changes"];
 
 interface Layout {
@@ -19,9 +20,10 @@ export function loadLayout(panel: HTMLElement): void {
 }
 
 export function saveLayout(panel: HTMLElement): void {
+  const open = panel.dataset.tab ?? "";
   const layout: Layout = {
     width: panel.style.width,
-    tab: panel.dataset.tab ?? "specs",
+    tab: TAB_IDS.includes(open) ? open : (readStore<Layout>(LAYOUT_KEY).tab ?? "specs"),
     unit: options.unit,
   };
   writeStore(LAYOUT_KEY, layout);

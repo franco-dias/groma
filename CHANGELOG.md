@@ -8,6 +8,10 @@ All notable changes to this package are recorded here. Versions follow
 Made for any project: nothing about a framework or a design system is
 assumed by default.
 
+- New: a Reference tab with every shortcut and trick, opened from the »
+  menu in the tab bar. "Collapse panel" moved into the same menu.
+- Fixed: the grid only showed on dark boards. It now shows on any
+  background, and no longer spills over the page around the board.
 - Licensed under MIT.
 - **Renamed to Groma.** Before the first publication, so there is no alias:
   the package is `groma`, the file `dist/groma.js`, the global

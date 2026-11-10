@@ -1,6 +1,7 @@
 /**
- * The side panel: docked to the right edge, with a tab bar, a collapse
- * button and a resize handle. It appears when an element is pinned.
+ * The side panel: docked to the right edge, with a tab bar, a » menu (the
+ * Reference tab and "Collapse panel") and a resize handle. It appears when
+ * an element is pinned.
  */
 import { h } from "../dom";
 import { elementName } from "../element-name";
@@ -11,10 +12,11 @@ import { cssTab } from "./css-tab";
 import { layersTab } from "./layers-tab";
 import { loadLayout, saveLayout, setTab } from "./layout";
 import template from "./panel.html?raw";
+import { referenceTab } from "./reference-tab";
 import { specsTab } from "./specs-tab";
 import { part, type Tab } from "./tab";
 
-const TABS: Tab[] = [specsTab, cssTab, layersTab, changesTab];
+const TABS: Tab[] = [specsTab, cssTab, layersTab, changesTab, referenceTab];
 const MIN_WIDTH = 320;
 const MAX_WIDTH = 560;
 
@@ -51,6 +53,27 @@ function resizeByDragging(el: HTMLElement): void {
   });
 }
 
+/** The » button opens a small menu: the Reference tab and "Collapse panel". */
+function mountMoreMenu(el: HTMLElement): void {
+  const button = part(el, ".more-button");
+  const menu = part(el, ".more-menu");
+  const setOpen = (open: boolean) => {
+    menu.hidden = !open;
+    button.setAttribute("aria-expanded", String(open));
+  };
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setOpen(menu.hidden);
+  });
+  // Any other click in the panel, or Esc, closes the menu.
+  el.addEventListener("click", () => setOpen(false));
+  el.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setOpen(false);
+  });
+  part(menu, '[data-tab="reference"]').addEventListener("click", () => setTab(el, "reference"));
+  part(menu, ".collapse").addEventListener("click", () => setCollapsed(el, true));
+}
+
 function createPanel(): HTMLElement {
   const el = mount(h("div", "panel"));
   el.innerHTML = template;
@@ -63,7 +86,7 @@ function createPanel(): HTMLElement {
     if (tab) setTab(el, tab);
   });
   part(el, ".close").addEventListener("click", unpin);
-  part(el, ".collapse").addEventListener("click", () => setCollapsed(el, true));
+  mountMoreMenu(el);
   part(el, ".rail").addEventListener("click", () => setCollapsed(el, false));
   resizeByDragging(el);
 

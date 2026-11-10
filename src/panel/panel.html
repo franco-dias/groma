@@ -10,12 +10,18 @@
     <button class="tab" role="tab" data-tab="layers">Layers</button>
     <button class="tab" role="tab" data-tab="changes">Changes</button>
   </div>
-  <button class="icon-button collapse" aria-label="Collapse panel" title="Collapse panel">
+  <button class="icon-button more-button" aria-label="More" aria-haspopup="menu" aria-expanded="false" title="More">
     <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="m6 17 5-5-5-5M13 17l5-5-5-5" /></svg>
   </button>
   <button class="icon-button close" aria-label="Close inspector" title="Close inspector">
     <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></svg>
   </button>
+</div>
+
+<!-- The » menu: what does not fit in the tab bar. -->
+<div class="more-menu" role="menu" hidden>
+  <button class="more-item" role="menuitem" data-tab="reference">Shortcuts and tips</button>
+  <button class="more-item collapse" role="menuitem">Collapse panel</button>
 </div>
 
 <!-- ───────────── Specs: what a developer needs to build the element ───────────── -->
@@ -68,6 +74,9 @@
 <div class="changes-head" data-for="changes"></div>
 <div class="body changes-list" data-for="changes"></div>
 <input type="file" accept=".html,text/html" hidden />
+
+<!-- ───────────── Reference: every shortcut and trick (reference.html) ───────────── -->
+<div class="body" data-for="reference"></div>
 
 <!-- Shown instead of everything above while the panel is collapsed. -->
 <button class="rail" aria-label="Expand panel" title="Expand panel">

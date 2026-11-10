@@ -1,0 +1,107 @@
+<!--
+  The Reference tab: every shortcut and trick, in one place.
+
+  Keep this file in step with the code. When you add or change a shortcut, a
+  click target or a setting, change its line here in the same commit.
+  <kbd data-key="alt"> and <kbd data-key="command"> are filled in for the
+  user's keyboard (⌥ and ⌘ on a Mac, Alt and Ctrl elsewhere).
+-->
+<section class="block">
+  <div class="block-head"><h3>Inspect</h3></div>
+  <dl class="reference">
+    <dt><kbd data-key="alt"></kbd> hover</dt>
+    <dd>Box model of the element under the pointer, with a chip that names it.</dd>
+    <dt><kbd data-key="alt"></kbd> click</dt>
+    <dd>Pin the element. The panel opens on it.</dd>
+    <dt><kbd data-key="alt"></kbd> hover</dt>
+    <dd>With an element pinned: distances from it to the hovered element, in red.</dd>
+    <dt><kbd data-key="alt"></kbd> right-click</dt>
+    <dd>List every layer under the pointer, to reach one that sits behind another.</dd>
+    <dt>Inspect pill</dt>
+    <dd>Bottom right. Click it to lock inspect mode on, so none of this needs <kbd data-key="alt"></kbd>.</dd>
+    <dt><kbd>Esc</kbd></dt>
+    <dd>Turn the inspect lock off, and end a comparison.</dd>
+  </dl>
+</section>
+
+<section class="block">
+  <div class="block-head"><h3>Copy</h3></div>
+  <dl class="reference">
+    <dt>Click a value</dt>
+    <dd>Copies it. A size, a colour, a font weight: anything shown in monospace.</dd>
+    <dt>Click a token</dt>
+    <dd>Copies the token. Its theme path, its variable and its value in each theme copy separately.</dd>
+    <dt>Click “margin” or “padding”</dt>
+    <dd>In the box diagram: copies all four sides at once.</dd>
+    <dt>Click a component name</dt>
+    <dd>Copies the name. Each prop value copies on its own.</dd>
+    <dt>Click a class</dt>
+    <dd>Open the class list first; each chip copies its class.</dd>
+  </dl>
+</section>
+
+<section class="block">
+  <div class="block-head"><h3>Specs</h3></div>
+  <dl class="reference">
+    <dt>px · rem</dt>
+    <dd>Switch the unit lengths are shown and copied in.</dd>
+    <dt>Grid</dt>
+    <dd>Lay a 4 or 8 pixel grid over the element's board.</dd>
+    <dt>Compare</dt>
+    <dd>Makes the pinned element the baseline. Pin another to see only what differs.</dd>
+    <dt>Copy link</dt>
+    <dd>A link that reopens this page with the element pinned. Paste it in a ticket.</dd>
+    <dt>Pick colour</dt>
+    <dd>Pick any pixel on screen and see which token has that colour.</dd>
+    <dt>Breadcrumb</dt>
+    <dd>Click the parent's name to pin the parent.</dd>
+    <dt>fixed · hug · fill</dt>
+    <dd>Beside the size: whether each axis has a set size, follows its content or fills its parent.</dd>
+    <dt>No token</dt>
+    <dd>A colour written by hand that no token has. Ask the designer before you hard-code it.</dd>
+  </dl>
+</section>
+
+<section class="block">
+  <div class="block-head"><h3>All CSS</h3></div>
+  <dl class="reference">
+    <dt>Type over a value</dt>
+    <dd>Changes it on the page. <kbd>Enter</kbd> or clicking away saves; <kbd>Esc</kbd> cancels.</dd>
+    <dt><kbd>↑</kbd> <kbd>↓</kbd></dt>
+    <dd>Change a number by 1. With <kbd>Shift</kbd> by 10, with <kbd data-key="alt"></kbd> by 0.1.</dd>
+    <dt>↩ on a row</dt>
+    <dd>Removes your edit and puts back the page's own value. Clearing the value does the same.</dd>
+    <dt><kbd data-key="command"></kbd> <kbd>Enter</kbd></dt>
+    <dd>In the content box at the top: apply the new text.</dd>
+    <dt>Search</dt>
+    <dd>Filters properties by name. “Hide defaults” off shows every property.</dd>
+    <dt>Your edits</dt>
+    <dd>Are saved in this browser for this page and come back on reload. They never change the file.</dd>
+  </dl>
+</section>
+
+<section class="block">
+  <div class="block-head"><h3>Layers and panel</h3></div>
+  <dl class="reference">
+    <dt>Hover a layer</dt>
+    <dd>Outlines it on the page. Click to pin it; the arrow opens its children.</dd>
+    <dt>Drag the left edge</dt>
+    <dd>Resizes the panel. The width is remembered.</dd>
+    <dt>» menu</dt>
+    <dd>This reference, and “Collapse panel”. Click the collapsed rail to bring the panel back.</dd>
+    <dt>Changes tab</dt>
+    <dd>On a Claude Design export: pick an older export to list the boards that changed.</dd>
+  </dl>
+</section>
+
+<section class="block">
+  <div class="block-head"><h3>Good to know</h3></div>
+  <dl class="reference">
+    <dt>Sizes and distances</dt>
+    <dd>Are in the design's own pixels, whatever the zoom of the board.</dd>
+    <dt>Boards that look empty</dt>
+    <dd>Some exports draw a board only when it scrolls into view. Scroll to it first.</dd>
+    <dt>Props</dt>
+    <dd>Are listed as the design passes them. Check them against your own component before you use them.</dd>
+  </dl>
+</section>

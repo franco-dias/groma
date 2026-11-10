@@ -173,6 +173,9 @@ The browser tests need Google Chrome installed; they do not download one.
   `shortcut: <the limit>, <when to upgrade>`; keep those markers.
 - Update [docs/features.md](docs/features.md) and
   [CHANGELOG.md](CHANGELOG.md) with the change.
+- The in-product reference (`src/panel/reference.html`) is what users read.
+  When you add or change a shortcut, a click target or a setting, change
+  its line there in the same commit.
 
 ### Releasing
 

@@ -67,6 +67,9 @@ CDN with no copy step:
 
 The package is not published yet (see [Release](development.md#release)).
 
+A list of every shortcut is also inside the inspector: open the » menu in
+the panel's tab bar and choose "Shortcuts and tips".
+
 ## Settings
 
 Optional. Put them on the script tag:

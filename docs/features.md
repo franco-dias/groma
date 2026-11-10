@@ -55,6 +55,8 @@ Opens when an element is pinned, docked to the right edge.
 
 - Four tabs: Specs, All CSS, Layers, Changes. The Changes tab is hidden on
   pages that are not Claude Design exports.
+- The » button opens a small menu: "Shortcuts and tips" (feature 16) and
+  "Collapse panel". A click elsewhere in the panel, or Esc, closes it.
 - Collapse leaves a 28px rail that names the element; clicking the rail or
   pinning another element expands it.
 - The left edge resizes the panel between 320 and 560px.
@@ -73,9 +75,14 @@ Tests: `tests/panel.test.ts`.
 - The outline follows the element while the page scrolls, zooms or moves
   it, and hides when the page removes the element.
 - "Outline element" in the All CSS tab switches it off.
-- The grid (off, 4 or 8 board pixels) covers the pinned element's board and
-  scales with it. It uses the `difference` blend mode so it shows on light
-  and dark boards.
+- The grid (off, 4 or 8 board pixels) covers the pinned element's board,
+  whichever element of the board is pinned, and scales with it.
+- The grid shows on light and dark boards alike: its lines are a mask over
+  a backdrop filter, not a colour. (A blend mode does not work: the
+  inspector's host is its own stacking context.)
+- The grid is cut to the part of the board the page shows, so it never
+  spills over the page's own chrome; its lines still start at the board's
+  corner.
 
 Code: `src/outlines.ts`. Tests: `tests/panel.test.ts`, `tests/specs.test.ts`.
 
@@ -263,3 +270,18 @@ are optional, and the defaults assume nothing about the project.
 
 Code: `src/config.ts`. Tests: `tests/config.test.ts`,
 `tests/specs.test.ts`.
+
+## 16. Reference
+
+A tab that lists every shortcut and trick, opened from the » menu.
+
+- Content lives in `src/panel/reference.html`, grouped by subject: Inspect,
+  Copy, Specs, All CSS, Layers and panel, Good to know.
+- Modifier keys are named as the user's keyboard does (⌥ and ⌘ on a Mac,
+  Alt and Ctrl elsewhere).
+- It has no tab in the tab bar, and it is not the tab the panel reopens on.
+- **It must stay true.** A new or changed shortcut, click target or setting
+  changes this file in the same commit.
+
+Code: `src/panel/reference-tab.ts`, `reference.html`, `src/platform.ts`.
+Tests: `tests/reference.test.ts`.
