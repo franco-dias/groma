@@ -126,24 +126,50 @@ describe("layout", () => {
 });
 
 describe("copying", () => {
-  it("copies a value on click and marks it without moving it", async () => {
+  const gapValue = (): HTMLElement =>
+    all(".cell")
+      .find((cell) => cell.textContent!.startsWith("Gap"))!
+      .querySelector<HTMLElement>(".value")!;
+
+  it("copies a value as CSS on click and marks it without moving it", async () => {
     inspector().pin(el(".row"));
-    const gap = all(".cell").find((cell) => cell.textContent!.startsWith("Gap"))!;
-    const value = gap.querySelector<HTMLElement>(".value")!;
+    const value = gapValue();
     const before = value.getBoundingClientRect();
     value.click();
     await wait(20);
 
-    expect(clipboard.text).toBe("16");
+    // Shown as a bare number, copied with its unit.
+    expect(value.textContent).toBe("16");
+    expect(clipboard.text).toBe("16px");
     expect(value.classList.contains("is-copied")).toBe(true);
     expect(value.getBoundingClientRect().width).toBe(before.width);
   });
 
-  it("copies padding in the form sx takes", async () => {
+  it("copies padding as a CSS declaration", async () => {
     inspector().pin(el(".row"));
     ui(".box-padding > .box-name")!.click();
     await wait(20);
+    expect(clipboard.text).toBe("padding: 12px 16px");
+  });
+
+  it("copies bare numbers and sx keys when the page asks for the sx format", async () => {
+    inspector().configure({ copyFormat: "sx" });
+    inspector().pin(el(".row"));
+    gapValue().click();
+    await wait(20);
+    expect(clipboard.text).toBe("16");
+
+    ui(".box-padding > .box-name")!.click();
+    await wait(20);
     expect(clipboard.text).toBe("py: 12, px: 16");
+  });
+
+  it("copies rem when the unit is rem, in either format", async () => {
+    inspector().pin(el(".row"));
+    ui('[data-option="unit"] [data-value="rem"]')!.click();
+    gapValue().click();
+    await wait(20);
+    expect(clipboard.text).toBe("1rem");
   });
 
   it("copies a link that pins the element when opened", async () => {
@@ -175,7 +201,15 @@ describe("colours and design tokens", () => {
     expect(rowTexts(background, ".mode.is-active")).toEqual(["#121212dark"]);
   });
 
-  it("shows the MUI theme path before the CSS variable", () => {
+  it("shows only the CSS variable when no token prefix is configured", () => {
+    inspector().pin(el(".fixed"));
+    const text = colorRow("Text");
+    expect(rowTexts(text, ".theme-path")).toEqual([]);
+    expect(rowTexts(text, ".css-var:not(.is-secondary)")).toEqual(["--mui-palette-text-primary"]);
+  });
+
+  it("shows the theme path before the variable for a configured prefix", () => {
+    inspector().configure({ tokenPrefixes: ["--mui-"] });
     inspector().pin(el(".fixed"));
     const text = colorRow("Text");
     expect(rowTexts(text, ".theme-path")).toEqual(["palette.text.primary"]);
@@ -203,6 +237,7 @@ describe("colours and design tokens", () => {
   });
 
   it("copies each line on its own and marks the row", async () => {
+    inspector().configure({ tokenPrefixes: ["--mui-"] });
     inspector().pin(el(".fixed"));
     const text = colorRow("Text");
     text.querySelector<HTMLElement>(".theme-path")!.click();

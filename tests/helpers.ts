@@ -122,6 +122,7 @@ export function reset(): void {
     openTab("specs");
     ui(".close")!.click();
   }
+  inspector().configure();
   localStorage.clear();
   clipboard.text = "";
 }

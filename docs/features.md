@@ -94,21 +94,36 @@ code box copies it.
   content) or `fill` (sized by the parent). Derived from declared styles
   and the parent's flex settings.
 - **Box**: margin around padding around the content size. Clicking
-  "margin" or "padding" copies the four sides in a short form
-  (`py: 12, px: 16`, the form MUI's `sx` prop takes).
+  "margin" or "padding" copies all four sides.
 - **Colors** (feature 7).
 - **Typography**: family, weight, size, line height, tracking. Only for
   elements with text of their own.
 - **Motion**: one row per transition or animation, with its easing curve.
-- Lengths show as bare numbers in px, or in rem. The unit switch is in the action bar.
+- Lengths show as bare numbers in px, or in rem. The unit switch is in the
+  action bar.
+- **What a click copies** depends on the page's copy format (feature 15).
+  `css`, the default: `24px`, and `padding: 12px 16px` for a box name.
+  `sx`: `24`, and `py: 12, px: 16`. In rem, both formats copy rem.
 
 Code: `src/panel/specs-tab.ts`, `src/specs/*`. Tests: `tests/specs.test.ts`,
 unit tests in `src/specs/`.
 
 ## 6. Component
 
-The UI component an element belongs to. Supported today: pages rendered
-with React. On any other page the block is absent.
+The UI component an element belongs to. A page can say this in three ways,
+each a "reader" in `src/specs/components/`, tried in this order:
+
+1. `declared.ts`: `data-component`, `data-source` and `data-props` (JSON)
+   attributes in the markup. Explicit, so it wins.
+2. `react.ts`: React's internals, plus the `@ds-bundle` header a Claude
+   Design export embeds for names and source paths.
+3. `custom-element.ts`: a tag with a hyphen is a component; its attributes
+   are its props. It looks at most five levels up, so an app shell far
+   above an element is not reported as its component.
+
+A reader returns null when it has nothing to say and must never throw. To
+support another framework, add a reader and list it in
+`src/specs/component.ts`.
 
 - Shows the component as JSX with its text, number and boolean props, and
   its source path when the page provides one.
@@ -116,11 +131,10 @@ with React. On any other page the block is absent.
   when it only sits inside one, with a button that pins the root.
 - The component's name is used for the element everywhere: header, chip,
   outline tag, rail.
-- Names and source paths come from the `@ds-bundle` header a Claude Design
-  export embeds; otherwise from the React component's own name.
-- Pages without React show no component block.
+- A page that says nothing about components shows no component block.
 
-Code: `src/specs/component.ts`, `src/element-name.ts`.
+Code: `src/specs/component.ts`, `src/specs/components/*`,
+`src/element-name.ts`.
 Tests: `tests/component.test.ts`.
 
 ## 7. Colours and tokens
@@ -128,9 +142,9 @@ Tests: `tests/component.test.ts`.
 Each colour is a row: swatch, hex, alpha, its role (Background, Border,
 Text, Fill, Stroke, Picked).
 
-- **Declared token**: the row lists a theme path
-  (`palette.background.paper`) when the variable follows a known naming
-  convention (today: MUI's `--mui-` prefix), then
+- **Declared token**: the row lists a theme path (`color.text.primary`)
+  when the variable starts with a prefix the page configured (feature 15),
+  then
   the CSS variable, then the token's value in every scope that sets it. The
   scope the element is in stands out.
 - Text and icon colours usually come from an ancestor; the lookup walks up
@@ -225,6 +239,23 @@ Tests: `tests/changes.test.ts`, `src/export-diff.test.ts`.
 ## 14. API for the host page
 
 `window.LiveInspector`, typed as `LiveInspectorApi` in `src/main.ts`:
-`pin(el)`, `pinnedElement()`, `replayOverrides(root?)`, `highlight(el)`.
+`pin(el)`, `pinnedElement()`, `replayOverrides(root?)`, `highlight(el)`,
+`configure(settings?)`.
 It is the only global the script creates. The Cadence design canvas calls
 it, so treat it as a public contract.
+
+## 15. Settings
+
+A page can tell the inspector how its project writes things. Both settings
+are optional, and the defaults assume nothing about the project.
+
+- **Copy format** (`data-copy`, `copyFormat`): `css` (default) or `sx`.
+- **Token prefixes** (`data-token-prefix`, `tokenPrefixes`): none by
+  default. A token with a configured prefix also shows its dotted path.
+- Read from the script tag at start; changed later with
+  `LiveInspector.configure()`, which applies to the open panel at once.
+  `configure()` with no argument restores the defaults.
+- Unknown values are ignored.
+
+Code: `src/config.ts`. Tests: `tests/config.test.ts`,
+`tests/specs.test.ts`.

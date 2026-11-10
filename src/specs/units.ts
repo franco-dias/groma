@@ -1,4 +1,5 @@
 /** How the Specs tab writes lengths, on screen and on the clipboard. */
+import type { CopyFormat } from "../config";
 import type { Unit } from "../options";
 
 /** CSS shorthand order: one value when all sides match, two for vertical/horizontal. */
@@ -19,9 +20,36 @@ export function shownLength(value: string, unit: Unit, rootFontSize: number): st
 }
 
 /**
- * Padding or margin as MUI's `sx` prop takes it when one theme spacing step
- * is 1px: `p: 24`, `py: 12, px: 16`, or one key per side.
+ * What a click on a length copies. CSS keeps the unit (`24px`, `1.5rem`);
+ * the "sx" format copies a bare number for pixels.
  */
+export function copiedLength(
+  value: string,
+  unit: Unit,
+  rootFontSize: number,
+  format: CopyFormat,
+): string {
+  if (unit === "rem") return shownLength(value, "rem", rootFontSize);
+  return format === "sx" ? shownLength(value, "px", rootFontSize) : value;
+}
+
+/**
+ * What a click on "padding" or "margin" copies, for sides given in pixels:
+ * a CSS declaration (`padding: 12px 16px`), or the "sx" keys (`py: 12, px: 16`).
+ */
+export function copiedSpacing(
+  name: "padding" | "margin",
+  sides: number[],
+  unit: Unit,
+  rootFontSize: number,
+  format: CopyFormat,
+): string {
+  if (format === "sx" && unit === "px") return sxSpacing(name, sides);
+  const lengths = sides.map((side) => copiedLength(`${side}px`, unit, rootFontSize, "css"));
+  return `${name}: ${compactSides(lengths)}`;
+}
+
+/** Padding or margin as style objects take it: `p: 24`, `py: 12, px: 16`, or one key per side. */
 export function sxSpacing(name: "padding" | "margin", sides: number[]): string {
   const [top, right, bottom, left] = sides;
   const key = name[0];

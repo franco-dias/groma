@@ -46,7 +46,8 @@ The side panel has four tabs:
 - **Specs**: what you need to build the element.
   - Where it is (board, parent) and what it is (tag, name, classes).
   - The UI component it belongs to, written as you would use it in code,
-    with its props and source path, when the page exposes them.
+    with its props and source path, when the page says (see
+    [Components](#components)).
   - Size, and whether each axis is fixed, hugs its content or fills its
     parent.
   - A box diagram of margin and padding.
@@ -62,9 +63,9 @@ The side panel has four tabs:
 - **Changes**: on a Claude Design export, compares the page with an older
   export file and lists the boards that changed.
 
-A click copies any value. Lengths are shown and copied as bare numbers in
-px, or in rem. Clicking "margin" or "padding" in the box diagram copies the
-four sides in a short form (`py: 12, px: 16`).
+A click copies any value. Lengths are shown as bare numbers and copied as
+CSS (`24px`, or `1.5rem` when the unit is rem). Clicking "margin" or
+"padding" in the box diagram copies all four sides (`padding: 12px 16px`).
 
 Every feature, with the rules it follows, is described in
 [docs/features.md](docs/features.md).
@@ -106,6 +107,41 @@ CDN with no copy step:
 
 The package is not published yet (see [Release](#release)).
 
+### Settings
+
+Optional. Put them on the script tag:
+
+```html
+<script src="live-inspector.js" data-copy="sx" data-token-prefix="--ds-"></script>
+```
+
+| Attribute | Values | What it changes |
+| --- | --- | --- |
+| `data-copy` | `css` (default), `sx` | What a click on a length copies. `css`: `24px` and `padding: 12px 16px`. `sx`: `24` and `py: 12, px: 16`, for styling libraries that take style objects where a bare number means pixels |
+| `data-token-prefix` | one or more prefixes, separated by spaces | Tokens with that prefix also show their path in the theme object the variables mirror: with `--ds-`, `--ds-color-text-primary` shows `color.text.primary` |
+
+The same settings can be changed from code with
+`LiveInspector.configure({ copyFormat: "sx", tokenPrefixes: ["--ds-"] })`.
+
+### Components
+
+The Specs tab names the component an element belongs to when the page says
+which it is. There are three ways, checked in this order:
+
+1. **The markup declares it.** Any tool or framework can add:
+
+   ```html
+   <div data-component="Card" data-source="ui/Card.tsx" data-props='{"tone":"dark"}'>
+   ```
+
+2. **The page's UI framework knows it.** Supported today: pages rendered
+   with React.
+3. **The element is a custom element.** `<my-card tone="dark">` is a
+   component by definition: the tag is its name, the attributes its props.
+
+A page that says nothing about components shows no component block;
+everything else works the same.
+
 ### For pages that re-render
 
 A page can talk to the inspector through `window.LiveInspector`:
@@ -116,6 +152,7 @@ A page can talk to the inspector through `window.LiveInspector`:
 | `pinnedElement()` | The pinned element, or `null` |
 | `replayOverrides(root?)` | Re-applies saved edits to the page, or inside `root` |
 | `highlight(el)` | Moves the pinned-element outline to `el` |
+| `configure(settings)` | Changes the [settings](#settings); with no argument, restores the defaults |
 
 ## Set up
 
@@ -185,7 +222,9 @@ Start at [src/main.ts](src/main.ts): it only starts the features.
 | `src/outlines.ts` | Outline and name tag of the pinned element, hover outline, grid |
 | `src/launcher.ts` | The launcher pill and the inspect lock |
 | `src/panel/` | The side panel, its markup (`panel.html`) and one file per tab |
-| `src/specs/` | What the Specs tab knows: sections, tokens, colours, units, sizing, components, motion |
+| `src/config.ts` | The settings a page can give the inspector |
+| `src/specs/` | What the Specs tab knows: sections, tokens, colours, units, sizing, motion |
+| `src/specs/components/` | One reader per way a page can name its components |
 | `src/edits/` | Saved edits: selectors, storage, apply and replay |
 | `src/export-diff.ts` | Comparing two Claude Design exports |
 | `src/icons.ts` | The icons, as SVG drawings |
@@ -224,13 +263,8 @@ above.
   ignores selector specificity.
 - Sizing intent (fixed, hug, fill) is inferred from styles; children of CSS
   grid are treated as plain blocks.
-- The component block appears only on pages whose UI framework leaves
-  component information on the elements, and source paths only when the
-  page lists them. See [docs/features.md](docs/features.md) for what is
-  supported today.
-- The theme path beside a token is shown only for variables that follow a
-  naming convention the inspector knows; other tokens show the CSS variable
-  alone.
+- Of the UI frameworks, only React pages are read for components; other
+  pages can declare components in the markup (see [Components](#components)).
 - The Changes tab compares lines without their order, so a line that only
   moved is not reported.
 - The colour picker needs a Chromium browser. It has no test: the browser

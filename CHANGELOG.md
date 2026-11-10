@@ -5,6 +5,19 @@ All notable changes to this package are recorded here. Versions follow
 
 ## Unreleased
 
+Made for any project: nothing about a framework or a design system is
+assumed by default.
+
+- **Changed**: a click on a length now copies CSS (`24px`,
+  `padding: 12px 16px`). The earlier form (`24`, `py: 12, px: 16`) is the
+  `sx` copy format: `data-copy="sx"` on the script tag.
+- **Changed**: a token's theme path is shown only for prefixes the page
+  configures (`data-token-prefix`). No prefix is built in any more.
+- New: `LiveInspector.configure()` and the script-tag settings.
+- New: components can be declared in the markup (`data-component`,
+  `data-source`, `data-props`), and custom elements are recognised as
+  components. React pages work as before.
+
 - Browser tests for the inspector's behaviour (`tests/`, 88 tests), run
   headless in the installed Chrome. `npm test` runs them with the unit
   tests; `test:unit` and `test:browser` run one kind.

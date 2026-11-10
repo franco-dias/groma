@@ -1,15 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { themePath } from "./tokens";
+import { tokenPath } from "./tokens";
 
-describe("themePath", () => {
-  it("turns an MUI variable into its theme path", () => {
-    expect(themePath("--mui-palette-background-paper")).toBe("palette.background.paper");
-    expect(themePath("--mui-palette-extra-elevation-outlined")).toBe(
-      "palette.extra.elevation.outlined",
+describe("tokenPath", () => {
+  it("turns a variable with a known prefix into its theme path", () => {
+    expect(tokenPath("--ds-color-text-primary", ["--ds-"])).toBe("color.text.primary");
+    expect(tokenPath("--theme-palette-background-paper", ["--ds-", "--theme-"])).toBe(
+      "palette.background.paper",
     );
   });
 
-  it("has no path for other variables", () => {
-    expect(themePath("--brand-600")).toBe("");
+  it("has no path for other variables, or when no prefix is configured", () => {
+    expect(tokenPath("--brand-600", ["--ds-"])).toBe("");
+    expect(tokenPath("--ds-color-text-primary", [])).toBe("");
   });
 });

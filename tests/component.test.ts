@@ -43,7 +43,7 @@ beforeEach(() => {
   Object.assign(el(".inner"), { __reactFiber$test: inner });
 });
 
-describe("component", () => {
+describe("component on a React page", () => {
   it("names the component, shows its props as JSX and where its source is", () => {
     inspector().pin(el(".root"));
     expect(texts(".component h3")).toEqual(["Component"]);
@@ -78,9 +78,76 @@ describe("component", () => {
     expect(inspector().pinnedElement()).toBe(el(".root"));
   });
 
-  it("shows no component block on a page without React", () => {
+  it("shows no component block when the page says nothing about components", () => {
     page(`<div class="plain">Plain</div>`);
     inspector().pin(el(".plain"));
     expect(ui(".component")).toBeNull();
+  });
+});
+
+describe("component declared in the markup", () => {
+  beforeEach(() => {
+    page(`
+      <div class="card" data-component="Card" data-source="ui/Card.tsx" data-props='{"tone":"dark","elevated":true,"onClose":{}}'>
+        <span class="label">Label</span>
+      </div>
+      <div class="broken" data-component="Broken" data-props="not json">x</div>
+    `);
+  });
+
+  it("reads the name, the props and the source from data attributes", () => {
+    inspector().pin(el(".card"));
+    expect(texts(".component h3")).toEqual(["Component"]);
+    expect(texts(".code")).toEqual(['<Card tone="dark" elevated>']);
+    expect(texts(".source .path")).toEqual(["ui/Card.tsx"]);
+    expect(texts(".title")).toEqual(["Card"]);
+  });
+
+  it("knows an element inside a declared component", () => {
+    inspector().pin(el(".label"));
+    expect(texts(".component h3")).toEqual(["Inside component"]);
+    ui(".select-row .ghost-button")!.click();
+    expect(inspector().pinnedElement()).toBe(el(".card"));
+  });
+
+  it("ignores props that are not valid JSON", () => {
+    inspector().pin(el(".broken"));
+    expect(texts(".code")).toEqual(["<Broken>"]);
+  });
+});
+
+describe("custom element", () => {
+  beforeEach(() => {
+    page(`
+      <my-card tone="dark" open class="shell" style="display: block">
+        <span class="label">Label</span>
+      </my-card>
+      <app-shell><div><div><div><div><div><div><p class="deep">Deep</p></div></div></div></div></div></div></app-shell>
+    `);
+  });
+
+  it("is a component: the tag is the name and the attributes are the props", () => {
+    inspector().pin(el("my-card"));
+    expect(texts(".component h3")).toEqual(["Component"]);
+    expect(texts(".code")).toEqual(['<my-card tone="dark" open>']);
+  });
+
+  it("contains the elements in it", () => {
+    inspector().pin(el(".label"));
+    expect(texts(".component h3")).toEqual(["Inside component"]);
+    expect(texts(".code")).toEqual(['<my-card tone="dark" open>']);
+  });
+
+  it("is not reported for an element far below an app shell", () => {
+    inspector().pin(el(".deep"));
+    expect(ui(".component")).toBeNull();
+  });
+});
+
+describe("when several sources name a component", () => {
+  it("prefers what the page declares", () => {
+    page(`<my-card data-component="Card"><span class="label">Label</span></my-card>`);
+    inspector().pin(el("my-card"));
+    expect(texts(".code")).toEqual(["<Card>"]);
   });
 });

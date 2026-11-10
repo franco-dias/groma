@@ -12,6 +12,7 @@
  * This file only wires the features together. Each one lives in its own
  * module; start with overlay/hover.ts and panel/panel.ts.
  */
+import { type Config, configure, configureFromScriptTag } from "./config";
 import { replayOverrides } from "./edits/overrides";
 import { startLauncher } from "./launcher";
 import { pinFromLink } from "./link";
@@ -31,9 +32,12 @@ export interface LiveInspectorApi {
   replayOverrides(root?: ParentNode): void;
   /** Moves the pinned-element outline to `el`. */
   highlight(el: Element): void;
+  /** Changes how values are copied and which tokens show a theme path (see config.ts). */
+  configure(changes?: Partial<Config>): void;
 }
 
 function start(): void {
+  configureFromScriptTag();
   startOutlines();
   startPanel();
   startHover();
@@ -47,7 +51,7 @@ function start(): void {
   window.addEventListener("load", () => replayOverrides());
   pinFromLink();
 
-  window.LiveInspector = { pin, pinnedElement, replayOverrides, highlight };
+  window.LiveInspector = { pin, pinnedElement, replayOverrides, highlight, configure };
 }
 
 // A page may include the script twice (a tag in the page and one injected).

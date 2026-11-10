@@ -10,6 +10,7 @@
  * another element, copies a link to the element and picks a colour.
  */
 import { boardPosition } from "../board";
+import { config } from "../config";
 import { SIDES, type Sides, sidesOf } from "../box-sides";
 import { h, layoutSize } from "../dom";
 import { elementName, sizeText } from "../element-name";
@@ -22,8 +23,8 @@ import { formatColor, isColorValue, tokensWithColor } from "../specs/colors";
 import { componentAttributes, componentJsx, componentOf } from "../specs/component";
 import { motionItems } from "../specs/motion";
 import { compareSpecs, type Spec, type SpecSection, specSections } from "../specs/sections";
-import { declaredTokens, hasTokens, themePath, tokenModes } from "../specs/tokens";
-import { shownLength, sxSpacing } from "../specs/units";
+import { declaredTokens, hasTokens, tokenModes, tokenPath } from "../specs/tokens";
+import { copiedLength, copiedSpacing, shownLength } from "../specs/units";
 import { copyOnClick } from "./copy";
 import { saveLayout } from "./layout";
 import { part, type Tab, tabBody } from "./tab";
@@ -49,8 +50,11 @@ const rootFontSize = (): number =>
 /** A length as the tab shows it: a bare number in px, or rem. */
 const shown = (value: string): string => shownLength(value, options.unit, rootFontSize());
 
-/** A number of pixels as the tab shows it. */
-const shownPixels = (pixels: number): string => shown(`${Math.round(pixels * 100) / 100}px`);
+/** What a click on that length copies: with its unit, or bare, as the page configured. */
+const copied = (value: string): string =>
+  copiedLength(value, options.unit, rootFontSize(), config.copyFormat);
+
+const hundredth = (pixels: number): number => Math.round(pixels * 100) / 100;
 
 /** A spec's value as text: colours as hex, lengths in the chosen unit. */
 const shownSpec = (spec: Spec): string =>
@@ -75,7 +79,7 @@ function block(title: string, note = "", className = ""): HTMLElement {
 function cell(label: string, value: string, wide = false): HTMLElement {
   const row = h("div", wide ? "wide" : "cell");
   row.appendChild(h("span", "label", label));
-  copyOnClick(row.appendChild(h("span", "value", value)), value);
+  copyOnClick(row.appendChild(h("span", "value", shown(value))), copied(value));
   return row;
 }
 
@@ -287,7 +291,8 @@ function tokenNotes(context: Context, specs: [label: string, spec: Spec | undefi
     declaredTokens(context.el, spec?.props ?? [], context.stylesOf).map((token) => {
       const row = h("div", "wide");
       row.appendChild(h("span", "label", label));
-      copyOnClick(row.appendChild(h("span", "token-note", themePath(token) || token)), token);
+      const path = tokenPath(token, config.tokenPrefixes);
+      copyOnClick(row.appendChild(h("span", "token-note", path || token)), path || token);
       return row;
     }),
   );
@@ -315,7 +320,7 @@ function renderLayout(context: Context): void {
     ["Stroke", spec("Icon", "stroke width")?.value, spec("Icon", "stroke width")],
   ];
   const grid = section.appendChild(h("div", "grid2"));
-  cells.forEach(([label, value]) => value && grid.appendChild(cell(label, shown(value))));
+  cells.forEach(([label, value]) => value && grid.appendChild(cell(label, value)));
 
   // Values too long for half a row
   const wide: [label: string, spec: Spec | undefined][] = [
@@ -324,7 +329,7 @@ function renderLayout(context: Context): void {
     ["Shadow", spec("Shape", "shadow")],
     ["Gradient", spec("Shape", "gradient")],
   ];
-  wide.forEach(([label, row]) => row && section.appendChild(cell(label, shown(row.value), true)));
+  wide.forEach(([label, row]) => row && section.appendChild(cell(label, row.value, true)));
 
   const tokenised = [
     ...cells.map(([label, , row]): [string, Spec | undefined] => [label, row]),
@@ -338,8 +343,8 @@ function renderLayout(context: Context): void {
 /** The four numbers of one ring, each on its own side; a click copies it. */
 function boxSides(box: HTMLElement, sides: Sides): void {
   for (const side of SIDES) {
-    const value = shownPixels(sides[side]);
-    box.appendChild(copyOnClick(h("span", `box-side is-${side}`, value), value));
+    const value = `${hundredth(sides[side])}px`;
+    box.appendChild(copyOnClick(h("span", `box-side is-${side}`, shown(value)), copied(value)));
   }
 }
 
@@ -351,23 +356,31 @@ function renderBox({ el, cs }: Context): void {
   const size = layoutSize(el, el.getBoundingClientRect());
   const contentWidth = size.width - padding.left - padding.right - border.left - border.right;
   const contentHeight = size.height - padding.top - padding.bottom - border.top - border.bottom;
-  const sx = (name: "margin" | "padding", sides: Sides) =>
-    sxSpacing(name, SIDES.map((side) => Math.round(sides[side] * 100) / 100));
+  const spacing = (name: "margin" | "padding", sides: Sides) =>
+    copiedSpacing(
+      name,
+      SIDES.map((side) => hundredth(sides[side])),
+      options.unit,
+      rootFontSize(),
+      config.copyFormat,
+    );
 
   const section = block("Box");
   const marginBox = section.appendChild(h("div", "box-margin"));
-  const marginName = copyOnClick(h("span", "box-name", "margin"), () => sx("margin", margin));
-  marginName.title = "Click to copy as sx";
+  const marginName = copyOnClick(h("span", "box-name", "margin"), () => spacing("margin", margin));
+  marginName.title = "Click to copy all four sides";
   marginBox.appendChild(marginName);
   boxSides(marginBox, margin);
 
   const paddingBox = marginBox.appendChild(h("div", "box-padding"));
-  const paddingName = copyOnClick(h("span", "box-name", "padding"), () => sx("padding", padding));
-  paddingName.title = "Click to copy as sx";
+  const paddingName = copyOnClick(h("span", "box-name", "padding"), () =>
+    spacing("padding", padding),
+  );
+  paddingName.title = "Click to copy all four sides";
   paddingBox.appendChild(paddingName);
   boxSides(paddingBox, padding);
 
-  const content = `${Math.round(contentWidth * 100) / 100} × ${Math.round(contentHeight * 100) / 100}`;
+  const content = `${hundredth(contentWidth)} × ${hundredth(contentHeight)}`;
   paddingBox.appendChild(h("div", "box-content", content));
 }
 
@@ -412,7 +425,7 @@ function colorRow(spec: Spec, role: string, context: Context): HTMLElement {
   slot.appendChild(h("span", "copied")).append(icon("check", 12), "Copied");
 
   for (const token of declared) {
-    const path = themePath(token);
+    const path = tokenPath(token, config.tokenPrefixes);
     if (path) row.appendChild(copies(h("div", "theme-path", path), path));
     row.appendChild(copies(h("div", path ? "css-var is-secondary" : "css-var", token), token));
     const modes = tokenModes(token);
@@ -479,7 +492,7 @@ function renderTypography(context: Context): void {
     ["Decoration", text("decoration")],
   ];
   const grid = section.appendChild(h("div", "grid2"));
-  cells.forEach(([label, value]) => value && grid.appendChild(cell(label, shown(value))));
+  cells.forEach(([label, value]) => value && grid.appendChild(cell(label, value)));
   section.append(...tokenNotes(context, [["Font", font]]));
 }
 

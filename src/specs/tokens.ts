@@ -33,9 +33,15 @@ export function declaredTokens(el: Element, props: string[], stylesOf: StyleLook
   return [];
 }
 
-/** "--mui-palette-background-paper" -> "palette.background.paper", the path in the MUI theme. */
-export const themePath = (token: string): string =>
-  token.startsWith("--mui-") ? token.slice(6).replaceAll("-", ".") : "";
+/**
+ * The token's path in the theme object its variable mirrors, for variables
+ * that start with one of `prefixes`: with "--ds-",
+ * "--ds-color-text-primary" -> "color.text.primary". "" for other tokens.
+ */
+export function tokenPath(token: string, prefixes: string[]): string {
+  const prefix = prefixes.find((candidate) => token.startsWith(candidate));
+  return prefix ? token.slice(prefix.length).replaceAll("-", ".") : "";
+}
 
 const modesByToken = new Map<string, [scope: string, value: string][]>();
 
