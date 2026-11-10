@@ -32,8 +32,13 @@ specs, design tokens and distances.
   the rules below.
 
 What each feature does, with the rules it must keep, is in
-[docs/features.md](docs/features.md). The file map and the scripts are in
-[README.md](README.md). Read the feature's section before you touch it.
+[docs/features.md](docs/features.md). The file map, the scripts and the
+release steps are in [docs/development.md](docs/development.md); settings
+and known limits are in [docs/usage.md](docs/usage.md). Read the feature's
+section before you touch it.
+
+The README is the first read for a newcomer: context, motivation, how to
+try it. Keep it short; detail belongs in `docs/`.
 
 ## Commands
 
@@ -178,7 +183,7 @@ The browser tests need Google Chrome installed; they do not download one.
 
 ## Known limits
 
-Listed in the README. The ones most likely to bite:
+Listed in [docs/usage.md](docs/usage.md). The ones most likely to bite:
 
 - Token lookup takes the last matching declaration and ignores selector
   specificity (`src/page-styles.ts`).
