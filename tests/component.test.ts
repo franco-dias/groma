@@ -1,5 +1,13 @@
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { clipboard, el, frames, inspector, page, reset, texts, ui, wait } from "./helpers";
+import { all, clipboard, el, frames, inspector, page, reset, texts, ui, wait } from "./helpers";
+
+/** The props listed in the component block, as { name: "value" }. */
+function props(): Record<string, string> {
+  const cells = all(".props > *").map((cell) => cell.textContent ?? "");
+  const entries: [string, string][] = [];
+  for (let i = 0; i < cells.length; i += 2) entries.push([cells[i], cells[i + 1]]);
+  return Object.fromEntries(entries);
+}
 
 /** What React leaves on a DOM node: enough of a fiber for the inspector to read. */
 interface FakeFiber {
@@ -44,11 +52,17 @@ beforeEach(() => {
 });
 
 describe("component on a React page", () => {
-  it("names the component, shows its props as JSX and where its source is", () => {
+  it("names the component, lists the props the design passes and where its source is", () => {
     inspector().pin(el(".root"));
     expect(texts(".component h3")).toEqual(["Component"]);
-    expect(texts(".code")).toEqual(['<Button variant="contained" size="small" disabled tabIndex={3}>']);
+    expect(texts(".code .name")).toEqual(["Button"]);
+    expect(props()).toEqual({ variant: "contained", size: "small", disabled: "true", tabIndex: "3" });
     expect(texts(".source .path")).toEqual(["components/actions/Button/Button.jsx"]);
+  });
+
+  it("does not suggest code: no JSX anywhere in the block", () => {
+    inspector().pin(el(".root"));
+    expect(ui(".component")!.textContent).not.toMatch(/[<>{}]/);
   });
 
   it("uses the component's name for the element everywhere", async () => {
@@ -59,12 +73,16 @@ describe("component on a React page", () => {
     expect(texts(".pin-tag b")).toEqual(["Button"]);
   });
 
-  it("copies the JSX when the code box is clicked", async () => {
+  it("copies the name, or one prop value, on click", async () => {
     inspector().pin(el(".root"));
     ui(".code")!.click();
     await wait(20);
-    expect(clipboard.text).toBe('<Button variant="contained" size="small" disabled tabIndex={3}>');
+    expect(clipboard.text).toBe("Button");
     expect(ui(".code")!.classList.contains("is-copied")).toBe(true);
+
+    ui(".props .value")!.click();
+    await wait(20);
+    expect(clipboard.text).toBe("contained");
   });
 
   it("says when the element only sits inside a component, and can select it", () => {
@@ -98,7 +116,8 @@ describe("component declared in the markup", () => {
   it("reads the name, the props and the source from data attributes", () => {
     inspector().pin(el(".card"));
     expect(texts(".component h3")).toEqual(["Component"]);
-    expect(texts(".code")).toEqual(['<Card tone="dark" elevated>']);
+    expect(texts(".code .name")).toEqual(["Card"]);
+    expect(props()).toEqual({ tone: "dark", elevated: "true" });
     expect(texts(".source .path")).toEqual(["ui/Card.tsx"]);
     expect(texts(".title")).toEqual(["Card"]);
   });
@@ -112,7 +131,8 @@ describe("component declared in the markup", () => {
 
   it("ignores props that are not valid JSON", () => {
     inspector().pin(el(".broken"));
-    expect(texts(".code")).toEqual(["<Broken>"]);
+    expect(texts(".code .name")).toEqual(["Broken"]);
+    expect(ui(".props")).toBeNull();
   });
 });
 
@@ -129,13 +149,14 @@ describe("custom element", () => {
   it("is a component: the tag is the name and the attributes are the props", () => {
     inspector().pin(el("my-card"));
     expect(texts(".component h3")).toEqual(["Component"]);
-    expect(texts(".code")).toEqual(['<my-card tone="dark" open>']);
+    expect(texts(".code .name")).toEqual(["my-card"]);
+    expect(props()).toEqual({ tone: "dark", open: "true" });
   });
 
   it("contains the elements in it", () => {
     inspector().pin(el(".label"));
     expect(texts(".component h3")).toEqual(["Inside component"]);
-    expect(texts(".code")).toEqual(['<my-card tone="dark" open>']);
+    expect(texts(".code .name")).toEqual(["my-card"]);
   });
 
   it("is not reported for an element far below an app shell", () => {
@@ -148,6 +169,6 @@ describe("when several sources name a component", () => {
   it("prefers what the page declares", () => {
     page(`<my-card data-component="Card"><span class="label">Label</span></my-card>`);
     inspector().pin(el("my-card"));
-    expect(texts(".code")).toEqual(["<Card>"]);
+    expect(texts(".code .name")).toEqual(["Card"]);
   });
 });

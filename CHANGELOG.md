@@ -19,6 +19,9 @@ assumed by default.
   `sx` copy format: `data-copy="sx"` on the script tag.
 - **Changed**: a token's theme path is shown only for prefixes the page
   configures (`data-token-prefix`). No prefix is built in any more.
+- **Changed**: the component block shows the component's name and a list of
+  the props the design passes. It no longer writes a JSX line: the design
+  may pass props a project's own component does not accept.
 - New: `npm run inspect -- <file.html>` opens any HTML file with the
   inspector attached, without editing it.
 - New: `Groma.configure()` and the script-tag settings.

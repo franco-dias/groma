@@ -1,13 +1,12 @@
 /**
  * What a developer needs to build an element, grouped the way the Specs tab
- * shows it: component, layout, shape, text, icon, motion.
+ * shows it: layout, shape, text, icon, motion.
  */
 import { boardPosition } from "../board";
 import { SIDES, sidesOf } from "../box-sides";
 import { layoutSize } from "../dom";
 import { hasValue } from "../edits/overrides";
 import type { StyleLookup } from "../page-styles";
-import { componentJsx, componentOf } from "./component";
 import { motionItems } from "./motion";
 import { sizingIntent } from "./sizing";
 import { compactSides } from "./units";
@@ -42,18 +41,6 @@ const sideProps = (name: string): string[] => [name, ...SIDES.map((side) => `${n
 function sidesText(cs: CSSStyleDeclaration, property: "margin" | "padding" | "border"): string {
   const sides = sidesOf(cs, property);
   return compactSides(SIDES.map((side) => `${sides[side]}px`));
-}
-
-function componentRows(el: Element): Spec[] {
-  const component = componentOf(el);
-  if (!component) return [];
-  return [
-    {
-      name: component.inside ? "inside" : "component",
-      value: componentJsx(component),
-      note: component.sourcePath,
-    },
-  ];
 }
 
 function layoutRows(el: Element, cs: CSSStyleDeclaration, stylesOf: StyleLookup): Spec[] {
@@ -188,7 +175,6 @@ export function specSections(
   stylesOf: StyleLookup,
 ): SpecSection[] {
   return [
-    { label: "Component", rows: componentRows(el) },
     { label: "Layout", rows: layoutRows(el, cs, stylesOf) },
     { label: "Shape", rows: shapeRows(cs) },
     { label: "Text", rows: textRows(el, cs) },
@@ -218,8 +204,8 @@ export function compareSpecs(
   const before = flatten(base);
   const after = flatten(other);
   const keys = [...new Set([...before.keys(), ...after.keys()])]
-    // Two elements are never in the same place, and "which component" is not a spec.
-    .filter((key) => !key.endsWith("/on board") && !key.startsWith("Component/"))
+    // Two elements are never in the same place.
+    .filter((key) => !key.endsWith("/on board"))
     .filter((key) => before.get(key)?.value || after.get(key)?.value);
   const differs = (key: string) => (before.get(key)?.value ?? "") !== (after.get(key)?.value ?? "");
   const differences = keys.filter(differs).map((key) => ({

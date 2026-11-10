@@ -51,8 +51,8 @@ The side panel has four tabs:
 
 - **Specs**: what you need to build the element.
   - Where it is (board, parent) and what it is (tag, name, classes).
-  - The UI component it belongs to, written as you would use it in code,
-    with its props and source path, when the page says (see
+  - The UI component it belongs to: its name, the props the design passes
+    to it and its source path, when the page says (see
     [Components](#components)).
   - Size, and whether each axis is fixed, hugs its content or fills its
     parent.
@@ -178,6 +178,10 @@ which it is. There are three ways, checked in this order:
 
 A page that says nothing about components shows no component block;
 everything else works the same.
+
+Groma lists the props as the design passes them. It does not write the code
+for you: a design may use a prop your own component does not accept, and
+only your codebase knows that.
 
 ### For pages that re-render
 

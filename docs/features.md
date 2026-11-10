@@ -125,8 +125,12 @@ A reader returns null when it has nothing to say and must never throw. To
 support another framework, add a reader and list it in
 `src/specs/component.ts`.
 
-- Shows the component as JSX with its text, number and boolean props, and
-  its source path when the page provides one.
+- Shows the component's name, the props the design passes to it (text,
+  numbers and booleans) as a name/value list, and its source path when the
+  page provides one. The name and each value copy on click.
+- It does not suggest code (no JSX). A design can pass a prop the project's
+  own component does not accept, and the inspector cannot know a project's
+  API. It reports what the design uses and stops there.
 - "Component" when the element is the component's root; "Inside component"
   when it only sits inside one, with a button that pins the root.
 - The component's name is used for the element everywhere: header, chip,

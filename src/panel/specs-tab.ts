@@ -2,9 +2,9 @@
  * The Specs tab: what a developer needs to build the pinned element.
  *
  * From top to bottom: the element header (where it is, what it is, its
- * classes), then one block per subject: component, comparison, layout, box,
- * colours, typography, motion. A click on any value, token or code box
- * copies it.
+ * classes), then one block per subject: comparison, component, layout, box,
+ * colours, typography, motion. A click on any value, token or name copies
+ * it.
  *
  * The action bar above switches the unit, shows a grid, compares with
  * another element, copies a link to the element and picks a colour.
@@ -20,7 +20,7 @@ import { options } from "../options";
 import { createStyleLookup, type StyleLookup } from "../page-styles";
 import { pin, pinnedElement, rerender } from "../selection";
 import { formatColor, isColorValue, tokensWithColor } from "../specs/colors";
-import { componentAttributes, componentJsx, componentOf } from "../specs/component";
+import { componentOf, componentProps } from "../specs/component";
 import { motionItems } from "../specs/motion";
 import { compareSpecs, type Spec, type SpecSection, specSections } from "../specs/sections";
 import { declaredTokens, hasTokens, tokenModes, tokenPath } from "../specs/tokens";
@@ -167,21 +167,26 @@ function renderComponent({ el }: Context): void {
     "component",
   );
 
-  // The JSX line is the largest copy target: the whole box copies.
-  const code = h("div", component.inside ? "code is-inside" : "code");
-  const punct = (text: string) => code.appendChild(h("span", "punct", text));
-  punct("<");
-  code.appendChild(h("span", "name", component.name));
-  for (const { name, value } of componentAttributes(component)) {
-    punct(value ? ` ${name}=` : ` ${name}`);
-    code.append(value);
-  }
-  punct(">");
-  const mark = code.appendChild(h("span", "copy-mark"));
+  // The name, in a box that copies it.
+  const name = h("div", component.inside ? "code is-inside" : "code");
+  name.appendChild(h("span", "name", component.name));
+  const mark = name.appendChild(h("span", "copy-mark"));
   mark.append(icon("copy"), icon("check"));
   mark.firstElementChild!.classList.add("when-idle");
   mark.lastElementChild!.classList.add("when-copied");
-  section.appendChild(copyOnClick(code, componentJsx(component)));
+  section.appendChild(copyOnClick(name, component.name));
+
+  // The props the design passes. Not a suggestion of code: the inspector
+  // does not know which props the project's own component accepts.
+  const props = componentProps(component);
+  if (props.length) {
+    section.appendChild(h("div", "hint", "Props in this design"));
+    const list = section.appendChild(h("div", "props"));
+    for (const prop of props) {
+      list.appendChild(h("span", "prop-name", prop.name));
+      list.appendChild(copyOnClick(h("span", "value", prop.value), prop.value));
+    }
+  }
 
   if (component.sourcePath) {
     // The path may wrap at slashes, never inside a name.

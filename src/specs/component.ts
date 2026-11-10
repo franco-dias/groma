@@ -1,5 +1,5 @@
 /**
- * The UI component an element belongs to, with its props.
+ * The UI component an element belongs to, with the props the design gives it.
  *
  * Pages say this in different ways, so each way is a small "reader" in
  * `components/`. To support another framework, add a reader and list it
@@ -28,28 +28,22 @@ export function componentOf(el: Element): ComponentInfo | null {
   return null;
 }
 
-export interface JsxAttribute {
+export interface ComponentProp {
   name: string;
-  /** `"h4"`, `{3}` or "" for a bare boolean attribute. */
   value: string;
 }
 
-/** The props worth showing: text, numbers and booleans. */
-export function componentAttributes({ props }: ComponentInfo): JsxAttribute[] {
+/**
+ * The props the design passes to a component, as text. Only text, numbers
+ * and booleans: functions, objects and children say little in a list.
+ *
+ * These are what the design uses, not what a codebase should write: the
+ * inspector cannot know a project's component API, so it does not suggest
+ * code.
+ */
+export function componentProps({ props }: ComponentInfo): ComponentProp[] {
   return Object.entries(props)
     .filter(([name]) => !["children", "className", "style"].includes(name))
-    .flatMap(([name, value]) => {
-      if (typeof value === "string") return [{ name, value: `"${value}"` }];
-      if (typeof value === "number") return [{ name, value: `{${value}}` }];
-      if (typeof value === "boolean") return [{ name, value: value ? "" : "{false}" }];
-      return [];
-    });
-}
-
-/** `<Card tone="dark" elevated>`: the component as you would write it. */
-export function componentJsx(component: ComponentInfo): string {
-  const attributes = componentAttributes(component).map(({ name, value }) =>
-    value ? `${name}=${value}` : name,
-  );
-  return `<${[component.name, ...attributes].join(" ")}>`;
+    .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
+    .map(([name, value]) => ({ name, value: String(value) }));
 }

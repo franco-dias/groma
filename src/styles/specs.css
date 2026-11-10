@@ -487,10 +487,6 @@ button.crumb:hover {
   border: 1px dashed var(--ins-border-strong);
 }
 
-.code .punct {
-  color: var(--ins-fg-muted);
-}
-
 .code .name {
   color: var(--ins-token);
 }
@@ -525,6 +521,29 @@ button.crumb:hover {
 
 .code.is-copied .copy-mark .when-copied {
   display: block;
+}
+
+/* The props the design passes: name, value. */
+.props {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: var(--ins-s-5);
+  align-items: baseline;
+}
+
+.props > * {
+  min-height: var(--ins-row-sm);
+  line-height: var(--ins-row-sm);
+}
+
+.prop-name {
+  color: var(--ins-fg-muted);
+  font: 400 11px/22px var(--ins-font-mono);
+}
+
+.props .value {
+  justify-self: start;
+  overflow-wrap: anywhere;
 }
 
 .source {
