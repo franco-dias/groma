@@ -104,6 +104,16 @@ npm version minor
 `npm version` bumps the version, commits and tags. `npm publish` runs the
 tests and the build first (`prepublishOnly`) and ships only `dist/`.
 
-The package is not published yet. It is marked `"private": true` so it
-cannot be published by accident; remove that line to publish. After that,
-jsDelivr and unpkg serve the file from the URL shown above.
+Publishing is a deliberate step. Before it, `npm run release:check` does everything
+`npm publish` would (tests, build, packing) without publishing, and lists the
+files that would ship.
+
+1. Move the "Unreleased" notes in [CHANGELOG.md](../CHANGELOG.md) under the new
+   version and date.
+2. `npm version <patch|minor|major>` sets the version, commits and tags.
+3. `npm run release:check`, then `npm publish` (you need to be logged in to
+   npm, with two-factor authentication on).
+4. `git push --follow-tags`.
+
+A published version can never be reused, and unpublishing is restricted. Fix
+mistakes with a new version.

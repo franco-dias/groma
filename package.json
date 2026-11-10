@@ -1,7 +1,6 @@
 {
   "name": "groma",
-  "version": "0.2.0",
-  "private": true,
+  "version": "0.3.0",
   "description": "Groma: survey any design before you build it. A Figma-style inspector for design handoff pages: box model, specs, design tokens, components and distances on any HTML page.",
   "keywords": [
     "inspector",
@@ -28,7 +27,8 @@
     "test": "vitest run",
     "prepublishOnly": "npm run test && npm run build",
     "test:unit": "vitest run --project unit",
-    "test:browser": "vitest run --project browser"
+    "test:browser": "vitest run --project browser",
+    "release:check": "npm publish --dry-run"
   },
   "devDependencies": {
     "@vitest/browser-playwright": "^5.1.0",
@@ -36,5 +36,13 @@
     "typescript": "^5.9.3",
     "vite": "^8.3.7",
     "vitest": "^5.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franco-dias/groma.git"
+  },
+  "homepage": "https://github.com/franco-dias/groma#readme",
+  "bugs": {
+    "url": "https://github.com/franco-dias/groma/issues"
   }
 }

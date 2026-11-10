@@ -58,14 +58,15 @@ Notes:
 - Edits you make in the All CSS tab are stored in that browser only. They
   do not change the file.
 
-Once the package is published to npm, the script can also be loaded from a
-CDN with no copy step:
+The script is also on npm, so it can be loaded from a CDN with no copy step.
+Pin the version, so a later release cannot change a design file that already
+works:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/groma@0.2.0/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/groma@0.3.0/dist/groma.js"></script>
 ```
 
-The package is not published yet (see [Release](development.md#release)).
+unpkg serves the same file at `https://unpkg.com/groma@0.3.0/dist/groma.js`.
 
 A list of every shortcut is also inside the inspector: open the » menu in
 the panel's tab bar and choose "Shortcuts and tips".

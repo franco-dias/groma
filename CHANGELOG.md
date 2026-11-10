@@ -5,6 +5,8 @@ All notable changes to this package are recorded here. Versions follow
 
 ## Unreleased
 
+## 0.3.0 (2026-11-10)
+
 Made for any project: nothing about a framework or a design system is
 assumed by default.
 

@@ -103,8 +103,11 @@ inside `<head>`:
 ```
 
 It works on a file opened from disk and on a served page, in Chrome and
-other Chromium browsers. Groma is not on npm yet, so there is no CDN link
-to use for now.
+other Chromium browsers. Groma is on npm, so you can also load it from a CDN with no copy step:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/groma@0.3.0/dist/groma.js"></script>
+```
 
 ## Learn more
 
