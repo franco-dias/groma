@@ -15,9 +15,11 @@ assumed by default.
   menu in the tab bar. "Collapse panel" moved into the same menu.
 - Fixed: the grid only showed on dark boards. It now shows on any
   background, and no longer spills over the page around the board.
+- The npm package is `gromajs`: npm refused `groma` as too close to existing
+  names. The product, the file and the global keep the name Groma.
 - Licensed under MIT.
 - **Renamed to Groma.** Before the first publication, so there is no alias:
-  the package is `groma`, the file `dist/groma.js`, the global
+  the product is Groma, the file `dist/groma.js`, the global
   `window.Groma`, the host element `<groma-inspector>`, the script-tag
   marker `data-groma` and the storage keys `__groma_*`. Edits saved under
   the old `__live_inspector_*` keys are not carried over.

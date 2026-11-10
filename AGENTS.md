@@ -6,7 +6,8 @@ needs and the rules that keep the project working.
 ## What this is
 
 Groma is a Figma-style inspector for design handoff pages (the name is the
-Roman surveyor's instrument). The npm package is `groma`; in prose, write
+Roman surveyor's instrument). The npm package is `gromajs` (npm refused `groma` as too close to existing
+names); in prose, write
 "Groma" for the product and "the inspector" for the thing on the page. One script, added to any
 HTML page, lets an engineer hover and pin elements to read their box model,
 specs, design tokens and distances.
