@@ -45,7 +45,8 @@ The side panel has four tabs:
 
 - **Specs**: what you need to build the element.
   - Where it is (board, parent) and what it is (tag, name, classes).
-  - Its React component as JSX, with props and source path.
+  - The UI component it belongs to, written as you would use it in code,
+    with its props and source path, when the page exposes them.
   - Size, and whether each axis is fixed, hugs its content or fills its
     parent.
   - A box diagram of margin and padding.
@@ -61,9 +62,9 @@ The side panel has four tabs:
 - **Changes**: on a Claude Design export, compares the page with an older
   export file and lists the boards that changed.
 
-A click copies any value. Lengths are copied as bare numbers and spacing in
-the form MUI's `sx` prop takes (`py: 12, px: 16`), because the inspector was
-first built for React and MUI projects where one spacing step is 1px.
+A click copies any value. Lengths are shown and copied as bare numbers in
+px, or in rem. Clicking "margin" or "padding" in the box diagram copies the
+four sides in a short form (`py: 12, px: 16`).
 
 Every feature, with the rules it follows, is described in
 [docs/features.md](docs/features.md).
@@ -223,8 +224,13 @@ above.
   ignores selector specificity.
 - Sizing intent (fixed, hug, fill) is inferred from styles; children of CSS
   grid are treated as plain blocks.
-- Component names and source paths need React; source paths need the bundle
-  header a Claude Design export embeds.
+- The component block appears only on pages whose UI framework leaves
+  component information on the elements, and source paths only when the
+  page lists them. See [docs/features.md](docs/features.md) for what is
+  supported today.
+- The theme path beside a token is shown only for variables that follow a
+  naming convention the inspector knows; other tokens show the CSS variable
+  alone.
 - The Changes tab compares lines without their order, so a line that only
   moved is not reported.
 - The colour picker needs a Chromium browser. It has no test: the browser

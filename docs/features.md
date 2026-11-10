@@ -94,20 +94,21 @@ code box copies it.
   content) or `fill` (sized by the parent). Derived from declared styles
   and the parent's flex settings.
 - **Box**: margin around padding around the content size. Clicking
-  "margin" or "padding" copies it as MUI `sx` (`py: 12, px: 16`).
+  "margin" or "padding" copies the four sides in a short form
+  (`py: 12, px: 16`, the form MUI's `sx` prop takes).
 - **Colors** (feature 7).
 - **Typography**: family, weight, size, line height, tracking. Only for
   elements with text of their own.
 - **Motion**: one row per transition or animation, with its easing curve.
-- Lengths show as bare numbers in px (one MUI spacing step is 1px), or in
-  rem. The unit switch is in the action bar.
+- Lengths show as bare numbers in px, or in rem. The unit switch is in the action bar.
 
 Code: `src/panel/specs-tab.ts`, `src/specs/*`. Tests: `tests/specs.test.ts`,
 unit tests in `src/specs/`.
 
 ## 6. Component
 
-On React pages, the component an element belongs to.
+The UI component an element belongs to. Supported today: pages rendered
+with React. On any other page the block is absent.
 
 - Shows the component as JSX with its text, number and boolean props, and
   its source path when the page provides one.
@@ -127,8 +128,9 @@ Tests: `tests/component.test.ts`.
 Each colour is a row: swatch, hex, alpha, its role (Background, Border,
 Text, Fill, Stroke, Picked).
 
-- **Declared token**: the row lists the MUI theme path
-  (`palette.background.paper`) when the variable starts with `--mui-`, then
+- **Declared token**: the row lists a theme path
+  (`palette.background.paper`) when the variable follows a known naming
+  convention (today: MUI's `--mui-` prefix), then
   the CSS variable, then the token's value in every scope that sets it. The
   scope the element is in stands out.
 - Text and icon colours usually come from an ancestor; the lookup walks up
