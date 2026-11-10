@@ -72,6 +72,37 @@ Every feature, with the rules it follows, is described in
 
 ## Use it on a design file
 
+There are two ways: run a command that opens the file with the inspector
+attached, or add the script to the file yourself.
+
+### Open a file with one command
+
+From this repo, after [setting up](#set-up):
+
+```bash
+npm run inspect -- path/to/design.html
+```
+
+This builds the inspector, serves the file's folder on `localhost:4777`
+with the inspector attached to that page, and opens the browser. The file
+is not edited, and only your machine can reach the server. Ctrl+C stops it.
+
+| Option | What it does |
+| --- | --- |
+| `--copy=css\|sx` | What a click on a length copies (see [Settings](#settings)) |
+| `--token-prefix=<prefix>` | Shows a theme path for tokens with this prefix |
+| `--port=<number>` | The port to serve on; the default is 4777 |
+| `--no-open` | Does not open the browser |
+
+```bash
+npm run inspect -- design.html --copy=sx --token-prefix=--ds-
+```
+
+Edits made in the All CSS tab are stored per address, so keep the same
+port to find them again.
+
+### Add the script to the file
+
 You need the built script, `dist/live-inspector.js`. Build it once (see
 [Set up](#set-up)), then:
 
@@ -184,6 +215,7 @@ dark theme scope, tokens, and one colour with no token.
 | Script | What it does |
 | --- | --- |
 | `npm run serve` | Demo page with live reload |
+| `npm run inspect -- <file.html>` | Opens any HTML file with the inspector attached |
 | `npm run build` | Typechecks, then writes `dist/live-inspector.js` |
 | `npm run typecheck` | TypeScript only |
 | `npm test` | Every test: unit and browser |
@@ -229,6 +261,7 @@ Start at [src/main.ts](src/main.ts): it only starts the features.
 | `src/export-diff.ts` | Comparing two Claude Design exports |
 | `src/icons.ts` | The icons, as SVG drawings |
 | `src/styles/` | The stylesheets, one per area; `tokens.css` holds every colour and size |
+| `scripts/` | `inspect.mjs`, the command that opens a file with the inspector attached |
 | `tests/` | Browser tests, one file per feature |
 | `docs/features.md` | Every feature and the rules it follows |
 

@@ -32,6 +32,7 @@ What each feature does, with the rules it must keep, is in
 
 ```bash
 npm run serve        # demo page with live reload
+npm run inspect -- <file.html>   # any HTML file with the inspector attached
 npm test             # unit + browser tests
 npm run typecheck
 npm run build        # typecheck, then dist/live-inspector.js
@@ -178,7 +179,12 @@ Listed in the README. The ones most likely to bite:
 
 ## Trying a change on a real handoff
 
-The demo page (`npm run serve`) covers most cases. For a real export, build
-and add `<script src="…/dist/live-inspector.js"></script>` as the first tag
-in the `<head>` of a copy of the export, then open it over HTTP. Exports
-render boards only when they scroll into view.
+The demo page (`npm run serve`) covers most cases. For a real file:
+
+```bash
+npm run inspect -- path/to/export.html --no-open
+```
+
+It serves the file with the built inspector attached and does not edit it
+(`scripts/inspect.mjs`, Node built-ins only). Exports render boards only
+when they scroll into view.

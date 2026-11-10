@@ -13,6 +13,8 @@ assumed by default.
   `sx` copy format: `data-copy="sx"` on the script tag.
 - **Changed**: a token's theme path is shown only for prefixes the page
   configures (`data-token-prefix`). No prefix is built in any more.
+- New: `npm run inspect -- <file.html>` opens any HTML file with the
+  inspector attached, without editing it.
 - New: `LiveInspector.configure()` and the script-tag settings.
 - New: components can be declared in the markup (`data-component`,
   `data-source`, `data-props`), and custom elements are recognised as

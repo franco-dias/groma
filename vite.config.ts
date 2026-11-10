@@ -20,7 +20,7 @@ export default defineConfig({
       {
         // Pure logic, next to the code it tests. Runs in Node.
         extends: true,
-        test: { name: "unit", include: ["src/**/*.test.ts"] },
+        test: { name: "unit", include: ["src/**/*.test.ts", "scripts/**/*.test.mjs"] },
       },
       {
         // Behaviour on a real page: layout, computed styles, events.

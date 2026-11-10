@@ -19,6 +19,7 @@
   ],
   "scripts": {
     "serve": "vite",
+    "inspect": "vite build --logLevel warn && node scripts/inspect.mjs",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
