@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { getSelector } from "../src/edits/selector";
 import { all, el, inspector, openTab, page, pressKey, reset, texts, typeOver, ui, wait } from "./helpers";
 
-const STORE = "__live_inspector_overrides:" + location.pathname;
+const STORE = "__groma_overrides:" + location.pathname;
 const savedEdits = (): Record<string, Record<string, string>> =>
   JSON.parse(localStorage.getItem(STORE) ?? "{}");
 

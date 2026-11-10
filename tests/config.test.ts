@@ -8,7 +8,7 @@ let tag: HTMLScriptElement;
 function scriptTag(attributes: Record<string, string>): void {
   tag = document.createElement("script");
   tag.type = "text/plain";
-  tag.dataset.liveInspector = "";
+  tag.dataset.groma = "";
   Object.assign(tag.dataset, attributes);
   document.head.appendChild(tag);
   configureFromScriptTag();

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { all, click, el, hover, inspector, page, pressEscape, reset, texts, ui } from "./helpers";
 
 const dock = (): string =>
-  getComputedStyle(document.querySelector("live-inspector")!).getPropertyValue("--ins-dock");
+  getComputedStyle(document.querySelector("groma-inspector")!).getPropertyValue("--ins-dock");
 
 beforeEach(() => {
   reset();

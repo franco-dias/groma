@@ -60,7 +60,7 @@ Opens when an element is pinned, docked to the right edge.
 - The left edge resizes the panel between 320 and 560px.
 - Close unpins the element; the outline and the grid go away.
 - Width, open tab and unit are remembered per origin
-  (`localStorage["__live_inspector_panel"]`).
+  (`localStorage["__groma_panel"]`).
 - Keys typed in the panel do not reach the page's own shortcuts.
 
 Code: `src/panel/panel.ts`, `layout.ts`, `panel.html`, `src/styles/panel.css`.
@@ -197,7 +197,7 @@ editable.
 - Edits are saved in `localStorage`, per page path, keyed by a selector
   that leads back to the same element (ids and classes escaped).
 - Saved edits are replayed on load. Pages that render late call
-  `LiveInspector.replayOverrides(root?)`.
+  `Groma.replayOverrides(root?)`.
 - If storage is blocked or full, the edit still applies.
 
 Code: `src/panel/css-tab.ts`, `src/edits/*`. Tests: `tests/edits.test.ts`.
@@ -238,11 +238,11 @@ Tests: `tests/changes.test.ts`, `src/export-diff.test.ts`.
 
 ## 14. API for the host page
 
-`window.LiveInspector`, typed as `LiveInspectorApi` in `src/main.ts`:
+`window.Groma`, typed as `GromaApi` in `src/main.ts`:
 `pin(el)`, `pinnedElement()`, `replayOverrides(root?)`, `highlight(el)`,
 `configure(settings?)`.
-It is the only global the script creates. The Cadence design canvas calls
-it, so treat it as a public contract.
+It is the only global the script creates. Host pages call it, so treat it
+as a public contract.
 
 ## 15. Settings
 
@@ -253,7 +253,7 @@ are optional, and the defaults assume nothing about the project.
 - **Token prefixes** (`data-token-prefix`, `tokenPrefixes`): none by
   default. A token with a configured prefix also shows its dotted path.
 - Read from the script tag at start; changed later with
-  `LiveInspector.configure()`, which applies to the open panel at once.
+  `Groma.configure()`, which applies to the open panel at once.
   `configure()` with no argument restores the defaults.
 - Unknown values are ignored.
 

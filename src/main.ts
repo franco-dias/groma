@@ -1,5 +1,5 @@
 /**
- * live-inspector — a Figma-style inspector for any HTML page.
+ * Groma — a Figma-style inspector for any HTML page.
  *
  *   Alt + hover         box model of the hovered element, with a name chip
  *   Alt + click         pin the element: the side panel opens
@@ -23,7 +23,7 @@ import { startPanel } from "./panel/panel";
 import { pin, pinnedElement } from "./selection";
 
 /** For pages that re-render and need to bring the inspector along. */
-export interface LiveInspectorApi {
+export interface GromaApi {
   /** Pins an element, as Alt+click does. */
   pin(el: Element): void;
   /** The element pinned in the panel, or null. */
@@ -51,8 +51,8 @@ function start(): void {
   window.addEventListener("load", () => replayOverrides());
   pinFromLink();
 
-  window.LiveInspector = { pin, pinnedElement, replayOverrides, highlight, configure };
+  window.Groma = { pin, pinnedElement, replayOverrides, highlight, configure };
 }
 
 // A page may include the script twice (a tag in the page and one injected).
-if (!window.LiveInspector) start();
+if (!window.Groma) start();

@@ -103,7 +103,7 @@ describe("layout", () => {
 
     ui('[data-option="unit"] [data-value="rem"]')!.click();
     expect(cells().Gap).toBe("1rem");
-    expect(JSON.parse(localStorage.getItem("__live_inspector_panel")!).unit).toBe("rem");
+    expect(JSON.parse(localStorage.getItem("__groma_panel")!).unit).toBe("rem");
   });
 
   it("shows radius and border", () => {

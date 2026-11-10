@@ -27,7 +27,7 @@ export function el<T extends HTMLElement = HTMLElement>(selector: string): T {
   return found;
 }
 
-const root = (): ShadowRoot => document.querySelector("live-inspector")!.shadowRoot!;
+const root = (): ShadowRoot => document.querySelector("groma-inspector")!.shadowRoot!;
 
 /** One node of the inspector's UI, or null. */
 export const ui = <T extends HTMLElement = HTMLElement>(selector: string): T | null =>
@@ -41,7 +41,7 @@ export const all = <T extends HTMLElement = HTMLElement>(selector: string): T[] 
 export const texts = (selector: string): string[] =>
   all(selector).map((node) => (node.textContent ?? "").replace(/\s+/g, " ").trim());
 
-export const inspector = () => window.LiveInspector!;
+export const inspector = () => window.Groma!;
 
 // ── what a user does ───────────────────────────────────────────
 

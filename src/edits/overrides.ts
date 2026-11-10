@@ -8,8 +8,8 @@
 import { readStore, writeStore } from "./storage";
 
 // Scoped by page: every file:// page shares one localStorage.
-const STYLE_KEY = "__live_inspector_overrides:" + location.pathname;
-const CONTENT_KEY = "__live_inspector_html:" + location.pathname;
+const STYLE_KEY = "__groma_overrides:" + location.pathname;
+const CONTENT_KEY = "__groma_html:" + location.pathname;
 
 type StyleOverrides = Record<string, Record<string, string>>;
 type ContentOverrides = Record<string, string>;

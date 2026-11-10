@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { el, frames, inspector, openTab, page, pressKey, reset, texts, ui } from "./helpers";
 
 const shown = (selector: string): boolean => getComputedStyle(ui(selector)!).display !== "none";
-const savedLayout = () => JSON.parse(localStorage.getItem("__live_inspector_panel") ?? "{}");
+const savedLayout = () => JSON.parse(localStorage.getItem("__groma_panel") ?? "{}");
 
 function dragResizeHandle(by: number): void {
   const handle = ui(".resize")!;
@@ -129,7 +129,7 @@ describe("pinned outline", () => {
     expect(shown(".outline-pinned")).toBe(true);
   });
 
-  it("can be moved to another element by the page (LiveInspector.highlight)", async () => {
+  it("can be moved to another element by the page (Groma.highlight)", async () => {
     inspector().pin(el(".card"));
     const fixture = document.querySelector("#fixture")!;
     inspector().highlight(fixture);

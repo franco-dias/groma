@@ -8,6 +8,12 @@ All notable changes to this package are recorded here. Versions follow
 Made for any project: nothing about a framework or a design system is
 assumed by default.
 
+- **Renamed to Groma.** Before the first publication, so there is no alias:
+  the package is `groma`, the file `dist/groma.js`, the global
+  `window.Groma`, the host element `<groma-inspector>`, the script-tag
+  marker `data-groma` and the storage keys `__groma_*`. Edits saved under
+  the old `__live_inspector_*` keys are not carried over.
+
 - **Changed**: a click on a length now copies CSS (`24px`,
   `padding: 12px 16px`). The earlier form (`24`, `py: 12, px: 16`) is the
   `sx` copy format: `data-copy="sx"` on the script tag.
@@ -15,7 +21,7 @@ assumed by default.
   configures (`data-token-prefix`). No prefix is built in any more.
 - New: `npm run inspect -- <file.html>` opens any HTML file with the
   inspector attached, without editing it.
-- New: `LiveInspector.configure()` and the script-tag settings.
+- New: `Groma.configure()` and the script-tag settings.
 - New: components can be declared in the markup (`data-component`,
   `data-source`, `data-props`), and custom elements are recognised as
   components. React pages work as before.
@@ -50,7 +56,7 @@ The interface was redesigned from the "Inspector States" design file.
 
 ## 0.1.0
 
-First packaged version, moved out of the `cadence-hub` design canvas.
+First packaged version.
 
 - Inspect mode: box model overlay, tooltip, distances from the pinned
   element, layers-under-pointer menu.

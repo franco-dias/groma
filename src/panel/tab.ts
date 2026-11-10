@@ -11,7 +11,7 @@ export interface Tab {
 /** An element of panel.html. Throws when the markup and the code disagree. */
 export function part<T extends HTMLElement = HTMLElement>(panel: HTMLElement, selector: string): T {
   const node = panel.querySelector<T>(selector);
-  if (!node) throw new Error(`live-inspector: panel.html has no "${selector}"`);
+  if (!node) throw new Error(`groma: panel.html has no "${selector}"`);
   return node;
 }
 

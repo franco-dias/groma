@@ -7,7 +7,7 @@
 import { h } from "./dom";
 import styles from "./styles/index.css?inline";
 
-const HOST_TAG = "live-inspector";
+const HOST_TAG = "groma-inspector";
 
 let host: HTMLElement | null = null;
 

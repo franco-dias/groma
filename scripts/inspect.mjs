@@ -40,11 +40,11 @@ const page = resolve(file);
 if (!existsSync(page)) fail(`No such file: ${page}`);
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), "..", "dist");
-if (!existsSync(join(dist, "live-inspector.js"))) fail("Build the inspector first: npm run build");
+if (!existsSync(join(dist, "groma.js"))) fail("Build the inspector first: npm run build");
 
 const root = dirname(page);
 /** The inspector is served under a path no design file is likely to use. */
-const INSPECTOR_PATH = "/__live-inspector/";
+const INSPECTOR_PATH = "/__groma/";
 const TYPES = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
@@ -88,7 +88,7 @@ async function respond(pathname) {
   const type = TYPES[extname(target).toLowerCase()] ?? "application/octet-stream";
   if (target !== page) return { body, type };
   const settings = { copy: flags.copy, "token-prefix": flags["token-prefix"] };
-  const html = withInspector(body.toString("utf8"), INSPECTOR_PATH + "live-inspector.js", settings);
+  const html = withInspector(body.toString("utf8"), INSPECTOR_PATH + "groma.js", settings);
   return { body: html, type };
 }
 

@@ -4,9 +4,9 @@
  *
  * Set it on the script tag:
  *
- *   <script src="live-inspector.js" data-copy="sx" data-token-prefix="--ds-"></script>
+ *   <script src="groma.js" data-copy="sx" data-token-prefix="--ds-"></script>
  *
- * or from code: `LiveInspector.configure({ copyFormat: "sx" })`.
+ * or from code: `Groma.configure({ copyFormat: "sx" })`.
  */
 import { rerender } from "./selection";
 
@@ -46,7 +46,7 @@ export function configure(changes: Partial<Config> = DEFAULTS): void {
 /** Reads the settings from the script tag that loaded the inspector. */
 export function configureFromScriptTag(): void {
   // A module script has no `currentScript`; such pages mark the tag instead.
-  const tag = document.currentScript ?? document.querySelector("script[data-live-inspector]");
+  const tag = document.currentScript ?? document.querySelector("script[data-groma]");
   if (!(tag instanceof HTMLElement)) return;
   configure({
     copyFormat: tag.dataset.copy as CopyFormat | undefined,

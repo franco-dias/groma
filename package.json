@@ -1,19 +1,22 @@
 {
-  "name": "live-inspector",
+  "name": "groma",
   "version": "0.2.0",
   "private": true,
-  "description": "Figma-style inspector for design handoff pages: box model, specs, design tokens and distances on any HTML page.",
+  "description": "Groma: survey any design before you build it. A Figma-style inspector for design handoff pages: box model, specs, design tokens, components and distances on any HTML page.",
   "keywords": [
     "inspector",
     "design-handoff",
     "design-tokens",
-    "devtools"
+    "devtools",
+    "figma",
+    "dev-mode",
+    "ai-design"
   ],
   "license": "UNLICENSED",
   "type": "module",
-  "main": "./dist/live-inspector.js",
-  "unpkg": "./dist/live-inspector.js",
-  "jsdelivr": "./dist/live-inspector.js",
+  "main": "./dist/groma.js",
+  "unpkg": "./dist/groma.js",
+  "jsdelivr": "./dist/groma.js",
   "files": [
     "dist"
   ],

@@ -1,11 +1,13 @@
-# live-inspector: guide for agents
+# Groma: guide for agents
 
 Read this before changing anything. It is the context a new maintainer
 needs and the rules that keep the project working.
 
 ## What this is
 
-A Figma-style inspector for design handoff pages. One script, added to any
+Groma is a Figma-style inspector for design handoff pages (the name is the
+Roman surveyor's instrument). The npm package is `groma`; in prose, write
+"Groma" for the product and "the inspector" for the thing on the page. One script, added to any
 HTML page, lets an engineer hover and pin elements to read their box model,
 specs, design tokens and distances.
 
@@ -19,7 +21,7 @@ specs, design tokens and distances.
   which must return null on pages it does not understand. If you are about
   to write the name of a framework or a design system outside those two
   places, stop: it belongs in a setting or a reader.
-- **How it ships**: `dist/live-inspector.js`, one self-contained file, to be
+- **How it ships**: `dist/groma.js`, one self-contained file, to be
   served from a CDN and attached to exported design pages.
 - **Where it runs**: inside pages we do not control. This shapes most of
   the rules below.
@@ -35,7 +37,7 @@ npm run serve        # demo page with live reload
 npm run inspect -- <file.html>   # any HTML file with the inspector attached
 npm test             # unit + browser tests
 npm run typecheck
-npm run build        # typecheck, then dist/live-inspector.js
+npm run build        # typecheck, then dist/groma.js
 ```
 
 Before you say a change is done: `npm test` and `npm run build` both pass.
@@ -52,7 +54,7 @@ The browser tests need Google Chrome installed; they do not download one.
 2. **All UI lives in the shadow root.** Create top-level nodes with
    `mount()` from `src/root.ts`. Never append inspector nodes to the page's
    DOM, and never add styles to the page.
-3. **One global: `window.LiveInspector`.** Nothing else on `window`.
+3. **One global: `window.Groma`.** Nothing else on `window`.
 4. **Do nothing until the user inspects.** With Alt up and the lock off,
    the page must behave exactly as without the script. The only standing
    UI is the launcher pill.
@@ -135,13 +137,15 @@ The browser tests need Google Chrome installed; they do not download one.
 
 ### Compatibility you must not break silently
 
-- **`window.LiveInspector`** (`LiveInspectorApi` in `src/main.ts`): another
-  project calls it. Removing or changing a method is a major version.
+- **`window.Groma`** (`GromaApi` in `src/main.ts`): host pages call it.
+  Removing or changing a method is a major version.
+- **Names in the page**: the host element is `<groma-inspector>` and the
+  script tag marker is `data-groma`. Pages and tests select them.
 - **Settings** (`data-copy`, `data-token-prefix` and `configure()`): pages
   in the wild carry these attributes. Changing a default or a value's
   meaning is a major version.
-- **Storage keys**: `__live_inspector_overrides:<path>`,
-  `__live_inspector_html:<path>` and `__live_inspector_panel`. Renaming
+- **Storage keys**: `__groma_overrides:<path>`,
+  `__groma_html:<path>` and `__groma_panel`. Renaming
   one loses users' saved edits; migrate, or do not rename.
 - **Saved selectors** (`src/edits/selector.ts`): changing their shape
   orphans saved edits.

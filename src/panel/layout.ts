@@ -2,7 +2,7 @@
 import { readStore, writeStore } from "../edits/storage";
 import { options } from "../options";
 
-const LAYOUT_KEY = "__live_inspector_panel";
+const LAYOUT_KEY = "__groma_panel";
 const TAB_IDS = ["specs", "css", "layers", "changes"];
 
 interface Layout {

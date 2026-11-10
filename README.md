@@ -1,10 +1,16 @@
-# live-inspector
+# Groma
 
-A Figma-style inspector for design handoff pages. Add one script to an HTML
-design file and inspect it the way you would inspect a frame in Figma's Dev
-Mode: box model, specs, design tokens, components and distances.
+Survey any design before you build it.
+
+Groma is a Figma-style inspector for design handoff pages. Add one script to
+an HTML design file and inspect it the way you would inspect a frame in
+Figma's Dev Mode: box model, specs, design tokens, components and distances.
 
 It has no runtime dependencies and ships as a single file.
+
+> A *groma* was the Roman surveyor's instrument: a staff with a cross and
+> plumb lines, used to lay out straight lines and right angles before roads
+> and cities were built. This one does the same job on a design.
 
 ## Why this exists
 
@@ -24,7 +30,7 @@ design file used to give them.
   you need to see what changed between two exports without comparing them
   by eye.
 
-live-inspector puts those answers on the page. It reads the design the way
+Groma puts those answers on the page. It reads the design the way
 an engineer needs it: the value to type, the token to use, the component to
 import, the distance to the next element.
 
@@ -103,15 +109,15 @@ port to find them again.
 
 ### Add the script to the file
 
-You need the built script, `dist/live-inspector.js`. Build it once (see
+You need the built script, `dist/groma.js`. Build it once (see
 [Set up](#set-up)), then:
 
-1. Copy `dist/live-inspector.js` next to your HTML file.
+1. Copy `dist/groma.js` next to your HTML file.
 2. Add the script as the first tag inside `<head>`:
 
    ```html
    <head>
-     <script src="live-inspector.js"></script>
+     <script src="groma.js"></script>
      …
    </head>
    ```
@@ -133,7 +139,7 @@ Once the package is published to npm, the script can also be loaded from a
 CDN with no copy step:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/live-inspector@0.2.0/dist/live-inspector.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/groma@0.2.0/dist/groma.js"></script>
 ```
 
 The package is not published yet (see [Release](#release)).
@@ -143,7 +149,7 @@ The package is not published yet (see [Release](#release)).
 Optional. Put them on the script tag:
 
 ```html
-<script src="live-inspector.js" data-copy="sx" data-token-prefix="--ds-"></script>
+<script src="groma.js" data-copy="sx" data-token-prefix="--ds-"></script>
 ```
 
 | Attribute | Values | What it changes |
@@ -152,7 +158,7 @@ Optional. Put them on the script tag:
 | `data-token-prefix` | one or more prefixes, separated by spaces | Tokens with that prefix also show their path in the theme object the variables mirror: with `--ds-`, `--ds-color-text-primary` shows `color.text.primary` |
 
 The same settings can be changed from code with
-`LiveInspector.configure({ copyFormat: "sx", tokenPrefixes: ["--ds-"] })`.
+`Groma.configure({ copyFormat: "sx", tokenPrefixes: ["--ds-"] })`.
 
 ### Components
 
@@ -175,7 +181,7 @@ everything else works the same.
 
 ### For pages that re-render
 
-A page can talk to the inspector through `window.LiveInspector`:
+A page can talk to the inspector through `window.Groma`:
 
 | Method | What it does |
 | --- | --- |
@@ -199,7 +205,7 @@ npm install
 npm run build
 ```
 
-The build writes `dist/live-inspector.js` (about 78 KB, 23 KB gzipped) with
+The build writes `dist/groma.js` (about 78 KB, 23 KB gzipped) with
 the styles and the panel markup inlined, plus a source map.
 
 ## Develop
@@ -216,7 +222,7 @@ dark theme scope, tokens, and one colour with no token.
 | --- | --- |
 | `npm run serve` | Demo page with live reload |
 | `npm run inspect -- <file.html>` | Opens any HTML file with the inspector attached |
-| `npm run build` | Typechecks, then writes `dist/live-inspector.js` |
+| `npm run build` | Typechecks, then writes `dist/groma.js` |
 | `npm run typecheck` | TypeScript only |
 | `npm test` | Every test: unit and browser |
 | `npm run test:unit` | Pure logic only, in Node; fast |
