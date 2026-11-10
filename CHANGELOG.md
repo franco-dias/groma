@@ -7,7 +7,9 @@ All notable changes to this package are recorded here. Versions follow
 
 - Changed: a heavier logo. The mark sits on a dark tile, with a thick bar and
   staff against thin plumb lines, solid plumb bobs and a red dimension line.
-  Same files, same animation, so the README needs no change.
+- New: a horizontal logo with the name, in Geist SemiBold, in a light and a dark
+  version (`docs/images/`). The README shows it as its title and follows the
+  reader's theme.
 
 ## 0.3.0 (2026-11-10)
 

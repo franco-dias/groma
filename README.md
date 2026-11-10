@@ -1,6 +1,9 @@
-<img src="docs/images/groma-logo.svg" width="88" height="88" alt="Groma logo: a surveyor's groma with two plumb lines and a red measuring line" />
-
-# Groma
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/groma-logo-horizontal-dark.svg">
+    <img src="docs/images/groma-logo-horizontal-light.svg" height="72" alt="Groma">
+  </picture>
+</h1>
 
 Survey any design before you build it.
 
@@ -121,4 +124,5 @@ other Chromium browsers. Groma is on npm, so you can also load it from a CDN wit
 
 ## Licence
 
-[MIT](LICENSE).
+[MIT](LICENSE). The name in the logo is set in Geist SemiBold, converted to
+outlines, under the [SIL Open Font License 1.1](https://openfontlicense.org).
