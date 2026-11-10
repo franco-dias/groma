@@ -15,7 +15,7 @@ describe("» menu", () => {
     expect(ui(".more-menu")!.hidden).toBe(true);
     ui(".more-button")!.click();
     expect(ui(".more-menu")!.hidden).toBe(false);
-    expect(texts(".more-item")).toEqual(["Shortcuts and tips", "Collapse panel"]);
+    expect(texts(".more-item")).toEqual(["Shortcuts and tips", "Push the page aside", "Collapse panel"]);
   });
 
   it("closes on a click elsewhere in the panel, and on Esc", () => {

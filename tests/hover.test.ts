@@ -60,6 +60,17 @@ describe("inspect mode (Alt)", () => {
     expect(all(".overlay > div")[0]).toBe(first);
   });
 
+  it("draws again when the page moves the hovered element under a still pointer", () => {
+    holdAlt();
+    hover(el(".card"));
+    const before = boxes("content-box")[0].left;
+
+    el(".card").style.position = "relative";
+    el(".card").style.left = "60px";
+    hover(el(".card"));
+    expect(boxes("content-box")[0].left).toBe(before + 60);
+  });
+
   it("clears when Alt is released", () => {
     holdAlt();
     hover(el(".card"));

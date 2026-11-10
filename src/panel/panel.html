@@ -20,8 +20,11 @@
 
 <!-- The » menu: what does not fit in the tab bar. -->
 <div class="more-menu" role="menu" hidden>
-  <button class="more-item" role="menuitem" data-tab="reference">Shortcuts and tips</button>
-  <button class="more-item collapse" role="menuitem">Collapse panel</button>
+  <button class="more-item" role="menuitem" data-tab="reference"><span class="slot"></span>Shortcuts and tips</button>
+  <button class="more-item" role="menuitemcheckbox" aria-checked="true" data-action="push" title="Take the panel's width out of the page instead of covering it">
+    <svg class="icon check" width="12" height="12" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>Push the page aside
+  </button>
+  <button class="more-item collapse" role="menuitem"><span class="slot"></span>Collapse panel</button>
 </div>
 
 <!-- ───────────── Specs: what a developer needs to build the element ───────────── -->

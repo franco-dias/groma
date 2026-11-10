@@ -2,7 +2,12 @@
 
 export type Unit = "px" | "rem";
 
+/** "push": the panel takes its width out of the page. "float": it covers the page. */
+export type PanelMode = "push" | "float";
+
 export const options = {
+  /** Whether the side panel pushes the page aside or floats over it. */
+  panelMode: "push" as PanelMode,
   /** How the Specs tab shows and copies lengths. */
   unit: "px" as Unit,
   /** Artboard pixels between grid lines; 0 turns the grid off. */

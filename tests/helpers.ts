@@ -120,6 +120,8 @@ export function reset(): void {
     ui('[data-option="unit"] [data-value="px"]')!.click();
     ui('[data-option="grid"] [data-value="0"]')!.click();
     openTab("specs");
+    const push = ui('[data-action="push"]')!;
+    if (push.getAttribute("aria-checked") === "false") push.click();
     ui(".close")!.click();
   }
   inspector().configure();

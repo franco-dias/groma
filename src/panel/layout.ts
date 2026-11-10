@@ -1,4 +1,4 @@
-/** Panel width, open tab and unit: remembered for every page on this origin. */
+/** Panel width, open tab, unit and mode: remembered for every page on this origin. */
 import { readStore, writeStore } from "../edits/storage";
 import { options } from "../options";
 
@@ -10,6 +10,7 @@ interface Layout {
   width: string;
   tab: string;
   unit: string;
+  mode: string;
 }
 
 export function loadLayout(panel: HTMLElement): void {
@@ -17,6 +18,7 @@ export function loadLayout(panel: HTMLElement): void {
   panel.dataset.tab = layout.tab && TAB_IDS.includes(layout.tab) ? layout.tab : "specs";
   panel.style.width = layout.width ?? "";
   options.unit = layout.unit === "rem" ? "rem" : "px";
+  options.panelMode = layout.mode === "float" ? "float" : "push";
 }
 
 export function saveLayout(panel: HTMLElement): void {
@@ -25,6 +27,7 @@ export function saveLayout(panel: HTMLElement): void {
     width: panel.style.width,
     tab: TAB_IDS.includes(open) ? open : (readStore<Layout>(LAYOUT_KEY).tab ?? "specs"),
     unit: options.unit,
+    mode: options.panelMode,
   };
   writeStore(LAYOUT_KEY, layout);
 }

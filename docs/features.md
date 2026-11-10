@@ -51,22 +51,35 @@ Code: `src/overlay/distances.ts`. Tests: `tests/measure.test.ts`.
 
 ## 3. Side panel
 
-Opens when an element is pinned, docked to the right edge.
+Opens when an element is pinned, docked to the right edge. It either pushes
+the page aside or floats over it (see below).
 
 - Four tabs: Specs, All CSS, Layers, Changes. The Changes tab is hidden on
   pages that are not Claude Design exports.
-- The » button opens a small menu: "Shortcuts and tips" (feature 16) and
-  "Collapse panel". A click elsewhere in the panel, or Esc, closes it.
+- The » button opens a small menu: "Shortcuts and tips" (feature 16),
+  "Push the page aside" and "Collapse panel". A click elsewhere in the
+  panel, or Esc, closes it.
+- **Push the page aside** is on by default. The panel then takes its width
+  out of the page instead of covering it: Groma sets one inline
+  `margin-right` on `<html>` (the page's own margin plus the panel's width)
+  and puts the page's value back when the panel closes or the user switches
+  to float. It follows the panel as it collapses (28px) and is resized.
+  Switched off, the panel floats over the page.
+- The page's own `margin-right` on `<html>` is the only thing push mode
+  touches. It cannot move elements fixed to the right edge of the window, and
+  layouts sized in `vw` and media queries still see the full window width.
+  That is why float exists.
 - Collapse leaves a 28px rail that names the element; clicking the rail or
   pinning another element expands it.
 - The left edge resizes the panel between 320 and 560px.
 - Close unpins the element; the outline and the grid go away.
-- Width, open tab and unit are remembered per origin
+- Width, open tab, unit and push/float mode are remembered per origin
   (`localStorage["__groma_panel"]`).
 - Keys typed in the panel do not reach the page's own shortcuts.
 
-Code: `src/panel/panel.ts`, `layout.ts`, `panel.html`, `src/styles/panel.css`.
-Tests: `tests/panel.test.ts`.
+Code: `src/panel/panel.ts`, `layout.ts`, `panel.html`, `src/page-shift.ts`,
+`src/styles/panel.css`.
+Tests: `tests/panel.test.ts`, `tests/page-shift.test.ts`.
 
 ## 4. Pinned outline and grid
 

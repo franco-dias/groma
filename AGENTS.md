@@ -70,7 +70,10 @@ The browser tests need Google Chrome installed; they do not download one.
    the page must behave exactly as without the script. The only standing
    UI is the launcher pill.
 5. **Never change the page except for the user's own edits**, and keep what
-   the page had so Reset can restore it (`src/edits/overrides.ts`).
+   the page had so Reset can restore it (`src/edits/overrides.ts`). One
+   exception, by design: in push mode the panel sets an inline `margin-right`
+   on `<html>`, remembers the page's value and puts it back when the panel
+   closes (`src/page-shift.ts`). Do not add other page changes.
 6. **The page changes under you.** Pages re-render and replace elements;
    boards render late; `<body>` may not exist yet at start. Check
    `isConnected`, use `whenBodyExists`, and never assume an element found

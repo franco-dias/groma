@@ -5,6 +5,17 @@ All notable changes to this package are recorded here. Versions follow
 
 ## Unreleased
 
+- New: the side panel pushes the page aside instead of covering it, and the
+  » menu has a "Push the page aside" switch to float it again. The choice is
+  remembered. Push is the default, so the panel no longer hides the right
+  edge of the page. Groma adds the panel's width to the page's `margin-right`
+  on `<html>` and restores the page's value when the panel closes. Elements
+  fixed to the right edge, `vw` layouts and media queries still see the full
+  window; float is for those pages.
+- Fixed: hover outlines now redraw when the page moves the hovered element
+  under a still pointer (a pushed layout, a scroll), instead of staying where
+  the element was.
+
 ## 0.3.1 (2026-11-10)
 
 No code changes: the script is identical to 0.3.0. This release updates the

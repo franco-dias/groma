@@ -16,13 +16,17 @@ import { hideTooltip, showTooltip } from "./tooltip";
 let altHeld = false;
 let locked = false;
 let hovered: Element | null = null;
+let hoveredRect = "";
 
 export const isInspecting = (): boolean => altHeld || locked;
+
+const rectKey = (rect: DOMRect): string => `${rect.left},${rect.top},${rect.width},${rect.height}`;
 
 function clearHover(): void {
   clearBoxes();
   hideTooltip();
   hovered = null;
+  hoveredRect = "";
 }
 
 /** Shows or hides inspect mode after `altHeld` or `locked` changed. */
@@ -38,7 +42,7 @@ export function setInspectLock(on: boolean): void {
 }
 
 function inspect(target: EventTarget | null): void {
-  if (target === hovered || isOwn(target)) return;
+  if (isOwn(target)) return;
   if (
     !(target instanceof Element) ||
     target === document.body ||
@@ -47,10 +51,14 @@ function inspect(target: EventTarget | null): void {
     clearHover();
     return;
   }
+  const rect = target.getBoundingClientRect();
+  // The same element in the same place needs no redraw. If the page moved it
+  // (the panel pushing the layout, a scroll), draw again.
+  if (target === hovered && rectKey(rect) === hoveredRect) return;
   clearBoxes();
   hovered = target;
+  hoveredRect = rectKey(rect);
 
-  const rect = target.getBoundingClientRect();
   const pinned = pinnedElement();
   if (pinned && pinned !== target && pinned.isConnected) {
     // Measuring: only the target's outline and the distances. The box model

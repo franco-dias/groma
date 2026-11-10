@@ -122,8 +122,22 @@ A page can talk to the inspector through `window.Groma`:
 | `highlight(el)` | Moves the pinned-element outline to `el` |
 | `configure(settings)` | Changes the [settings](#settings); with no argument, restores the defaults |
 
+## The side panel: push or float
+
+The panel pushes the page aside by default, so it never covers what you are
+inspecting. Groma does this by adding the panel's width to the page's right
+margin on `<html>`, and puts the page's own value back when the panel closes.
+
+Some pages look wrong when pushed: elements fixed to the right edge of the
+window stay under the panel, and layouts sized in `vw` or chosen by media
+queries still see the full window width. For those, open the » menu in the
+panel and switch off "Push the page aside". The panel then floats over the
+page. The choice is remembered for the site.
+
 ## Known limits
 
+- Push mode moves only what is laid out in normal flow; see
+  [the side panel](#the-side-panel-push-or-float).
 - Token lookup takes the last matching declaration in source order and
   ignores selector specificity.
 - Sizing intent (fixed, hug, fill) is inferred from styles; children of CSS

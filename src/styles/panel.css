@@ -115,10 +115,26 @@
 }
 
 .more-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
   height: var(--ins-row);
   padding: 0 var(--ins-s-4);
   border-radius: var(--ins-radius-sm);
+  white-space: nowrap;
   font: 400 12px/24px var(--ins-font-sans);
+}
+
+/* A leading slot keeps the labels aligned; only the switch fills it. */
+.more-item .slot,
+.more-item .check {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+.more-item[aria-checked="false"] .check {
+  visibility: hidden;
 }
 
 .more-item:hover {

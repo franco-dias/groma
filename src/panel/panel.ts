@@ -1,10 +1,15 @@
 /**
  * The side panel: docked to the right edge, with a tab bar, a » menu (the
- * Reference tab and "Collapse panel") and a resize handle. It appears when
- * an element is pinned.
+ * Reference tab, "Push the page aside" and "Collapse panel") and a resize
+ * handle. It appears when an element is pinned.
+ *
+ * It either pushes the page aside by its own width (the default) or floats
+ * over the page; the user switches in the » menu and the choice is remembered.
  */
 import { h } from "../dom";
 import { elementName } from "../element-name";
+import { options } from "../options";
+import { restorePage, shiftPage } from "../page-shift";
 import { mount, setRootVariable } from "../root";
 import { onSelection, unpin } from "../selection";
 import { changesTab } from "./changes-tab";
@@ -22,10 +27,16 @@ const MAX_WIDTH = 560;
 
 let panel: HTMLElement | null = null;
 
-/** Tells the rest of the inspector how much of the right edge the panel covers. */
+/**
+ * Tells the rest of the inspector how much of the right edge the panel takes,
+ * and, in push mode, makes room for it in the page.
+ */
 function reportDock(): void {
   const visible = panel !== null && panel.style.display !== "none";
-  setRootVariable("--ins-dock", `${visible ? panel!.offsetWidth : 0}px`);
+  const width = visible ? panel!.offsetWidth : 0;
+  setRootVariable("--ins-dock", `${width}px`);
+  if (options.panelMode === "push") shiftPage(width);
+  else restorePage();
 }
 
 function setCollapsed(el: HTMLElement, collapsed: boolean): void {
@@ -53,7 +64,7 @@ function resizeByDragging(el: HTMLElement): void {
   });
 }
 
-/** The » button opens a small menu: the Reference tab and "Collapse panel". */
+/** The » button opens a small menu: the Reference tab, the push/float switch and "Collapse panel". */
 function mountMoreMenu(el: HTMLElement): void {
   const button = part(el, ".more-button");
   const menu = part(el, ".more-menu");
@@ -72,6 +83,16 @@ function mountMoreMenu(el: HTMLElement): void {
   });
   part(menu, '[data-tab="reference"]').addEventListener("click", () => setTab(el, "reference"));
   part(menu, ".collapse").addEventListener("click", () => setCollapsed(el, true));
+
+  const push = part(menu, '[data-action="push"]');
+  const showMode = () => push.setAttribute("aria-checked", String(options.panelMode === "push"));
+  push.addEventListener("click", () => {
+    options.panelMode = options.panelMode === "push" ? "float" : "push";
+    showMode();
+    saveLayout(el);
+    reportDock();
+  });
+  showMode();
 }
 
 function createPanel(): HTMLElement {
