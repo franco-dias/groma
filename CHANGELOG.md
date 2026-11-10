@@ -5,6 +5,11 @@ All notable changes to this package are recorded here. Versions follow
 
 ## Unreleased
 
+## 0.3.1 (2026-11-10)
+
+No code changes: the script is identical to 0.3.0. This release updates the
+README that the npm page shows.
+
 - Changed: a heavier logo. The mark sits on a dark tile, with a thick bar and
   staff against thin plumb lines, solid plumb bobs and a red dimension line.
 - New: a horizontal logo with the name, in Geist SemiBold, in a light and a dark
