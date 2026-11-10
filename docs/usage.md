@@ -63,10 +63,10 @@ Pin the version, so a later release cannot change a design file that already
 works:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@0.4.0/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@0.5.0/dist/groma.js"></script>
 ```
 
-unpkg serves the same file at `https://unpkg.com/gromajs@0.4.0/dist/groma.js`.
+unpkg serves the same file at `https://unpkg.com/gromajs@0.5.0/dist/groma.js`.
 
 A list of every shortcut is also inside the inspector: open the » menu in
 the panel's tab bar and choose "Shortcuts and tips".

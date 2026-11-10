@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.5.0 (2026-11-10)
 
 - New: canvas mode. "Show on a canvas" in the » menu puts the page in a frame
   on a canvas, like an artboard: drag its edges to try any width and height,
