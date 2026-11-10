@@ -1,0 +1,87 @@
+<!doctype html>
+<!-- Demo page for `npm run serve`. Hold Alt and hover; Alt+click to pin. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>live-inspector demo</title>
+    <style>
+      :root,
+      .light {
+        --demo-surface: #ffffff;
+        --demo-text: #1b1a17;
+        --demo-accent: #009c5a;
+        --demo-outline: #01000a14;
+      }
+      .dark {
+        --demo-surface: #121212;
+        --demo-text: #f4f3ef;
+        --demo-accent: #3ddc97;
+        --demo-outline: #ffffff14;
+      }
+      body {
+        margin: 0;
+        padding: 40px;
+        font-family: system-ui, sans-serif;
+        background: #f4f3ef;
+        color: #1b1a17;
+      }
+      .board {
+        width: 720px;
+        padding: 32px;
+        display: flex;
+        gap: 24px;
+        background: #ebe9e3;
+        transform-origin: 0 0;
+      }
+      .card {
+        flex: 1;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border: 1px solid var(--demo-outline);
+        border-radius: 16px;
+        background: var(--demo-surface);
+        color: var(--demo-text);
+      }
+      .card h2 {
+        margin: 0;
+        font-size: 22px;
+        line-height: 28px;
+      }
+      .chip {
+        align-self: flex-start;
+        padding: 4px 12px;
+        border-radius: 999px;
+        color: var(--demo-accent);
+        border: 1.5px solid var(--demo-accent);
+        transition: opacity 0.2s ease-in;
+      }
+      .hand-written {
+        color: #7a3cff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>live-inspector demo</h1>
+    <p>Hold <kbd>Alt</kbd> and hover. <kbd>Alt</kbd> + click pins an element.</p>
+
+    <section id="cards" aria-label="Demo · Cards">
+      <div class="board" data-artboard>
+        <div class="card light">
+          <h2>Light card</h2>
+          <span class="chip">Reported</span>
+          <p class="hand-written">This colour has no token.</p>
+        </div>
+        <div class="card dark">
+          <h2>Dark card</h2>
+          <span class="chip">Reported</span>
+          <input value="A form value" />
+        </div>
+      </div>
+    </section>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

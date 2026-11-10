@@ -1,0 +1,198 @@
+/* The docked side panel: shell, header, tabs, toolbars, search, resize handle. */
+
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: calc(100vw - 40px);
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: left;
+  color: #c8c4bc;
+  background: rgba(18, 14, 10, 0.94);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-left: 0.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
+  font: 11.5px/normal ui-monospace, "Cascadia Code", "Fira Mono", monospace;
+}
+
+.panel.is-collapsed {
+  width: 28px !important;
+}
+
+.panel.is-collapsed > :not(.header),
+.panel.is-collapsed .header > :not(.collapse) {
+  display: none;
+}
+
+.panel.is-collapsed .header {
+  padding: 0;
+  justify-content: center;
+  border: 0;
+}
+
+.panel button,
+.panel input[type="text"] {
+  all: unset;
+  font: inherit;
+  cursor: default;
+}
+
+.panel [hidden] {
+  display: none !important;
+}
+
+.panel:not([data-tab="specs"]) [data-for="specs"],
+.panel:not([data-tab="css"]) [data-for="css"],
+.panel:not([data-tab="layers"]) [data-for="layers"],
+.panel:not([data-tab="changes"]) [data-for="changes"] {
+  display: none;
+}
+
+.panel .header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 42px;
+  padding: 0 14px;
+  flex-shrink: 0;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel .tab {
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(200, 196, 188, 0.4);
+  border-bottom: 2px solid transparent;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.panel[data-tab="specs"] .tab[data-tab="specs"],
+.panel[data-tab="css"] .tab[data-tab="css"],
+.panel[data-tab="layers"] .tab[data-tab="layers"],
+.panel[data-tab="changes"] .tab[data-tab="changes"] {
+  color: #e8e4dc;
+  border-bottom-color: #e8c97a;
+}
+
+.panel .spacer {
+  flex: 1;
+}
+
+.panel .close,
+.panel .collapse {
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1;
+  color: rgba(200, 196, 188, 0.5);
+}
+
+.panel .close:hover,
+.panel .collapse:hover {
+  color: #e8e4dc;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.panel .search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  flex-shrink: 0;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+}
+
+.panel .search input {
+  flex: 1;
+  line-height: 1.5;
+  color: #e8e4dc;
+  cursor: text;
+}
+
+.panel .clear {
+  padding: 0 2px;
+  font-size: 11px;
+  color: rgba(200, 196, 188, 0.35);
+}
+
+.panel .search input:placeholder-shown + .clear {
+  display: none;
+}
+
+.panel .toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 5px 14px;
+  flex-shrink: 0;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+}
+
+.panel .toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(200, 196, 188, 0.55);
+  user-select: none;
+}
+
+.panel .body {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 0 12px;
+  overflow: hidden auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.panel .actions {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.panel .action {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #c8c4bc;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.panel .action:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.panel .action.is-on {
+  color: #fff;
+  background: rgba(13, 153, 255, 0.3);
+}
+
+.panel .body > .action {
+  margin: 4px 14px;
+}
+
+.panel .resize {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.panel .resize:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

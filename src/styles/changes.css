@@ -1,0 +1,15 @@
+/* The Changes tab: changed lines of a board. */
+
+.panel .diff {
+  padding: 2px 14px 6px 28px;
+  font-size: 10.5px;
+  overflow-wrap: anywhere;
+}
+
+.panel .diff .is-added {
+  color: #9fd6a8;
+}
+
+.panel .diff .is-removed {
+  color: #f0a070;
+}
