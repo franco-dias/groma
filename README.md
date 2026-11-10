@@ -45,6 +45,10 @@ The side panel has four tabs:
 Pages that re-render can call `window.LiveInspector`; see `LiveInspectorApi`
 in [src/main.ts](src/main.ts).
 
+What each feature does, rule by rule, is in
+[docs/features.md](docs/features.md). Agents and new maintainers start with
+[AGENTS.md](AGENTS.md).
+
 ## Develop
 
 ```bash
