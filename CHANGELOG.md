@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.6.0 (2026-11-10)
 
 - New: `npx gromajs <file.html>` opens any HTML design file with Groma
   attached, with nothing to clone or install. It serves the file's folder on
