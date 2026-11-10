@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.4.0 (2026-11-10)
 
 - New: the side panel pushes the page aside instead of covering it, and the
   » menu has a "Push the page aside" switch to float it again. The choice is
