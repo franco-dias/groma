@@ -9,21 +9,25 @@ import styles from "./styles/index.css?inline";
 
 const HOST_TAG = "live-inspector";
 
-let root: ShadowRoot | null = null;
+let host: HTMLElement | null = null;
 
-function inspectorRoot(): ShadowRoot {
-  if (!root) {
-    const host = document.body.appendChild(document.createElement(HOST_TAG));
-    root = host.attachShadow({ mode: "open" });
-    root.appendChild(h("style", "", styles));
+function inspectorHost(): HTMLElement {
+  if (!host) {
+    host = document.body.appendChild(document.createElement(HOST_TAG));
+    host.attachShadow({ mode: "open" }).appendChild(h("style", "", styles));
   }
-  return root;
+  return host;
 }
 
 /** Adds a top-level inspector node (overlay, panel, menu…) to the page. */
 export function mount<T extends HTMLElement>(node: T): T {
-  inspectorRoot().appendChild(node);
+  inspectorHost().shadowRoot!.appendChild(node);
   return node;
+}
+
+/** Sets a CSS variable every inspector node can read (see styles/tokens.css). */
+export function setRootVariable(name: string, value: string): void {
+  inspectorHost().style.setProperty(name, value);
 }
 
 /**
@@ -32,4 +36,10 @@ export function mount<T extends HTMLElement>(node: T): T {
  */
 export function isOwn(node: EventTarget | null): boolean {
   return node instanceof Element && node.localName === HOST_TAG;
+}
+
+/** Runs `start` once the page has a `<body>` to mount into. */
+export function whenBodyExists(start: () => void): void {
+  if (document.body) start();
+  else document.addEventListener("DOMContentLoaded", start, { once: true });
 }

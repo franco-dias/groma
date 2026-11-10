@@ -8,6 +8,7 @@ import { layoutSize } from "../dom";
 import { hasValue } from "../edits/overrides";
 import type { StyleLookup } from "../page-styles";
 import { componentJsx, componentOf } from "./component";
+import { motionItems } from "./motion";
 import { sizingIntent } from "./sizing";
 import { compactSides } from "./units";
 
@@ -175,15 +176,10 @@ function iconRows(el: Element, cs: CSSStyleDeclaration): Spec[] {
 }
 
 function motionRows(cs: CSSStyleDeclaration): Spec[] {
-  const moves = /[1-9]/.test(cs.transitionDuration);
-  return [
-    { name: "transition", value: moves ? cs.transition : "", props: ["transition"] },
-    {
-      name: "animation",
-      value: cs.animationName === "none" ? "" : cs.animation,
-      props: ["animation"],
-    },
-  ];
+  return motionItems(cs).map((item) => ({
+    name: item.property,
+    value: `${item.duration} ${item.easing}`,
+  }));
 }
 
 export function specSections(
@@ -201,26 +197,35 @@ export function specSections(
   ];
 }
 
+export interface SpecDifference {
+  name: string;
+  /** Undefined when that element has no such spec. */
+  before?: Spec;
+  after?: Spec;
+}
+
 /** The specs that differ between a baseline element's sections and another's. */
-export function specDifferences(
+export function compareSpecs(
   base: SpecSection[],
   other: SpecSection[],
-  show: (spec: Spec) => string,
-): Spec[] {
+): { differences: SpecDifference[]; identical: number } {
   const flatten = (sections: SpecSection[]) =>
-    new Map(
+    new Map<string, Spec>(
       sections.flatMap((section) =>
-        section.rows.map((spec) => [`${section.label}/${spec.name}`, spec] as const),
+        section.rows.map((spec): [string, Spec] => [`${section.label}/${spec.name}`, spec]),
       ),
     );
   const before = flatten(base);
   const after = flatten(other);
-  const shown = (spec?: Spec): string => (spec?.value ? show(spec) : "none");
-  return [...new Set([...before.keys(), ...after.keys()])]
-    .filter((key) => !key.endsWith("/on board")) // two elements are never in the same place
-    .filter((key) => (before.get(key)?.value ?? "") !== (after.get(key)?.value ?? ""))
-    .map((key) => ({
-      name: key.split("/")[1],
-      value: `${shown(before.get(key))} → ${shown(after.get(key))}`,
-    }));
+  const keys = [...new Set([...before.keys(), ...after.keys()])]
+    // Two elements are never in the same place, and "which component" is not a spec.
+    .filter((key) => !key.endsWith("/on board") && !key.startsWith("Component/"))
+    .filter((key) => before.get(key)?.value || after.get(key)?.value);
+  const differs = (key: string) => (before.get(key)?.value ?? "") !== (after.get(key)?.value ?? "");
+  const differences = keys.filter(differs).map((key) => ({
+    name: key.split("/")[1],
+    before: before.get(key),
+    after: after.get(key),
+  }));
+  return { differences, identical: keys.length - differences.length };
 }

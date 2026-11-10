@@ -13,7 +13,10 @@ export function boardOf(el: Element): Element | null {
 }
 
 export interface BoardPosition {
-  /** "x 64 · y 216", in the board's own pixels at any zoom. */
+  /** Offset from the board's top-left corner, in the board's own pixels at any zoom. */
+  x: number;
+  y: number;
+  /** "x 64 · y 216" */
   text: string;
   /** The board's name, when the page labels it. */
   board: string;
@@ -29,6 +32,8 @@ export function boardPosition(el: Element, rect: Box): BoardPosition | null {
   const x = tenth((rect.left - boardRect.left) / scale.x);
   const y = tenth((rect.top - boardRect.top) / scale.y);
   return {
+    x,
+    y,
     text: `x ${x} · y ${y}`,
     board: board.closest("[aria-label]")?.getAttribute("aria-label") ?? "",
   };

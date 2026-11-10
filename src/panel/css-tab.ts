@@ -72,7 +72,9 @@ function rowShell(row: CssRow): { rowEl: HTMLElement; valueEl: HTMLElement } {
   rowEl.classList.toggle("is-overridden", !!row.overridden);
   rowEl.classList.toggle("is-dimmed", !!row.dimmed && !row.overridden);
   rowEl.appendChild(h("span", "name", row.name));
-  if (isColorValue(row.value)) rowEl.appendChild(h("span", "swatch")).style.background = row.value;
+  if (isColorValue(row.value)) {
+    rowEl.appendChild(h("span", "swatch")).style.setProperty("--swatch", row.value);
+  }
   const valueEl = rowEl.appendChild(h("span", "value", row.value || "—"));
   valueEl.title = row.value;
   return { rowEl, valueEl };
@@ -166,11 +168,13 @@ const TEXT_TAGS = new Set(
 /** Edits the element's text (or a form control's value). ⌘/Ctrl+Enter applies. */
 function contentEditor(el: Element, selector: string): HTMLElement {
   if (!hasValue(el) && !TEXT_TAGS.has(el.localName)) {
-    return h("div", "note", `${el.localName} — structural element, no content editor`);
+    const note = h("section", "block");
+    note.appendChild(h("span", "hint", `${el.localName} holds other elements, so its content is not editable here.`));
+    return note;
   }
 
-  const section = h("div", "content");
-  section.appendChild(h("div", "label", hasValue(el) ? "value" : "innerHTML"));
+  const section = h("section", "block content");
+  section.appendChild(h("div", "heading", hasValue(el) ? "Value" : "Content"));
   const editor = section.appendChild(h("div", "editor", getContent(el)));
   editor.contentEditable = "true";
   editor.spellcheck = false;
@@ -211,7 +215,7 @@ function renderCss(el: Element, change: SelectionChange): void {
   const cs = getComputedStyle(el);
   const addSection = (title: string, rows: HTMLElement[], labelClass = "") => {
     if (!rows.length) return;
-    body.appendChild(h("div", `label ${labelClass}`, title));
+    body.appendChild(h("div", `heading ${labelClass}`, title));
     body.append(...rows);
   };
   const matchesSearch = (row: CssRow) =>
@@ -226,7 +230,7 @@ function renderCss(el: Element, change: SelectionChange): void {
     overridden: true,
     custom: true,
   }));
-  addSection("★ Custom styles", custom.map(editable), "is-custom");
+  addSection("Your edits", custom.map(editable), "is-custom");
   if (custom.length) body.appendChild(h("div", "divider"));
 
   addSection("Element", elementRows(el).filter(matchesSearch).map(readOnlyRow));

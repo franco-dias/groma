@@ -1,47 +1,78 @@
 <!--
-  The side panel. `data-tab` on a button names the tab it opens; `data-for`
-  on a section names the tab it belongs to (see styles/panel.css).
+  The side panel. `data-tab` on a tab names the tab it opens; `data-for` on a
+  section names the tab it belongs to (see styles/panel.css). Sections with no
+  content here are filled by the tab's TypeScript file.
 -->
-<div class="header">
-  <button class="tab" data-tab="specs">Specs</button>
-  <button class="tab" data-tab="css">All CSS</button>
-  <button class="tab" data-tab="layers">Layers</button>
-  <button class="tab" data-tab="changes">Changes</button>
-  <span class="spacer"></span>
-  <button class="collapse" title="Collapse or expand the panel">»</button>
-  <button class="close" title="Close">✕</button>
+<div class="tab-bar">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="specs">Specs</button>
+    <button class="tab" role="tab" data-tab="css">All CSS</button>
+    <button class="tab" role="tab" data-tab="layers">Layers</button>
+    <button class="tab" role="tab" data-tab="changes">Changes</button>
+  </div>
+  <button class="icon-button collapse" aria-label="Collapse panel" title="Collapse panel">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="m6 17 5-5-5-5M13 17l5-5-5-5" /></svg>
+  </button>
+  <button class="icon-button close" aria-label="Close inspector" title="Close inspector">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></svg>
+  </button>
 </div>
 
-<!-- Specs: what a developer needs to build the element -->
-<div class="toolbar actions" data-for="specs">
-  <button class="action" data-action="unit" title="Show and copy lengths in px or rem"></button>
-  <button class="action" data-action="grid" title="Grid over the artboard: off, 4 or 8"></button>
-  <button class="action" data-action="compare" title="Compare this element with the next one you pin"></button>
-  <button class="action" data-action="link" title="Copy a link that reopens this page with the element pinned">copy link</button>
-  <button class="action" data-action="pick" title="Pick any colour on screen">pick colour</button>
+<!-- ───────────── Specs: what a developer needs to build the element ───────────── -->
+<div class="action-bar" data-for="specs">
+  <div class="segmented" role="radiogroup" aria-label="Units" data-option="unit">
+    <button class="segment" role="radio" data-value="px">px</button>
+    <button class="segment" role="radio" data-value="rem">rem</button>
+  </div>
+  <div class="segmented" role="radiogroup" aria-label="Grid" data-option="grid">
+    <span class="lead">
+      <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M3 15h18M9 3v18M15 3v18" /></svg>
+    </span>
+    <button class="segment" role="radio" data-value="0">Off</button>
+    <button class="segment is-on" role="radio" data-value="4">4</button>
+    <button class="segment is-on" role="radio" data-value="8">8</button>
+  </div>
+  <span class="spacer"></span>
+  <button class="action" data-action="compare" aria-pressed="false" aria-label="Compare" title="Compare this element with the next one you pin">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><circle cx="18" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><path d="M13 6h3a2 2 0 0 1 2 2v7M11 18H8a2 2 0 0 1-2-2V9" /></svg>
+    <span class="when-on">Comparing</span>
+  </button>
+  <button class="action" data-action="link" aria-label="Copy link to element" title="Copy a link that reopens this page with the element pinned">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+  </button>
+  <button class="action" data-action="pick" aria-pressed="false" aria-label="Pick colour" title="Pick any colour on screen">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="m2 22 1-1h3l9-9M3 21v-3l9-9" /><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z" /></svg>
+  </button>
 </div>
+<div class="element-header" data-for="specs"></div>
 <div class="body" data-for="specs"></div>
 
-<!-- All CSS: every computed property, editable -->
+<!-- ───────────── All CSS: every computed property, editable ───────────── -->
 <div class="search" data-for="css">
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="rgba(200,196,188,0.4)" stroke-width="1.5" stroke-linecap="round">
-    <circle cx="5" cy="5" r="3.5" />
-    <path d="M8 8l2.5 2.5" />
-  </svg>
-  <input type="text" placeholder="Search properties…" />
-  <button class="clear" title="Clear search">✕</button>
+  <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+  <input type="text" placeholder="Search properties" />
+  <button class="icon-button clear" aria-label="Clear search" title="Clear search">
+    <svg class="icon" width="12" height="12" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></svg>
+  </button>
 </div>
-<div class="toolbar" data-for="css">
-  <label><input type="checkbox" data-option="hideDefaults" checked style="accent-color: #e8c97a" />Hide defaults</label>
-  <label><input type="checkbox" data-option="highlightPinned" checked style="accent-color: #0d99ff" />Highlight element</label>
+<div class="switches" data-for="css">
+  <label><input type="checkbox" data-option="hideDefaults" checked />Hide defaults</label>
+  <label><input type="checkbox" data-option="highlightPinned" checked />Outline element</label>
 </div>
-<div class="body" data-for="css"></div>
+<div class="body css-body" data-for="css"></div>
 
-<!-- Layers: the artboard's element tree -->
-<div class="body" data-for="layers"></div>
+<!-- ───────────── Layers: the artboard's element tree ───────────── -->
+<div class="body tree" data-for="layers" role="tree"></div>
 
-<!-- Changes: this export against an older one -->
-<div class="body" data-for="changes"></div>
+<!-- ───────────── Changes: this export against an older one ───────────── -->
+<div class="changes-head" data-for="changes"></div>
+<div class="body changes-list" data-for="changes"></div>
 <input type="file" accept=".html,text/html" hidden />
+
+<!-- Shown instead of everything above while the panel is collapsed. -->
+<button class="rail" aria-label="Expand panel" title="Expand panel">
+  <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /><path d="M12 2v4M12 18v4M2 12h4M18 12h4" /></svg>
+  <span class="name"></span>
+</button>
 
 <div class="resize"></div>

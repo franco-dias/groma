@@ -10,8 +10,9 @@ export type BoxKind =
   | "content-box"
   | "gap"
   | "child"
-  | "measure"
-  | "target";
+  | "target"
+  | "measure is-x"
+  | "measure is-y";
 
 let layer: HTMLElement | null = null;
 
@@ -23,7 +24,7 @@ export function addBox(box: Box, kind: BoxKind): void {
   placeOver(overlay().appendChild(h("div", kind)), box);
 }
 
-/** Draws a distance label at a point; `transform` nudges it off the line. */
+/** Draws a distance label at a point; `transform` places it relative to that point. */
 export function addLabel(text: string, left: number, top: number, transform: string): void {
   const label = overlay().appendChild(h("div", "measure-label", text));
   label.style.left = `${left}px`;

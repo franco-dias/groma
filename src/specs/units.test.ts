@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compactSides, inUnit, sxValue } from "./units";
+import { compactSides, shownLength, sxSpacing } from "./units";
 
 describe("compactSides", () => {
   it("uses the shortest CSS shorthand", () => {
@@ -9,32 +9,28 @@ describe("compactSides", () => {
   });
 });
 
-describe("inUnit", () => {
-  it("leaves px values alone", () => {
-    expect(inUnit("24px", "px", 16)).toBe("24px");
+describe("shownLength", () => {
+  it("shows bare numbers in px", () => {
+    expect(shownLength("24px", "px", 16)).toBe("24");
+    expect(shownLength("1px solid", "px", 16)).toBe("1 solid");
+    expect(shownLength("-0.8px", "px", 16)).toBe("-0.8");
   });
 
   it("converts every length to rem", () => {
-    expect(inUnit("24px", "rem", 16)).toBe("1.5rem");
-    expect(inUnit("12px 16px", "rem", 16)).toBe("0.75rem 1rem");
-    expect(inUnit("-0.8px", "rem", 16)).toBe("-0.05rem");
+    expect(shownLength("24px", "rem", 16)).toBe("1.5rem");
+    expect(shownLength("12px 16px", "rem", 16)).toBe("0.75rem 1rem");
+  });
+
+  it("leaves other values alone", () => {
+    expect(shownLength("50%", "px", 16)).toBe("50%");
+    expect(shownLength("flex", "rem", 16)).toBe("flex");
   });
 });
 
-describe("sxValue", () => {
-  it("copies a single length as a bare number", () => {
-    expect(sxValue("gap", "32px", "px")).toBe("32");
-    expect(sxValue("radius", "16px", "px")).toBe("16");
-  });
-
-  it("copies multi-value padding and margin as sx keys", () => {
-    expect(sxValue("padding", "12px 16px", "px")).toBe("py: 12, px: 16");
-    expect(sxValue("margin", "1px 2px 3px 4px", "px")).toBe("mt: 1, mr: 2, mb: 3, ml: 4");
-  });
-
-  it("copies everything else as shown", () => {
-    expect(sxValue("radius", "50%", "px")).toBe("50%");
-    expect(sxValue("radius", "4px 8px", "px")).toBe("4px 8px");
-    expect(sxValue("gap", "2rem", "rem")).toBe("2rem");
+describe("sxSpacing", () => {
+  it("writes the shortest sx form", () => {
+    expect(sxSpacing("padding", [24, 24, 24, 24])).toBe("p: 24");
+    expect(sxSpacing("padding", [12, 16, 12, 16])).toBe("py: 12, px: 16");
+    expect(sxSpacing("margin", [1, 2, 3, 4])).toBe("mt: 1, mr: 2, mb: 3, ml: 4");
   });
 });

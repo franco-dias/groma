@@ -16,12 +16,17 @@ export interface ComponentInfo {
   sourcePath?: string;
   /** False when the element is the component's own root, true when it only sits inside it. */
   inside: boolean;
+  /** The component's root element on the page. */
+  element?: Element;
   props: Record<string, unknown>;
 }
 
 interface Fiber {
   type: unknown;
   return: Fiber | null;
+  child: Fiber | null;
+  /** The DOM node, on fibers of HTML elements. */
+  stateNode: unknown;
   memoizedProps: Record<string, unknown> | null;
 }
 
@@ -83,28 +88,48 @@ export function componentOf(el: Element): ComponentInfo | null {
     if (!type || typeof type === "string") continue;
     const props = fiber.memoizedProps ?? {};
     const entry = known.get(type);
-    if (entry) return { ...entry, inside, props };
+    if (entry) return { ...entry, inside, props, element: rootElement(fiber) };
 
     const { displayName, name, styledComponentId } = type as ComponentType;
     // Bundlers add a number to repeated names ("Typography2").
     const ownName = (displayName ?? name ?? "").replace(/\d+$/, "");
     const usable = /^[A-Z]/.test(ownName) && !/^Component$|Provider$/.test(ownName);
     if (!direct && !inside && !styledComponentId && usable) {
-      direct = { name: ownName, inside, props };
+      direct = { name: ownName, inside, props, element: rootElement(fiber) };
     }
   }
   return direct;
 }
 
-/** `<Typography variant="h4" component="h1">`: the component as you would write it. */
-export function componentJsx({ name, props }: ComponentInfo): string {
-  const attributes = Object.entries(props)
-    .filter(([prop]) => !["children", "className", "style"].includes(prop))
-    .flatMap(([prop, value]) => {
-      if (typeof value === "string") return [`${prop}="${value}"`];
-      if (typeof value === "number") return [`${prop}={${value}}`];
-      if (typeof value === "boolean") return [value ? prop : `${prop}={false}`];
+/** The first HTML element a component renders. */
+function rootElement(fiber: Fiber): Element | undefined {
+  let node: Fiber | null = fiber;
+  while (node && typeof node.type !== "string") node = node.child;
+  return node?.stateNode instanceof Element ? node.stateNode : undefined;
+}
+
+export interface JsxAttribute {
+  name: string;
+  /** `"h4"`, `{3}` or "" for a bare boolean attribute. */
+  value: string;
+}
+
+/** The props worth showing: text, numbers and booleans. */
+export function componentAttributes({ props }: ComponentInfo): JsxAttribute[] {
+  return Object.entries(props)
+    .filter(([name]) => !["children", "className", "style"].includes(name))
+    .flatMap(([name, value]) => {
+      if (typeof value === "string") return [{ name, value: `"${value}"` }];
+      if (typeof value === "number") return [{ name, value: `{${value}}` }];
+      if (typeof value === "boolean") return [{ name, value: value ? "" : "{false}" }];
       return [];
     });
-  return `<${[name, ...attributes].join(" ")}>`;
+}
+
+/** `<Typography variant="h4" component="h1">`: the component as you would write it. */
+export function componentJsx(component: ComponentInfo): string {
+  const attributes = componentAttributes(component).map(({ name, value }) =>
+    value ? `${name}=${value}` : name,
+  );
+  return `<${[component.name, ...attributes].join(" ")}>`;
 }

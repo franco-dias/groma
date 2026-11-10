@@ -1,12 +1,16 @@
 /**
- * Alt + right-click: a menu of every layer under the pointer, to reach an
- * element that sits behind another one.
+ * Alt + right-click: a menu of every layer under the pointer, topmost first,
+ * to reach an element that sits behind another one.
  */
-import { elementLabel, h } from "../dom";
+import { h } from "../dom";
+import { sizeText, tagAndClasses } from "../element-name";
 import { hideHoverOutline, showHoverOutline } from "../outlines";
 import { isOwn, mount } from "../root";
 import { pin } from "../selection";
 import { isInspecting } from "./hover";
+
+/** The menu opens this far below and right of the pointer. */
+const OFFSET = 8;
 
 let menu: HTMLElement | null = null;
 
@@ -19,20 +23,29 @@ function closeMenu(): void {
 
 function openMenu(pointerX: number, pointerY: number): void {
   closeMenu();
-  const list = (menu = mount(h("div", "menu")));
-  document
+  const layers = document
     .elementsFromPoint(pointerX, pointerY)
-    .filter((el) => !isOwn(el) && el !== document.body && el !== document.documentElement)
-    .forEach((el) => {
-      const row = list.appendChild(h("div", "", elementLabel(el)));
-      row.addEventListener("mouseenter", () => showHoverOutline(el));
-      row.addEventListener("click", () => {
-        closeMenu();
-        pin(el);
-      });
+    .filter((el) => !isOwn(el) && el !== document.body && el !== document.documentElement);
+
+  const list = (menu = mount(h("div", "menu")));
+  list.setAttribute("role", "menu");
+  const head = list.appendChild(h("div", "menu-head"));
+  head.append(h("span", "", "Layers at pointer"), h("span", "count", String(layers.length)));
+  for (const layer of layers) {
+    const item = list.appendChild(h("div", "menu-item"));
+    item.setAttribute("role", "menuitem");
+    item.append(tagAndClasses(layer, "layer-name"), h("span", "size", sizeText(layer)));
+    item.addEventListener("mouseenter", () => showHoverOutline(layer));
+    item.addEventListener("click", () => {
+      closeMenu();
+      pin(layer);
     });
-  list.style.left = `${Math.min(pointerX, window.innerWidth - list.offsetWidth - 8)}px`;
-  list.style.top = `${Math.min(pointerY, window.innerHeight - list.offsetHeight - 8)}px`;
+  }
+  // Below and right of the pointer, pulled back inside the window when needed.
+  const left = Math.min(pointerX + OFFSET, window.innerWidth - list.offsetWidth - OFFSET);
+  const top = Math.min(pointerY + OFFSET, window.innerHeight - list.offsetHeight - OFFSET);
+  list.style.left = `${left}px`;
+  list.style.top = `${top}px`;
 }
 
 export function startLayerMenu(): void {

@@ -1,14 +1,20 @@
 /**
- * Marks that follow elements on the page: the pinned element's outline, the
- * outline of a layer hovered in the panel, and the artboard grid.
+ * Marks that follow elements on the page: the pinned element's outline with
+ * its name tag, the outline of a layer hovered in the panel, and the
+ * artboard grid.
  */
 import { boardOf } from "./board";
 import { h, placeOver, scaleOf } from "./dom";
+import { elementName, sizeText } from "./element-name";
 import { options } from "./options";
 import { mount } from "./root";
 import { onSelection, pinnedElement } from "./selection";
 
+/** Below this distance from the top of the window, the tag moves inside the outline. */
+const TAG_HEIGHT = 18;
+
 let pinnedOutline: HTMLElement | null = null;
+let pinTag: HTMLElement | null = null;
 let hoverOutline: HTMLElement | null = null;
 let grid: HTMLElement | null = null;
 let outlined: Element | null = null;
@@ -21,6 +27,7 @@ function placeGrid(pinned: Element): void {
   const rect = board.getBoundingClientRect();
   const scale = scaleOf(board, rect);
   placeOver(grid, rect);
+  grid.classList.toggle("is-8", options.gridStep === 8);
   grid.style.backgroundSize = `${options.gridStep * scale.x}px ${options.gridStep * scale.y}px`;
 }
 
@@ -28,7 +35,13 @@ function placeGrid(pinned: Element): void {
 function tick(): void {
   const pinned = pinnedElement();
   const showGrid = options.gridStep > 0 && pinned !== null;
-  if (outlined && pinnedOutline) placeOver(pinnedOutline, outlined.getBoundingClientRect());
+  if (outlined && pinnedOutline) {
+    const rect = outlined.getBoundingClientRect();
+    placeOver(pinnedOutline, rect);
+    pinTag?.classList.toggle("is-inside", rect.top < TAG_HEIGHT);
+    // The page may replace the pinned element (a re-render, another page).
+    pinnedOutline.style.visibility = outlined.isConnected ? "" : "hidden";
+  }
   if (showGrid) placeGrid(pinned);
   if (grid) grid.style.display = showGrid ? "block" : "none";
   frame = outlined || showGrid ? requestAnimationFrame(tick) : 0;
@@ -41,7 +54,11 @@ function startTicking(): void {
 /** Outlines `el` as the pinned element, unless the user switched outlines off. */
 export function highlight(el: Element): void {
   if (!options.highlightPinned) return;
-  pinnedOutline ??= mount(h("div", "outline outline-pinned"));
+  if (!pinnedOutline) {
+    pinnedOutline = mount(h("div", "outline outline-pinned"));
+    pinTag = pinnedOutline.appendChild(h("div", "pin-tag"));
+  }
+  pinTag?.replaceChildren(h("b", "", elementName(el)), sizeText(el));
   pinnedOutline.style.display = "block";
   outlined = el;
   startTicking();
@@ -61,7 +78,7 @@ export function syncOutlines(): void {
 
 /** A dashed outline for a layer the pointer is over in the panel or a menu. */
 export function showHoverOutline(el: Element): void {
-  hoverOutline ??= mount(h("div", "outline outline-nav"));
+  hoverOutline ??= mount(h("div", "outline outline-hover"));
   placeOver(hoverOutline, el.getBoundingClientRect());
   hoverOutline.style.display = "block";
 }

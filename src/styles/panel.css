@@ -1,51 +1,25 @@
-/* The docked side panel: shell, header, tabs, toolbars, search, resize handle. */
+/* The docked side panel: shell, tab bar, action bar, bodies, collapsed rail. */
 
 .panel {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  width: 420px;
+  z-index: 5;
+  width: var(--ins-panel-w);
   max-width: calc(100vw - 40px);
-  z-index: 2147483647;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  text-align: left;
-  color: #c8c4bc;
-  background: rgba(18, 14, 10, 0.94);
-  backdrop-filter: blur(20px) saturate(160%);
-  border-left: 0.5px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
-  font: 11.5px/normal ui-monospace, "Cascadia Code", "Fira Mono", monospace;
+  color: var(--ins-fg);
+  background: var(--ins-bg);
+  border-left: 1px solid var(--ins-border-strong);
+  box-shadow: var(--ins-shadow);
+  font: 400 12px/16px var(--ins-font-sans);
+  /* Lets the action bar adapt to the panel's own width. */
+  container-type: inline-size;
 }
 
-.panel.is-collapsed {
-  width: 28px !important;
-}
-
-.panel.is-collapsed > :not(.header),
-.panel.is-collapsed .header > :not(.collapse) {
-  display: none;
-}
-
-.panel.is-collapsed .header {
-  padding: 0;
-  justify-content: center;
-  border: 0;
-}
-
-.panel button,
-.panel input[type="text"] {
-  all: unset;
-  font: inherit;
-  cursor: default;
-}
-
-.panel [hidden] {
-  display: none !important;
-}
-
+/* Each section belongs to one tab; only the open tab's sections show. */
 .panel:not([data-tab="specs"]) [data-for="specs"],
 .panel:not([data-tab="css"]) [data-for="css"],
 .panel:not([data-tab="layers"]) [data-for="layers"],
@@ -53,146 +27,274 @@
   display: none;
 }
 
-.panel .header {
+/* ── tab bar ── */
+.tab-bar {
+  flex: none;
   display: flex;
   align-items: center;
-  gap: 16px;
-  height: 42px;
-  padding: 0 14px;
-  flex-shrink: 0;
-  border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+  gap: var(--ins-s-2);
+  height: var(--ins-bar-h);
+  padding: 0 var(--ins-s-3) 0 var(--ins-s-4);
+  border-bottom: 1px solid var(--ins-border);
 }
 
-.panel .tab {
-  box-sizing: border-box;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(200, 196, 188, 0.4);
-  border-bottom: 2px solid transparent;
-  transition: color 0.12s, border-color 0.12s;
+.tabs {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--ins-s-1);
+  padding: var(--ins-s-1);
+  background: var(--ins-bg-raised);
+  border: 1px solid var(--ins-border);
+  border-radius: var(--ins-radius);
+}
+
+.tab {
+  height: 24px;
+  padding: 0 var(--ins-s-1);
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ins-fg-muted);
+  border-radius: var(--ins-radius-md);
+  font: 500 12px/24px var(--ins-font-sans);
+  transition: background var(--ins-dur), color var(--ins-dur);
+}
+
+.tab:hover {
+  color: var(--ins-fg);
 }
 
 .panel[data-tab="specs"] .tab[data-tab="specs"],
 .panel[data-tab="css"] .tab[data-tab="css"],
 .panel[data-tab="layers"] .tab[data-tab="layers"],
 .panel[data-tab="changes"] .tab[data-tab="changes"] {
-  color: #e8e4dc;
-  border-bottom-color: #e8c97a;
+  color: var(--ins-fg);
+  background: var(--ins-bg-active);
 }
 
-.panel .spacer {
-  flex: 1;
+.icon-button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--ins-fg-muted);
+  border-radius: var(--ins-radius-sm);
 }
 
-.panel .close,
-.panel .collapse {
-  padding: 2px 4px;
-  border-radius: 4px;
-  font-size: 13px;
-  line-height: 1;
-  color: rgba(200, 196, 188, 0.5);
+.icon-button:hover {
+  color: var(--ins-fg);
+  background: var(--ins-bg-hover);
 }
 
-.panel .close:hover,
-.panel .collapse:hover {
-  color: #e8e4dc;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.panel .search {
+/* ── action bar (Specs) ── */
+.action-bar {
+  flex: none;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  flex-shrink: 0;
-  border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+  gap: var(--ins-s-4);
+  height: var(--ins-bar-h);
+  padding: 0 var(--ins-s-5);
+  overflow: hidden;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--ins-border);
 }
 
-.panel .search input {
-  flex: 1;
-  line-height: 1.5;
-  color: #e8e4dc;
-  cursor: text;
+.segmented {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-1);
+  padding: var(--ins-s-1);
+  background: var(--ins-bg-raised);
+  border: 1px solid var(--ins-border);
+  border-radius: var(--ins-radius-md);
 }
 
-.panel .clear {
-  padding: 0 2px;
-  font-size: 11px;
-  color: rgba(200, 196, 188, 0.35);
+.segmented .lead {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--ins-fg-muted);
 }
 
-.panel .search input:placeholder-shown + .clear {
+.segmented.is-on .lead {
+  color: var(--ins-token);
+}
+
+.segment {
+  height: 20px;
+  padding: 0 var(--ins-s-3);
+  color: var(--ins-fg-muted);
+  border-radius: var(--ins-radius-sm);
+  font: 400 11px/20px var(--ins-font-mono);
+}
+
+.segment[aria-checked="true"] {
+  color: var(--ins-fg);
+  background: var(--ins-bg-active);
+}
+
+/* A choice that switches something on is tinted, not just selected. */
+.segment.is-on[aria-checked="true"] {
+  background: var(--ins-pin-tint);
+  box-shadow: inset 0 0 0 1px var(--ins-pin);
+}
+
+.action {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-2);
+  height: 26px;
+  min-width: 26px;
+  padding: 0 var(--ins-s-3);
+  justify-content: center;
+  color: var(--ins-fg-muted);
+  border: 1px solid transparent;
+  border-radius: var(--ins-radius-md);
+  font: 500 11px/16px var(--ins-font-sans);
+}
+
+.action:hover {
+  color: var(--ins-fg);
+  background: var(--ins-bg-hover);
+}
+
+.action[aria-pressed="true"] {
+  color: var(--ins-fg);
+  background: var(--ins-pin-tint);
+  border-color: var(--ins-pin);
+}
+
+.action[aria-pressed="true"] .icon {
+  color: var(--ins-token);
+}
+
+.action .when-on {
   display: none;
 }
 
-.panel .toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 5px 14px;
-  flex-shrink: 0;
-  border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+.action[aria-pressed="true"] .when-on {
+  display: inline;
 }
 
-.panel .toolbar label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  color: rgba(200, 196, 188, 0.55);
-  user-select: none;
+/* Below 360px the "Comparing" label drops and the pressed icon remains. */
+@container (max-width: 359px) {
+  .action[aria-pressed="true"] .when-on {
+    display: none;
+  }
 }
 
-.panel .body {
+.action.is-copied {
+  color: var(--ins-ok);
+  background: var(--ins-ok-bg);
+  box-shadow: none;
+  border-radius: var(--ins-radius-md);
+}
+
+/* ── bodies ── */
+.body {
   flex: 1;
   min-height: 0;
-  padding: 8px 0 12px;
   overflow: hidden auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: var(--ins-border-strong) transparent;
 }
 
-.panel .actions {
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.panel .action {
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  color: #c8c4bc;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.panel .action:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.panel .action.is-on {
-  color: #fff;
-  background: rgba(13, 153, 255, 0.3);
-}
-
-.panel .body > .action {
-  margin: 4px 14px;
-}
-
-.panel .resize {
+.resize {
   position: absolute;
-  z-index: 10;
   top: 0;
-  left: 0;
+  left: -3px;
   bottom: 0;
   width: 6px;
   cursor: ew-resize;
 }
 
-.panel .resize:hover {
-  background: rgba(255, 255, 255, 0.15);
+.resize:hover {
+  background: var(--ins-pin-tint);
+}
+
+/* ── collapsed: a 28px rail ── */
+.rail {
+  display: none;
+}
+
+.panel.is-collapsed {
+  width: var(--ins-s-7) !important;
+}
+
+.panel.is-collapsed > :not(.rail) {
+  display: none;
+}
+
+.panel.is-collapsed .rail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ins-s-4);
+  padding-top: var(--ins-s-4);
+  color: var(--ins-fg-muted);
+}
+
+.rail .name {
+  writing-mode: vertical-rl;
+  font: 500 11px/16px var(--ins-font-sans);
+}
+
+/* ── shared by every tab ── */
+.block {
+  display: flex;
+  flex-direction: column;
+  padding: var(--ins-s-4) var(--ins-s-5) var(--ins-s-5);
+  border-bottom: 1px solid var(--ins-border);
+}
+
+.block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ins-s-4);
+  min-height: var(--ins-row-sm);
+}
+
+.block-head h3,
+.heading {
+  margin: 0;
+  color: var(--ins-fg-subtle);
+  font: 600 11px/16px var(--ins-font-sans);
+}
+
+.block-head .note {
+  color: var(--ins-fg-subtle);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+.ghost-button {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-2);
+  height: 24px;
+  padding: 0 var(--ins-s-4);
+  color: var(--ins-fg);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius-md);
+  font: 500 11px/16px var(--ins-font-sans);
+}
+
+.ghost-button:hover {
+  background: var(--ins-bg-hover);
+}
+
+.hint {
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-sans);
+  text-wrap: pretty;
 }

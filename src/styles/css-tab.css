@@ -1,0 +1,174 @@
+/* The All CSS tab: search, switches, editable property rows, content editor. */
+
+.search {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  height: var(--ins-bar-h);
+  padding: 0 var(--ins-s-5);
+  color: var(--ins-fg-muted);
+  border-bottom: 1px solid var(--ins-border);
+}
+
+.search input {
+  all: unset;
+  flex: 1;
+  min-width: 0;
+  color: var(--ins-fg);
+  font: 400 12px/16px var(--ins-font-mono);
+}
+
+.search input::placeholder {
+  color: var(--ins-fg-subtle);
+}
+
+.search input:placeholder-shown + .icon-button {
+  display: none;
+}
+
+.switches {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--ins-s-5);
+  height: 32px;
+  padding: 0 var(--ins-s-5);
+  border-bottom: 1px solid var(--ins-border);
+}
+
+.switches label {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-sans);
+  user-select: none;
+}
+
+.switches input {
+  margin: 0;
+  accent-color: var(--ins-pin);
+}
+
+.css-body {
+  padding-bottom: var(--ins-s-5);
+}
+
+.css-body .heading {
+  padding: var(--ins-s-5) var(--ins-s-5) var(--ins-s-2);
+}
+
+/* The user's own edits */
+.css-body .heading.is-custom {
+  color: var(--ins-warn);
+}
+
+.divider {
+  margin: var(--ins-s-4) var(--ins-s-5) 0;
+  border-top: 1px solid var(--ins-border);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-4);
+  min-height: var(--ins-row-sm);
+  margin: 0 var(--ins-s-3);
+  padding: 0 var(--ins-s-3);
+  border-radius: var(--ins-radius-sm);
+}
+
+.row:hover {
+  background: var(--ins-bg-hover);
+}
+
+.row.is-overridden {
+  background: var(--ins-warn-bg);
+}
+
+.row .name {
+  flex: none;
+  width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+.row .value {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--ins-s-1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  outline: none;
+  border-radius: var(--ins-radius-xs);
+}
+
+.row .value[contenteditable] {
+  cursor: text;
+}
+
+.row .value:focus {
+  overflow: visible;
+  white-space: pre;
+  background: var(--ins-bg-active);
+  box-shadow: 0 0 0 1px var(--ins-pin);
+}
+
+/* A property that still has its default value */
+.row.is-dimmed .name,
+.row.is-dimmed .value {
+  color: var(--ins-fg-subtle);
+}
+
+.row.is-overridden .value {
+  color: var(--ins-warn);
+}
+
+.row .reset {
+  flex: none;
+  padding: 0 var(--ins-s-2);
+  color: var(--ins-warn);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+/* ── content editor ── */
+.content .heading {
+  padding: 0 0 var(--ins-s-2);
+}
+
+.editor {
+  max-height: 180px;
+  padding: var(--ins-s-3) var(--ins-s-4);
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  cursor: text;
+  outline: none;
+  color: var(--ins-fg);
+  background: var(--ins-bg-raised);
+  border: 1px solid var(--ins-border);
+  border-radius: var(--ins-radius-md);
+  font: 400 12px/18px var(--ins-font-mono);
+}
+
+.editor:focus {
+  border-color: var(--ins-pin);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--ins-s-3);
+}
+
+.footer .reset {
+  color: var(--ins-warn);
+  font: 500 11px/16px var(--ins-font-sans);
+}

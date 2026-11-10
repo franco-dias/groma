@@ -1,0 +1,161 @@
+/* Design tokens and resets. Every other stylesheet reads these variables. */
+
+:host {
+  all: initial;
+
+  --ins-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --ins-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Surfaces and text */
+  --ins-bg: #171717;
+  --ins-bg-raised: #1f1f1f;
+  --ins-bg-hover: #262626;
+  --ins-bg-active: #303030;
+  --ins-border: #2a2a2a;
+  --ins-border-strong: #3d3d3d;
+  --ins-fg: #fafafa;
+  --ins-fg-muted: #a3a3a3;
+  --ins-fg-subtle: #8f8f8f;
+
+  /* Meaning */
+  --ins-token: #8ab4ff;
+  --ins-pin: #2f6bff;
+  --ins-pin-tag: #2563eb;
+  --ins-pin-fg: #ffffff;
+  --ins-pin-tint: rgba(47, 107, 255, 0.2);
+  --ins-hover-line: #3b82f6;
+  --ins-measure: #d92d20;
+  --ins-measure-fg: #ffffff;
+  --ins-warn: #f5b84a;
+  --ins-warn-bg: rgba(245, 184, 74, 0.12);
+  --ins-ok: #4ade80;
+  --ins-ok-bg: rgba(74, 222, 128, 0.16);
+  --ins-added: #4ade80;
+  --ins-added-bg: rgba(74, 222, 128, 0.12);
+  --ins-removed: #ff7b72;
+  --ins-removed-bg: rgba(255, 123, 114, 0.12);
+  --ins-removed-line: rgba(255, 123, 114, 0.45);
+
+  /* Box model: the panel diagram and the hover overlay */
+  --ins-box-margin-bg: rgba(246, 178, 107, 0.1);
+  --ins-box-margin-line: #8a6a45;
+  --ins-box-padding-bg: rgba(134, 199, 120, 0.1);
+  --ins-box-padding-line: #557a4d;
+  --ins-box-content-bg: rgba(111, 168, 220, 0.16);
+  --ins-box-content-line: #4c6f93;
+
+  --ins-swatch-ring: rgba(255, 255, 255, 0.22);
+  --ins-checker: repeating-conic-gradient(#4a4a4a 0 25%, #2a2a2a 0 50%) 0 0 / 6px 6px;
+  --ins-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.2);
+  --ins-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --ins-grid-4: rgba(255, 255, 255, 0.1);
+  --ins-grid-8: rgba(255, 255, 255, 0.2);
+
+  /* Spacing and sizes */
+  --ins-s-1: 2px;
+  --ins-s-2: 4px;
+  --ins-s-3: 6px;
+  --ins-s-4: 8px;
+  --ins-s-5: 12px;
+  --ins-s-6: 16px;
+  --ins-s-7: 28px;
+  --ins-row: 24px;
+  --ins-row-sm: 22px;
+  --ins-label-w: 56px;
+  --ins-indent: 12px;
+  --ins-bar-h: 40px;
+  --ins-menu-w: 260px;
+  --ins-panel-w: 380px;
+  --ins-radius-xs: 3px;
+  --ins-radius-sm: 4px;
+  --ins-radius-md: 6px;
+  --ins-radius: 8px;
+  --ins-radius-pill: 9999px;
+  --ins-dur: 100ms;
+
+  /* Width the docked panel takes; the launcher moves out of its way. */
+  --ins-dock: 0px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2147483647;
+  color: var(--ins-fg);
+  font: 400 12px/16px var(--ins-font-sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.icon {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.spacer {
+  flex: 1;
+  min-width: 0;
+}
+
+kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 var(--ins-s-1);
+  color: var(--ins-fg);
+  background: var(--ins-bg-raised);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius-xs);
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+/* A colour chip; the checker shows through translucent colours. */
+.swatch {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--ins-radius-xs);
+  background:
+    linear-gradient(var(--swatch), var(--swatch)),
+    var(--ins-checker);
+  box-shadow: inset 0 0 0 1px var(--ins-swatch-ring);
+}
+
+.swatch.is-small {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+/* Click to copy: the copied text gets a tint that adds no size. */
+.copy {
+  cursor: pointer;
+}
+
+.copy.is-copied {
+  background: var(--ins-ok-bg);
+  box-shadow: 0 0 0 2px var(--ins-ok-bg);
+  border-radius: 2px;
+}
+
+.copy.is-copy-blocked {
+  background: var(--ins-removed-bg);
+  box-shadow: 0 0 0 2px var(--ins-removed-bg);
+  border-radius: 2px;
+}

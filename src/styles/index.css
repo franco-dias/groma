@@ -1,7 +1,8 @@
 /* One stylesheet for the inspector, inlined into its shadow root. */
+@import "./tokens.css";
 @import "./overlay.css";
 @import "./panel.css";
-@import "./rows.css";
-@import "./editor.css";
+@import "./specs.css";
+@import "./css-tab.css";
 @import "./layers.css";
 @import "./changes.css";

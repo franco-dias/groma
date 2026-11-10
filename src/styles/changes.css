@@ -1,15 +1,240 @@
-/* The Changes tab: changed lines of a board. */
+/* The Changes tab: this export against an older one. */
 
-.panel .diff {
-  padding: 2px 14px 6px 28px;
-  font-size: 10.5px;
+.changes-head {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ins-s-3);
+  padding: var(--ins-s-4) var(--ins-s-5);
+  border-bottom: 1px solid var(--ins-border);
+}
+
+.file-button {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  height: 28px;
+  min-width: 0;
+  padding: 0 var(--ins-s-4);
+  color: var(--ins-fg);
+  background: var(--ins-bg-raised);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius-md);
+  font: 400 12px/16px var(--ins-font-mono);
+}
+
+.file-button .icon {
+  color: var(--ins-fg-muted);
+}
+
+.file-button .file-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-button .change {
+  flex: none;
+  color: var(--ins-fg-muted);
+  font: 500 11px/16px var(--ins-font-sans);
+}
+
+.file-button.is-error {
+  border-color: var(--ins-removed-line);
+}
+
+.dates {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+.dates .icon {
+  color: var(--ins-fg-muted);
+}
+
+.changes-list {
+  padding: var(--ins-s-3);
+}
+
+.change-group {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-2);
+  height: var(--ins-row);
+  padding: 0 var(--ins-s-2);
+  font: 600 11px/16px var(--ins-font-sans);
+}
+
+.change-group + .change-row,
+.change-lines + .change-group,
+.change-row + .change-group {
+  margin-top: 0;
+}
+
+.change-group:not(:first-child) {
+  margin-top: var(--ins-s-2);
+}
+
+.change-group .icon {
+  color: var(--ins-fg-muted);
+}
+
+.count {
+  padding: 0 var(--ins-s-2);
+  color: var(--ins-fg-muted);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius-pill);
+  font: 400 10px/14px var(--ins-font-mono);
+}
+
+.change-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-2);
+  height: var(--ins-row);
+  padding: 0 var(--ins-s-2) 0 calc(var(--ins-s-2) + var(--ins-indent));
+  border-radius: var(--ins-radius-sm);
+  white-space: nowrap;
+  font: 400 12px/16px var(--ins-font-mono);
+}
+
+button.change-row {
+  width: 100%;
+}
+
+button.change-row:hover,
+.change-row[aria-expanded="true"] {
+  background: var(--ins-bg-raised);
+}
+
+.change-row[aria-expanded="true"] {
+  border-radius: var(--ins-radius-sm) var(--ins-radius-sm) 0 0;
+}
+
+.change-row .icon {
+  color: var(--ins-fg-muted);
+}
+
+.change-row .board-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.change-row .prefix,
+.change-row .zero {
+  color: var(--ins-fg-muted);
+  font-size: 11px;
+}
+
+.change-row .totals {
+  flex: none;
+  display: flex;
+  gap: var(--ins-s-3);
+  font-size: 11px;
+}
+
+.sign {
+  flex: none;
+  width: 12px;
+  text-align: center;
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+.is-added > .sign,
+.totals .added {
+  color: var(--ins-added);
+}
+
+.is-removed > .sign,
+.totals .removed {
+  color: var(--ins-removed);
+}
+
+.change-row.is-removed .board-name {
+  color: var(--ins-fg-muted);
+  text-decoration: line-through;
+}
+
+.change-lines {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--ins-s-1);
+  padding: var(--ins-s-1) 0 var(--ins-s-2);
+  background: var(--ins-bg-raised);
+  border-radius: 0 0 var(--ins-radius-sm) var(--ins-radius-sm);
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+.change-line {
+  display: flex;
+  gap: var(--ins-s-3);
+  padding: var(--ins-s-1) var(--ins-s-3) var(--ins-s-1) calc(var(--ins-s-2) + 2 * var(--ins-indent));
+}
+
+.change-line.is-added {
+  background: var(--ins-added-bg);
+}
+
+.change-line.is-removed {
+  background: var(--ins-removed-bg);
+}
+
+.change-line .text {
+  min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.panel .diff .is-added {
-  color: #9fd6a8;
+/* ── empty and error states ── */
+.changes-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ins-s-3);
+  padding: var(--ins-s-6) var(--ins-s-5);
 }
 
-.panel .diff .is-removed {
-  color: #f0a070;
+.changes-empty b,
+.alert b {
+  font: 600 12px/16px var(--ins-font-sans);
+}
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  height: 28px;
+  margin-top: var(--ins-s-2);
+  padding: 0 var(--ins-s-5) 0 var(--ins-s-4);
+  color: var(--ins-bg);
+  background: var(--ins-fg);
+  border-radius: var(--ins-radius-md);
+  font: 500 12px/16px var(--ins-font-sans);
+}
+
+.alert {
+  display: flex;
+  gap: var(--ins-s-3);
+  margin: var(--ins-s-4) var(--ins-s-5);
+  padding: var(--ins-s-4);
+  background: var(--ins-removed-bg);
+  border: 1px solid var(--ins-removed-line);
+  border-radius: var(--ins-radius-md);
+}
+
+.alert .icon {
+  margin-top: 1px;
+  color: var(--ins-removed);
+}
+
+.alert div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ins-s-1);
+  min-width: 0;
 }

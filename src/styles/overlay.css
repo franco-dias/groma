@@ -1,30 +1,23 @@
-/* Everything drawn over the page: hover boxes, distances, tooltip, outlines, grid, layer menu. */
-
-:host {
-  all: initial;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 2147483647;
-}
+/* Everything drawn over the page: hover boxes, outlines, distances, tooltip, grid, launcher. */
 
 .overlay,
 .overlay > div,
+.outline,
 .tooltip,
-.outline {
+.grid {
   position: fixed;
   pointer-events: none;
-  box-sizing: border-box;
 }
 
 .overlay {
-  z-index: 2147483645;
   top: 0;
   left: 0;
   width: 0;
   height: 0;
+  z-index: 3;
 }
 
+/* Box model of the hovered element */
 .margin {
   background: rgba(246, 178, 107, 0.45);
 }
@@ -50,82 +43,272 @@
   border: 1px solid rgba(160, 100, 210, 0.7);
 }
 
-.tooltip {
-  z-index: 2147483646;
-  display: none;
-  padding: 12px 16px;
-  border-radius: 10px;
-  white-space: pre;
-  color: #e8e4dc;
-  background: rgba(18, 14, 10, 0.92);
-  backdrop-filter: blur(12px) saturate(160%);
-  border: 0.5px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  font: 12px/1.7 ui-monospace, "Cascadia Code", "Fira Mono", monospace;
-}
-
-.measure {
-  background: rgb(240, 60, 60);
-}
-
+/* Hovered element while measuring */
 .target {
-  border: 1px solid rgb(240, 60, 60);
+  border: 1px dashed var(--ins-hover-line);
 }
 
-.measure-label {
-  padding: 1px 5px;
-  border-radius: 3px;
-  color: #fff;
-  background: rgb(240, 60, 60);
-  font: 600 11px/1.4 ui-monospace, "Cascadia Code", "Fira Mono", monospace;
+/* Distance lines: a 1px line with a 7px cap on each end */
+.measure {
+  background: var(--ins-measure);
 }
 
-.outline {
-  display: none;
-  border-radius: 1px;
+.measure::before,
+.measure::after {
+  content: "";
+  position: absolute;
+  background: var(--ins-measure);
 }
 
-.grid {
-  position: fixed;
-  pointer-events: none;
-  z-index: 2147483642;
-  display: none;
-  background-image: linear-gradient(to right, rgba(13, 153, 255, 0.25) 1px, transparent 1px), linear-gradient(to bottom, rgba(13, 153, 255, 0.25) 1px, transparent 1px);
+.measure.is-x::before,
+.measure.is-x::after {
+  top: -3px;
+  width: 1px;
+  height: 7px;
 }
 
-.menu {
-  position: fixed;
-  z-index: 2147483647;
-  min-width: 180px;
-  max-height: 320px;
-  overflow: auto;
-  padding: 4px 0;
-  border-radius: 8px;
-  color: #c8c4bc;
-  background: rgba(18, 14, 10, 0.96);
-  border: 0.5px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  font: 12px/1.6 ui-monospace, "Cascadia Code", "Fira Mono", monospace;
+.measure.is-x::before {
+  left: 0;
 }
 
-.menu > div {
-  padding: 2px 12px;
-  cursor: default;
+.measure.is-x::after {
+  right: 0;
+}
+
+.measure.is-y::before,
+.measure.is-y::after {
+  left: -3px;
+  width: 7px;
+  height: 1px;
+}
+
+.measure.is-y::before {
+  top: 0;
+}
+
+.measure.is-y::after {
+  bottom: 0;
+}
+
+.overlay > .measure-label {
+  height: 16px;
+  padding: 0 var(--ins-s-2);
+  border-radius: var(--ins-radius-xs);
+  color: var(--ins-measure-fg);
+  background: var(--ins-measure);
+  font: 500 11px/16px var(--ins-font-mono);
   white-space: nowrap;
 }
 
-.menu > div:hover {
-  color: #fff;
-  background: rgba(13, 153, 255, 0.3);
+/* Outlines that follow an element */
+.outline {
+  display: none;
+  z-index: 2;
 }
 
 .outline-pinned {
-  z-index: 2147483644;
-  border: 2px solid rgb(13, 153, 255);
-  box-shadow: 0 0 0 4px rgba(13, 153, 255, 0.18);
+  border: 2px solid var(--ins-pin);
 }
 
-.outline-nav {
-  z-index: 2147483643;
-  border: 2px dashed rgb(13, 153, 255);
+.outline-hover {
+  border: 1px dashed var(--ins-hover-line);
+}
+
+.pin-tag {
+  position: absolute;
+  left: -2px;
+  bottom: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  height: 18px;
+  padding: 0 var(--ins-s-3);
+  color: var(--ins-pin-fg);
+  background: var(--ins-pin-tag);
+  border-radius: var(--ins-radius-sm) var(--ins-radius-sm) 0 0;
+  white-space: nowrap;
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+.pin-tag b {
+  font: 600 11px/16px var(--ins-font-sans);
+}
+
+/* No room above the element: the tag sits inside its top edge. */
+.pin-tag.is-inside {
+  bottom: auto;
+  top: 0;
+  left: 0;
+  border-radius: 0 0 var(--ins-radius-sm) 0;
+}
+
+/* Hover tooltip: name, size, position on the board */
+.tooltip {
+  display: none;
+  z-index: 4;
+  align-items: center;
+  gap: var(--ins-s-4);
+  height: 24px;
+  padding: 0 var(--ins-s-4);
+  color: var(--ins-fg);
+  background: var(--ins-bg);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius-md);
+  box-shadow: var(--ins-shadow-sm);
+  white-space: nowrap;
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+.tooltip b {
+  font: 600 12px/16px var(--ins-font-sans);
+}
+
+.tooltip .position {
+  color: var(--ins-fg-muted);
+}
+
+/* Artboard grid: white lines in "difference" mode show on light and dark alike. */
+.grid {
+  display: none;
+  z-index: 1;
+  mix-blend-mode: difference;
+  --grid-line: var(--ins-grid-4);
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+}
+
+.grid.is-8 {
+  --grid-line: var(--ins-grid-8);
+}
+
+/* Launcher pill, bottom right */
+.launcher {
+  position: fixed;
+  right: calc(var(--ins-dock) + var(--ins-s-6));
+  bottom: var(--ins-s-6);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  height: 32px;
+  padding: 0 var(--ins-s-5) 0 var(--ins-s-4);
+  color: var(--ins-fg);
+  background: var(--ins-bg);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius-pill);
+  box-shadow: var(--ins-shadow-sm);
+  white-space: nowrap;
+  font: 500 12px/16px var(--ins-font-sans);
+  cursor: pointer;
+  transition: right var(--ins-dur);
+}
+
+.launcher .icon {
+  color: var(--ins-fg-muted);
+}
+
+.launcher .dot {
+  color: var(--ins-fg-subtle);
+}
+
+.launcher .hold {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-2);
+  color: var(--ins-fg-muted);
+  font-weight: 400;
+}
+
+.launcher .locked,
+.launcher .off {
+  display: none;
+}
+
+.launcher.is-locked {
+  cursor: default;
+  padding-right: var(--ins-s-1);
+  border-color: var(--ins-pin);
+  box-shadow:
+    var(--ins-shadow-sm),
+    0 0 0 3px var(--ins-pin-tint);
+}
+
+.launcher.is-locked .icon {
+  color: var(--ins-token);
+}
+
+.launcher.is-locked .dot,
+.launcher.is-locked .hold {
+  display: none;
+}
+
+.launcher.is-locked .locked {
+  display: block;
+  height: 18px;
+  padding: 0 var(--ins-s-3);
+  color: var(--ins-token);
+  background: var(--ins-pin-tint);
+  border-radius: var(--ins-radius-pill);
+  font: 500 11px/18px var(--ins-font-sans);
+}
+
+.launcher.is-locked .off {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--ins-fg-muted);
+  border-radius: var(--ins-radius-pill);
+}
+
+/* Layers under the pointer (Alt + right-click) */
+.menu {
+  position: fixed;
+  z-index: 6;
+  width: var(--ins-menu-w);
+  max-height: 320px;
+  overflow: auto;
+  padding: var(--ins-s-2);
+  color: var(--ins-fg);
+  background: var(--ins-bg);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius);
+  box-shadow: var(--ins-shadow);
+  font: 400 12px/16px var(--ins-font-mono);
+}
+
+.menu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--ins-row-sm);
+  padding: 0 var(--ins-s-3);
+  color: var(--ins-fg-subtle);
+  font: 600 11px/16px var(--ins-font-sans);
+}
+
+.menu-head .count {
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  height: var(--ins-row);
+  padding: 0 var(--ins-s-3);
+  border-radius: var(--ins-radius-sm);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: var(--ins-bg-hover);
+}
+
+.menu-item .size {
+  flex: none;
+  font-size: 11px;
+  color: var(--ins-fg-muted);
 }

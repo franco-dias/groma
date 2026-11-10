@@ -1,26 +1,49 @@
-/* The Layers tab tree (rows are reused by the Changes tab). */
+/* The Layers tab: the artboard's element tree. */
 
-.panel .nav-row {
-  margin: 0 4px;
-  padding: 4px 14px;
-  border-radius: 5px;
-  font-size: 12px;
-  color: rgba(200, 196, 188, 0.65);
-  transition: background 0.1s;
+.tree {
+  padding: var(--ins-s-3);
+  font: 400 12px/16px var(--ins-font-mono);
 }
 
-.panel .nav-row:hover {
-  background: rgba(255, 255, 255, 0.04);
+.layer {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-2);
+  height: var(--ins-row);
+  min-width: 0;
+  /* --depth is set per row: 12px of indent per level. */
+  padding: 0 var(--ins-s-3) 0 calc(var(--ins-s-2) + var(--depth, 0) * var(--ins-indent));
+  border-radius: var(--ins-radius-sm);
+  white-space: nowrap;
+  cursor: pointer;
 }
 
-.panel .nav-row.is-current {
-  font-weight: 600;
-  color: #e8e4dc;
-  background: rgba(255, 255, 255, 0.07);
+.layer:hover {
+  background: var(--ins-bg-hover);
 }
 
-.panel .caret {
-  display: inline-block;
-  width: 14px;
-  color: rgba(200, 196, 188, 0.5);
+.layer.is-current {
+  background: var(--ins-pin-tint);
+  box-shadow: inset 2px 0 0 var(--ins-pin);
+}
+
+.layer .caret {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 12px;
+  height: 12px;
+  color: var(--ins-fg-muted);
+}
+
+/* The tag reads first; its classes are muted. */
+.layer-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.layer-name .classes {
+  color: var(--ins-fg-muted);
 }

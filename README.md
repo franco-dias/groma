@@ -18,19 +18,24 @@ Put the tag anywhere in the page, `<head>` included. Then:
 
 | Keys | What happens |
 | --- | --- |
-| Alt + hover | The hovered element's box model and a tooltip |
+| Alt + hover | The hovered element's box model and a chip with its name, size and position |
 | Alt + click | Pins the element and opens the side panel |
 | Alt + hover, with an element pinned | Distances from the pinned element |
 | Alt + right-click | A menu of every layer under the pointer |
+| Esc | Ends a comparison and turns the inspect lock off |
+
+A launcher pill sits at the bottom right of the page. Click it to lock
+inspect mode on, so none of the above needs Alt.
 
 The side panel has four tabs:
 
-- **Specs**: component and props, size and sizing intent (fixed, hug, fill),
-  position on the artboard, spacing, colours, font, motion. Design tokens
-  appear beside the values, with their MUI theme path and their value in each
-  theme. A click copies a value in the form `sx` takes. The toolbar switches
-  px and rem, shows a grid, compares two elements, copies a link to the
-  element and picks a colour from the screen.
+- **Specs**: where the element is (board, parent), its component and props,
+  size and sizing intent (fixed, hug, fill), a box diagram of margin and
+  padding, colours, typography and motion. Each colour shows its design
+  token: the MUI theme path, the CSS variable and the value in each theme;
+  a colour with no token is flagged. A click copies any value. The action
+  bar switches px and rem, shows a grid, compares two elements, copies a
+  link to the element and picks a colour from the screen.
 - **All CSS**: every computed property. Values are editable; edits are saved
   in the browser and replayed on reload.
 - **Layers**: the artboard's element tree.
@@ -70,12 +75,14 @@ Start at [src/main.ts](src/main.ts): it only starts the features.
 | `src/options.ts` | What the user switched on in the panel |
 | `src/root.ts` | The shadow root that isolates the inspector from the page's CSS |
 | `src/overlay/` | Inspect mode: hover boxes, distances, tooltip, layer menu |
-| `src/outlines.ts` | Outline of the pinned element, hover outline, grid |
+| `src/outlines.ts` | Outline and name tag of the pinned element, hover outline, grid |
+| `src/launcher.ts` | The launcher pill and the inspect lock |
+| `src/icons.ts` | The icons, as SVG drawings |
 | `src/panel/` | The side panel, its markup (`panel.html`) and one file per tab |
 | `src/specs/` | What the Specs tab knows: sections, tokens, colours, units, sizing, components |
 | `src/edits/` | Saved edits: selectors, storage, apply and replay |
 | `src/export-diff.ts` | Comparing two Claude Design exports |
-| `src/styles/` | The stylesheets, one per area |
+| `src/styles/` | The stylesheets, one per area; `tokens.css` holds every colour and size |
 
 Each tab implements the small `Tab` interface in
 [src/panel/tab.ts](src/panel/tab.ts); adding a tab means adding a file and
@@ -98,7 +105,7 @@ licence is chosen; remove `private` to publish. Once published, jsDelivr and
 unpkg serve the file:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/live-inspector@0.1.0/dist/live-inspector.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/live-inspector@0.2.0/dist/live-inspector.js"></script>
 ```
 
 ## Known limits

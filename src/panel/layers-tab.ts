@@ -4,7 +4,9 @@
  * Hover a layer to outline it on the page; click it to pin it.
  */
 import { boardOf } from "../board";
-import { elementLabel, h } from "../dom";
+import { h } from "../dom";
+import { tagAndClasses } from "../element-name";
+import { icon } from "../icons";
 import { hideHoverOutline, showHoverOutline } from "../outlines";
 import { isOwn } from "../root";
 import { pin } from "../selection";
@@ -21,24 +23,27 @@ const layerChildren = (node: Element): Element[] =>
 function treeNode(node: Element, depth: number, open: Set<Element>, current: Element): HTMLElement {
   const wrap = h("div");
   const children = layerChildren(node);
-  const row = wrap.appendChild(h("div", "nav-row"));
+  const row = wrap.appendChild(h("div", "layer"));
+  row.setAttribute("role", "treeitem");
   row.classList.toggle("is-current", node === current);
-  row.style.paddingLeft = `${10 + depth * 12}px`;
-  const caret = row.appendChild(h("span", "caret", children.length ? "▸" : ""));
-  row.appendChild(h("span", "", elementLabel(node)));
+  row.style.setProperty("--depth", String(depth));
+  const caret = row.appendChild(h("span", "caret"));
+  row.appendChild(tagAndClasses(node, "layer-name"));
   const childList = wrap.appendChild(h("div"));
 
-  const setOpen = (isOpen: boolean) => {
-    caret.textContent = isOpen ? "▾" : "▸";
+  let isOpen = false;
+  const setOpen = (next: boolean) => {
+    isOpen = next;
+    caret.replaceChildren(icon(isOpen ? "chevronDown" : "chevronRight", 12));
     childList.replaceChildren(
       ...(isOpen ? children.map((child) => treeNode(child, depth + 1, open, current)) : []),
     );
   };
-  if (children.length && open.has(node)) setOpen(true);
+  if (children.length) setOpen(open.has(node));
 
   caret.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (children.length) setOpen(caret.textContent === "▸");
+    if (children.length) setOpen(!isOpen);
   });
   row.addEventListener("mouseenter", () => showHoverOutline(node));
   row.addEventListener("mouseleave", hideHoverOutline);
@@ -52,7 +57,8 @@ function renderLayers(el: Element): void {
   const root = boardOf(el) ?? document.body;
   const open = new Set<Element>();
   for (let node: Element | null = el; node; node = node.parentElement) {
-    open.add(node);
+    // The pinned layer itself starts closed: its children are one click away.
+    if (node !== el) open.add(node);
     if (node === root) break;
   }
   const scrollTop = body.scrollTop;
