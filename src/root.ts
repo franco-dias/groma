@@ -3,6 +3,11 @@
  *
  * Every node the inspector draws lives in one shadow root, so the page's CSS
  * cannot restyle the inspector and the inspector's CSS cannot leak out.
+ *
+ * The host is also put in the browser's top layer, which paints above every
+ * other element whatever its z-index. A page's own fixed elements, even one
+ * at the highest z-index that comes later in the document, cannot cover the
+ * panel, the launcher or the outlines.
  */
 import { h } from "./dom";
 import styles from "./styles/index.css?inline";
@@ -15,8 +20,24 @@ function inspectorHost(): HTMLElement {
   if (!host) {
     host = document.body.appendChild(document.createElement(HOST_TAG));
     host.attachShadow({ mode: "open" }).appendChild(h("style", "", styles));
+    promoteToTopLayer(host);
   }
   return host;
+}
+
+/**
+ * A manual popover stays open until closed (no light dismiss, Esc does not
+ * close it) and sits in the top layer. Browsers without the Popover API keep
+ * the z-index the stylesheet gives the host.
+ */
+function promoteToTopLayer(element: HTMLElement): void {
+  if (!("showPopover" in element)) return;
+  try {
+    element.popover = "manual";
+    element.showPopover();
+  } catch {
+    // Not promoted: the host's own z-index still applies.
+  }
 }
 
 /** Adds a top-level inspector node (overlay, panel, menu…) to the page. */

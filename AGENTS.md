@@ -90,6 +90,10 @@ The browser tests need Google Chrome installed; they do not download one.
   target.
 - `document.querySelector` does not see the inspector's nodes. Hold
   references, or query the shadow root.
+- The host is a manual popover, in the browser's top layer, so no page
+  element can cover it (`src/root.ts`). Do not give the host a `transform`
+  or `overflow`, and do not take it out of the top layer: a page that uses
+  the highest z-index would then hide the panel.
 
 ### Pixels
 

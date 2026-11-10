@@ -76,10 +76,18 @@ the page aside or floats over it (see below).
 - Width, open tab, unit and push/float mode are remembered per origin
   (`localStorage["__groma_panel"]`).
 - Keys typed in the panel do not reach the page's own shortcuts.
+- The inspector is always above the page. Its host element is a manual
+  popover, so it sits in the browser's top layer, which paints over every
+  other element whatever its z-index. A page element fixed at the highest
+  z-index that comes later in the document cannot cover the panel, the
+  launcher or the outlines. Browsers without the Popover API fall back to the
+  host's own z-index. A modal `<dialog>` that the page opens later sits above
+  the inspector, and blocks it while it is open.
 
 Code: `src/panel/panel.ts`, `layout.ts`, `panel.html`, `src/page-shift.ts`,
-`src/styles/panel.css`.
-Tests: `tests/panel.test.ts`, `tests/page-shift.test.ts`.
+`src/root.ts` (the top layer), `src/styles/panel.css`.
+Tests: `tests/panel.test.ts`, `tests/page-shift.test.ts`,
+`tests/layering.test.ts`.
 
 ## 4. Pinned outline and grid
 

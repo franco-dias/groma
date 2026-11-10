@@ -12,6 +12,10 @@ All notable changes to this package are recorded here. Versions follow
   on `<html>` and restores the page's value when the panel closes. Elements
   fixed to the right edge, `vw` layouts and media queries still see the full
   window; float is for those pages.
+- Fixed: a page element fixed at the highest z-index, added after Groma, could
+  cover the panel, the launcher and the outlines. Groma now sits in the
+  browser's top layer, above every z-index. Browsers without the Popover API
+  keep the old behaviour.
 - Fixed: hover outlines now redraw when the page moves the hovered element
   under a still pointer (a pushed layout, a scroll), instead of staying where
   the element was.
