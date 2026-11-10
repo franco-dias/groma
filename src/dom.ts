@@ -46,6 +46,27 @@ export function scaleOf(el: Element, rect: Box): Scale {
   };
 }
 
+/**
+ * The part of an element's rectangle the page actually shows: what is left
+ * after every scrolling or clipping ancestor has cut it.
+ */
+export function visibleBox(el: Element, rect: Box): Box {
+  let left = rect.left;
+  let top = rect.top;
+  let right = rect.left + rect.width;
+  let bottom = rect.top + rect.height;
+  for (let parent = el.parentElement; parent; parent = parent.parentElement) {
+    const { overflowX, overflowY } = getComputedStyle(parent);
+    if (overflowX === "visible" && overflowY === "visible") continue;
+    const clip = parent.getBoundingClientRect();
+    left = Math.max(left, clip.left);
+    top = Math.max(top, clip.top);
+    right = Math.min(right, clip.right);
+    bottom = Math.min(bottom, clip.bottom);
+  }
+  return { left, top, width: Math.max(0, right - left), height: Math.max(0, bottom - top) };
+}
+
 /** The element's border-box size in its own CSS pixels, at any zoom. */
 export function layoutSize(el: Element, rect: Box): { width: number; height: number } {
   const { offsetWidth, offsetHeight } = el as HTMLElement;

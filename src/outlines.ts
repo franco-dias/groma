@@ -4,7 +4,7 @@
  * artboard grid.
  */
 import { boardOf } from "./board";
-import { h, placeOver, scaleOf } from "./dom";
+import { h, placeOver, scaleOf, visibleBox } from "./dom";
 import { elementName, sizeText } from "./element-name";
 import { options } from "./options";
 import { mount } from "./root";
@@ -20,15 +20,25 @@ let grid: HTMLElement | null = null;
 let outlined: Element | null = null;
 let frame = 0;
 
-/** The grid covers the pinned element's artboard and scales with it. */
+/**
+ * The grid covers the visible part of the pinned element's artboard and
+ * scales with it. Its lines start at the board's corner, also when the page
+ * has scrolled that corner out of view.
+ */
 function placeGrid(pinned: Element): void {
   grid ??= mount(h("div", "grid"));
   const board = boardOf(pinned) ?? document.body;
   const rect = board.getBoundingClientRect();
   const scale = scaleOf(board, rect);
-  placeOver(grid, rect);
+  const visible = visibleBox(board, rect);
+  placeOver(grid, visible);
+  const origin = `${rect.left - visible.left}px ${rect.top - visible.top}px`;
+  grid.style.setProperty("-webkit-mask-position", origin);
+  grid.style.setProperty("mask-position", origin);
   grid.classList.toggle("is-8", options.gridStep === 8);
-  grid.style.backgroundSize = `${options.gridStep * scale.x}px ${options.gridStep * scale.y}px`;
+  const cell = `${options.gridStep * scale.x}px ${options.gridStep * scale.y}px`;
+  grid.style.setProperty("-webkit-mask-size", cell);
+  grid.style.setProperty("mask-size", cell);
 }
 
 /** Keeps the outline and the grid on their targets while the page scrolls or zooms. */

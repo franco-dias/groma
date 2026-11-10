@@ -167,19 +167,29 @@
   color: var(--ins-fg-muted);
 }
 
-/* Artboard grid: white lines in "difference" mode show on light and dark alike. */
+/*
+ * Artboard grid. The lines are a mask over a filter that shifts whatever is
+ * behind them towards its opposite: light boards get darker lines and dark
+ * boards lighter ones. (A blend mode cannot do this from here: the
+ * inspector's host is its own stacking context, so it would only blend with
+ * the inspector's other nodes and show as faint white.)
+ */
 .grid {
   display: none;
   z-index: 1;
-  mix-blend-mode: difference;
-  --grid-line: var(--ins-grid-4);
-  background-image:
-    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  --grid-strength: 0.12;
+  -webkit-backdrop-filter: invert(var(--grid-strength));
+  backdrop-filter: invert(var(--grid-strength));
+  --grid-lines:
+    linear-gradient(to right, #000 1px, transparent 1px),
+    linear-gradient(to bottom, #000 1px, transparent 1px);
+  -webkit-mask-image: var(--grid-lines);
+  mask-image: var(--grid-lines);
 }
 
+/* The wider grid has fewer lines, so each can be stronger. */
 .grid.is-8 {
-  --grid-line: var(--ins-grid-8);
+  --grid-strength: 0.22;
 }
 
 /* Launcher pill, bottom right */

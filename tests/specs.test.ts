@@ -300,10 +300,39 @@ describe("grid", () => {
     expect(getComputedStyle(grid).display).toBe("block");
     expect(grid.getBoundingClientRect().width).toBe(board.width);
     // 8 board pixels at half size.
-    expect(grid.style.backgroundSize).toBe("4px 4px");
+    expect(grid.style.getPropertyValue("mask-size")).toBe("4px 4px");
+    // The lines must show on any board: they filter what is behind them
+    // (a blend mode would only show on dark boards).
+    expect(getComputedStyle(grid).backdropFilter).toBe("invert(0.22)");
+    expect(getComputedStyle(grid).mixBlendMode).toBe("normal");
 
     ui('[data-option="grid"] [data-value="0"]')!.click();
     await frames();
     expect(getComputedStyle(grid).display).toBe("none");
+  });
+
+  it("stays inside the part of the board the page shows", async () => {
+    // A board scrolled inside a narrower, clipping frame.
+    page(`
+      <div class="frame" style="width: 200px; height: 100px; overflow: hidden; margin-left: 50px">
+        <div data-artboard style="width: 600px; height: 300px; margin-left: -40px">
+          <p class="text" style="margin: 0">Text</p>
+        </div>
+      </div>
+    `);
+    inspector().pin(el(".text"));
+    ui('[data-option="grid"] [data-value="8"]')!.click();
+    await frames();
+
+    const grid = ui(".grid")!.getBoundingClientRect();
+    const frame = el(".frame").getBoundingClientRect();
+    expect([grid.left, grid.top, grid.width, grid.height]).toEqual([
+      frame.left,
+      frame.top,
+      frame.width,
+      frame.height,
+    ]);
+    // The lines still start at the board's corner, 40px left of the frame.
+    expect(ui(".grid")!.style.getPropertyValue("mask-position")).toBe("-40px 0px");
   });
 });
