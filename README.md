@@ -295,10 +295,14 @@ npm version minor
 `npm version` bumps the version, commits and tags. `npm publish` runs the
 tests and the build first (`prepublishOnly`) and ships only `dist/`.
 
-The package is not published. It is marked `"private": true` and
-`"license": "UNLICENSED"` until a licence is chosen; remove `private` to
-publish. After that, jsDelivr and unpkg serve the file from the URL shown
-above.
+The package is not published yet. It is marked `"private": true` so it
+cannot be published by accident; remove that line to publish. After that,
+jsDelivr and unpkg serve the file from the URL shown above.
+
+## Licence
+
+[MIT](LICENSE). You may use Groma, embed it in your design files and change
+it, as long as the copyright notice stays with it.
 
 ## Known limits
 

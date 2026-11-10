@@ -12,7 +12,7 @@
     "dev-mode",
     "ai-design"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/groma.js",
   "unpkg": "./dist/groma.js",

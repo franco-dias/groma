@@ -172,8 +172,9 @@ The browser tests need Google Chrome installed; they do not download one.
 ### Releasing
 
 - Versions follow semver; `npm version` bumps, commits and tags.
-- The package is `"private": true` with no licence chosen. Do not publish,
-  push to a remote or change the licence unless the owner asks.
+- The code is MIT licensed. The package is `"private": true` so it is not
+  published by accident. Do not publish to npm, remove `private` or change
+  the licence unless the owner asks.
 
 ## Known limits
 

@@ -8,6 +8,7 @@ All notable changes to this package are recorded here. Versions follow
 Made for any project: nothing about a framework or a design system is
 assumed by default.
 
+- Licensed under MIT.
 - **Renamed to Groma.** Before the first publication, so there is no alias:
   the package is `groma`, the file `dist/groma.js`, the global
   `window.Groma`, the host element `<groma-inspector>`, the script-tag
