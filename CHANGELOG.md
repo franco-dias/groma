@@ -5,6 +5,10 @@ All notable changes to this package are recorded here. Versions follow
 
 ## Unreleased
 
+- Changed: a heavier logo. The mark sits on a dark tile, with a thick bar and
+  staff against thin plumb lines, solid plumb bobs and a red dimension line.
+  Same files, same animation, so the README needs no change.
+
 ## 0.3.0 (2026-11-10)
 
 Made for any project: nothing about a framework or a design system is

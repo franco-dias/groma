@@ -1,10 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Groma">
   <title>Groma</title>
-  <style>
-    svg { color: #171717 }
-    @media (prefers-color-scheme: dark) { svg { color: #fafafa } }
-  </style>
-  <path d="M14 50H50M14 47v6M50 47v6" fill="none" stroke="#d92d20" stroke-width="2" stroke-linecap="round" />
-  <path d="M32 60V14M14 14H50M14 14V36M50 14V36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M11 36h6l-3 6zM47 36h6l-3 6z" fill="currentColor" />
+  <rect x=".5" y=".5" width="63" height="63" rx="14.5" fill="#171717" stroke="#3a3a3a" />
+  <rect x="15.5" y="24.7" width="33" height="2.6" rx="1.3" fill="#f04438" />
+  <path d="M28.5 12H35.5V47L32 55L28.5 47Z" fill="#fafafa" />
+  <rect x="10" y="11" width="44" height="7" rx="3.5" fill="#fafafa" />
+  <path d="M15.5 18V34M48.5 18V34" fill="none" stroke="#fafafa" stroke-width="3" stroke-linecap="round" />
+  <path d="M15.5 22.5v7M48.5 22.5v7" fill="none" stroke="#f04438" stroke-width="2.6" stroke-linecap="round" />
+  <rect x="11.5" y="33" width="8" height="4" rx="1.5" fill="#fafafa" />
+  <path d="M12 37H19L15.5 49Z" fill="#fafafa" />
+  <rect x="44.5" y="33" width="8" height="4" rx="1.5" fill="#fafafa" />
+  <path d="M45 37H52L48.5 49Z" fill="#fafafa" />
 </svg>
