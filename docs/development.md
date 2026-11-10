@@ -34,7 +34,7 @@ dark theme scope, tokens, and one colour with no token.
 | Script | What it does |
 | --- | --- |
 | `npm run serve` | Demo page with live reload |
-| `npm run inspect -- <file.html>` | Opens any HTML file with the inspector attached |
+| `npm run inspect -- <file.html>` | Builds the inspector, then opens any HTML file with it attached. The same script is the package's `gromajs` command (`npx gromajs <file.html>`) |
 | `npm run build` | Typechecks, then writes `dist/groma.js` |
 | `npm run typecheck` | TypeScript only |
 | `npm test` | Every test: unit and browser |
@@ -82,7 +82,7 @@ Start at [src/main.ts](../src/main.ts): it only starts the features.
 | `src/export-diff.ts` | Comparing two Claude Design exports |
 | `src/icons.ts` | The icons, as SVG drawings |
 | `src/styles/` | The stylesheets, one per area; `tokens.css` holds every colour and size |
-| `scripts/` | `inspect.mjs`, the command that opens a file with the inspector attached |
+| `scripts/` | `inspect.mjs`, the command that opens a file with the inspector attached. It ships in the package as its `bin` |
 | `tests/` | Browser tests, one file per feature |
 | `docs/features.md` | Every feature and the rules it follows |
 

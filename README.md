@@ -65,7 +65,18 @@ The side panel answers four questions:
 
 ## Try it
 
-You need [Node.js](https://nodejs.org) 22.12 or newer and Google Chrome.
+Open any HTML design file with Groma attached. You need
+[Node.js](https://nodejs.org) 18.3 or newer; nothing is installed in your
+project and the file is not edited:
+
+```bash
+npx gromajs path/to/design.html
+```
+
+Then hold Alt and move the pointer over the page.
+
+To see it on the built-in demo page instead, clone the repo (Node.js 22.12
+or newer):
 
 ```bash
 git clone https://github.com/franco-dias/groma.git
@@ -79,19 +90,9 @@ cd groma
 npm install
 ```
 
-Open any HTML design file with Groma attached. The file is not edited:
-
-```bash
-npm run inspect -- path/to/design.html
-```
-
-Or see it on the built-in demo page:
-
 ```bash
 npm run serve
 ```
-
-Then hold Alt and move the pointer over the page.
 
 ## Add it to a design file
 

@@ -3,6 +3,15 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## Unreleased
+
+- New: `npx gromajs <file.html>` opens any HTML design file with Groma
+  attached, with nothing to clone or install. It serves the file's folder on
+  `localhost`, does not edit the file, and takes the options the repo's
+  `npm run inspect` always had (`--copy`, `--token-prefix`, `--port`,
+  `--no-open`), plus `--help`. The package now ships the command beside the
+  script and needs Node.js 18.3 or newer to run it.
+
 ## 0.5.0 (2026-11-10)
 
 - New: canvas mode. "Show on a canvas" in the » menu puts the page in a frame

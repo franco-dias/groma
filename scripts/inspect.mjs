@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 /**
  * Opens an HTML file with the inspector attached, without editing the file.
+ * This is the `gromajs` command of the npm package:
  *
- *   npm run inspect -- path/to/design.html
- *   npm run inspect -- design.html --copy=sx --token-prefix=--ds- --port=4777 --no-open
+ *   npx gromajs path/to/design.html
+ *   npx gromajs design.html --copy=sx --token-prefix=--ds- --port=4777 --no-open
+ *
+ * In this repo, `npm run inspect -- <file.html>` builds the inspector first
+ * and then runs the same script.
  *
  * It serves the file's folder on localhost (so the page's own relative
  * files load) and adds the built inspector script to that one page.
@@ -17,22 +21,37 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { withInspector } from "./inject.mjs";
 
-const USAGE = `Usage: npm run inspect -- <file.html> [options]
+const USAGE = `Usage: npx gromajs <file.html> [options]
 
   --copy=css|sx          what a click on a length copies (default: css)
   --token-prefix=<p>     show a theme path for tokens with this prefix
   --port=<number>        port to serve on (default: 4777)
-  --no-open              do not open the browser`;
+  --no-open              do not open the browser
+  -h, --help             show this help`;
 
-const { values: flags, positionals } = parseArgs({
-  allowPositionals: true,
-  options: {
-    copy: { type: "string" },
-    "token-prefix": { type: "string" },
-    port: { type: "string", default: "4777" },
-    "no-open": { type: "boolean", default: false },
-  },
-});
+function readArguments() {
+  try {
+    return parseArgs({
+      allowPositionals: true,
+      options: {
+        copy: { type: "string" },
+        "token-prefix": { type: "string" },
+        port: { type: "string", default: "4777" },
+        "no-open": { type: "boolean", default: false },
+        help: { type: "boolean", short: "h", default: false },
+      },
+    });
+  } catch (error) {
+    // An option this command does not have.
+    return fail(`${error.message}\n\n${USAGE}`);
+  }
+}
+
+const { values: flags, positionals } = readArguments();
+if (flags.help) {
+  console.log(USAGE);
+  process.exit(0);
+}
 
 const [file] = positionals;
 if (!file) fail(USAGE);

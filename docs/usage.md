@@ -6,15 +6,15 @@ known limits. What each feature does is in [features.md](features.md).
 
 ## Open a file with one command
 
-From this repo, after [setting up](development.md#set-up):
-
 ```bash
-npm run inspect -- path/to/design.html
+npx gromajs path/to/design.html
 ```
 
-This builds the inspector, serves the file's folder on `localhost:4777`
-with the inspector attached to that page, and opens the browser. The file
-is not edited, and only your machine can reach the server. Ctrl+C stops it.
+This serves the file's folder on `localhost:4777` with the inspector attached
+to that page, and opens the browser. The file is not edited, and only your
+machine can reach the server. Ctrl+C stops it. It needs
+[Node.js](https://nodejs.org) 18.3 or newer and installs nothing in your
+project.
 
 | Option | What it does |
 | --- | --- |
@@ -22,10 +22,14 @@ is not edited, and only your machine can reach the server. Ctrl+C stops it.
 | `--token-prefix=<prefix>` | Shows a theme path for tokens with this prefix |
 | `--port=<number>` | The port to serve on; the default is 4777 |
 | `--no-open` | Does not open the browser |
+| `-h`, `--help` | Lists these options |
 
 ```bash
-npm run inspect -- design.html --copy=sx --token-prefix=--ds-
+npx gromajs design.html --copy=sx --token-prefix=--ds-
 ```
+
+In a clone of this repo, `npm run inspect -- <file.html>` does the same with
+the inspector built from the source.
 
 Edits made in the All CSS tab are stored per address, so keep the same
 port to find them again.

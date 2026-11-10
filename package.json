@@ -18,9 +18,17 @@
   "main": "./dist/groma.js",
   "unpkg": "./dist/groma.js",
   "jsdelivr": "./dist/groma.js",
+  "bin": {
+    "gromajs": "scripts/inspect.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "scripts/inspect.mjs",
+    "scripts/inject.mjs"
   ],
+  "engines": {
+    "node": ">=18.3"
+  },
   "scripts": {
     "serve": "vite",
     "inspect": "vite build --logLevel warn && node scripts/inspect.mjs",

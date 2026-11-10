@@ -180,6 +180,8 @@ frame, not `document`. `src/page.ts` knows which one it is.
   Removing or changing a method is a major version.
 - **Names in the page**: the host element is `<groma-inspector>` and the
   script tag marker is `data-groma`. Pages and tests select them.
+- **The `gromajs` command** and its options (`--copy`, `--token-prefix`,
+  `--port`, `--no-open`): people type them. Renaming one is a major version.
 - **Settings** (`data-copy`, `data-token-prefix` and `configure()`): pages
   in the wild carry these attributes. Changing a default or a value's
   meaning is a major version.
@@ -237,5 +239,8 @@ npm run inspect -- path/to/export.html --no-open
 ```
 
 It serves the file with the built inspector attached and does not edit it
-(`scripts/inspect.mjs`, Node built-ins only). Exports render boards only
+(`scripts/inspect.mjs`, Node built-ins only). The same script ships in the
+package as the `gromajs` command (`npx gromajs <file.html>`), so it must keep
+working from an installed package: only Node built-ins, and every file it
+imports listed in `files` in `package.json` (`scripts/package.test.mjs`). Exports render boards only
 when they scroll into view.
