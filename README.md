@@ -63,7 +63,28 @@ directly and reloads on every change.
 | `npm run serve` | Demo page with live reload |
 | `npm run build` | Typechecks, then writes `dist/live-inspector.js` (one file, styles and markup inlined) |
 | `npm run typecheck` | TypeScript only |
-| `npm test` | Unit tests for the pure logic |
+| `npm test` | Every test: unit and browser |
+| `npm run test:unit` | Pure logic only, in Node; fast |
+| `npm run test:browser` | Behaviour on a real page, headless in Chrome |
+
+## Tests
+
+There are two kinds, and `npm test` runs both.
+
+- **Unit tests** sit next to the code (`src/**/*.test.ts`) and cover the
+  logic that needs no page: units, colours, theme paths, motion, the export
+  comparison.
+- **Browser tests** live in `tests/` and cover what the inspector does on a
+  page: inspect mode, measuring, the panel and each tab, tokens, edits and
+  their replay, layers, the launcher. They run in a real browser because the
+  behaviour depends on layout, computed styles and events. Each test builds
+  a small page, drives the inspector as a user does (Alt, hover, click) and
+  reads its UI. [tests/helpers.ts](tests/helpers.ts) has the vocabulary.
+
+The browser tests use the Google Chrome installed on the machine, so there
+is no browser download. When a behaviour changes on purpose, change its test
+in the same commit; when you fix a bug, add the test that would have caught
+it.
 
 ## How the code is organised
 
@@ -114,5 +135,7 @@ unpkg serve the file:
   ignores selector specificity.
 - The Changes tab compares lines without their order, so a line that only
   moved is not reported.
-- The colour picker needs a Chromium browser.
+- The colour picker needs a Chromium browser. It has no test: the browser
+  only opens it on a real click.
+- The tests run in Chrome only; Firefox and Safari are not covered.
 - Elements inside iframes and other shadow roots are not inspected.

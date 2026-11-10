@@ -3,21 +3,32 @@
   "version": "0.2.0",
   "private": true,
   "description": "Figma-style inspector for design handoff pages: box model, specs, design tokens and distances on any HTML page.",
-  "keywords": ["inspector", "design-handoff", "design-tokens", "devtools"],
+  "keywords": [
+    "inspector",
+    "design-handoff",
+    "design-tokens",
+    "devtools"
+  ],
   "license": "UNLICENSED",
   "type": "module",
   "main": "./dist/live-inspector.js",
   "unpkg": "./dist/live-inspector.js",
   "jsdelivr": "./dist/live-inspector.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "serve": "vite",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run test && npm run build",
+    "test:unit": "vitest run --project unit",
+    "test:browser": "vitest run --project browser"
   },
   "devDependencies": {
+    "@vitest/browser-playwright": "^5.1.0",
+    "playwright": "^1.65.0",
     "typescript": "^5.9.3",
     "vite": "^8.3.7",
     "vitest": "^5.1.0"

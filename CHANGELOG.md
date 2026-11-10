@@ -3,6 +3,12 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## Unreleased
+
+- Browser tests for the inspector's behaviour (`tests/`, 88 tests), run
+  headless in the installed Chrome. `npm test` runs them with the unit
+  tests; `test:unit` and `test:browser` run one kind.
+
 ## 0.2.0
 
 The interface was redesigned from the "Inspector States" design file.
