@@ -1,26 +1,40 @@
 # live-inspector
 
-A Figma-style inspector for design handoff pages. Add one script to any HTML
-page and inspect it the way you would inspect a frame in Figma's Dev Mode:
-box model, specs, design tokens and distances.
+A Figma-style inspector for design handoff pages. Add one script to an HTML
+design file and inspect it the way you would inspect a frame in Figma's Dev
+Mode: box model, specs, design tokens, components and distances.
 
-It is built for engineers who implement a design from an HTML handoff (for
-example a Claude Design export) in React and MUI, and it has no runtime
-dependencies.
+It has no runtime dependencies and ships as a single file.
 
-## Use it
+## Why this exists
 
-```html
-<script src="live-inspector.js"></script>
-```
+More and more designs are now produced by AI tools, and they arrive as
+working HTML, not as Figma files. That is good for speed: a design can go
+from an idea to something you can click in minutes, and be revised just as
+fast. But it leaves the engineer who has to build it without the tools a
+design file used to give them.
 
-Put the tag anywhere in the page, `<head>` included. Then:
+- **Browser devtools answer the wrong question.** They show computed CSS,
+  hundreds of properties per element. They do not say which design token a
+  colour came from, which component an element is, whether a width is fixed
+  or fills its parent, or how far two elements are from each other.
+- **The handoff is the HTML itself.** There is no separate spec to read, so
+  the inspection has to happen on the page.
+- **Designs change often.** When a new version takes minutes to produce,
+  you need to see what changed between two exports without comparing them
+  by eye.
+
+live-inspector puts those answers on the page. It reads the design the way
+an engineer needs it: the value to type, the token to use, the component to
+import, the distance to the next element.
+
+## What it does
 
 | Keys | What happens |
 | --- | --- |
 | Alt + hover | The hovered element's box model and a chip with its name, size and position |
 | Alt + click | Pins the element and opens the side panel |
-| Alt + hover, with an element pinned | Distances from the pinned element |
+| Alt + hover, with an element pinned | Distances from the pinned element, in red |
 | Alt + right-click | A menu of every layer under the pointer |
 | Esc | Ends a comparison and turns the inspect lock off |
 
@@ -29,43 +43,110 @@ inspect mode on, so none of the above needs Alt.
 
 The side panel has four tabs:
 
-- **Specs**: where the element is (board, parent), its component and props,
-  size and sizing intent (fixed, hug, fill), a box diagram of margin and
-  padding, colours, typography and motion. Each colour shows its design
-  token: the MUI theme path, the CSS variable and the value in each theme;
-  a colour with no token is flagged. A click copies any value. The action
-  bar switches px and rem, shows a grid, compares two elements, copies a
-  link to the element and picks a colour from the screen.
-- **All CSS**: every computed property. Values are editable; edits are saved
-  in the browser and replayed on reload.
-- **Layers**: the artboard's element tree.
+- **Specs**: what you need to build the element.
+  - Where it is (board, parent) and what it is (tag, name, classes).
+  - Its React component as JSX, with props and source path.
+  - Size, and whether each axis is fixed, hugs its content or fills its
+    parent.
+  - A box diagram of margin and padding.
+  - Colours with their design token: the theme path, the CSS variable and
+    the value in each theme. A colour with no token is flagged.
+  - Typography and motion.
+  - Tools: px or rem, a grid over the board, a comparison between two
+    elements, a link that reopens the page with the element pinned, and a
+    colour picker.
+- **All CSS**: every computed property. Values are editable; edits are
+  saved in the browser and replayed on reload.
+- **Layers**: the board's element tree.
 - **Changes**: on a Claude Design export, compares the page with an older
-  export file.
+  export file and lists the boards that changed.
 
-Pages that re-render can call `window.LiveInspector`; see `LiveInspectorApi`
-in [src/main.ts](src/main.ts).
+A click copies any value. Lengths are copied as bare numbers and spacing in
+the form MUI's `sx` prop takes (`py: 12, px: 16`), because the inspector was
+first built for React and MUI projects where one spacing step is 1px.
 
-What each feature does, rule by rule, is in
-[docs/features.md](docs/features.md). Agents and new maintainers start with
-[AGENTS.md](AGENTS.md).
+Every feature, with the rules it follows, is described in
+[docs/features.md](docs/features.md).
 
-## Develop
+## Use it on a design file
+
+You need the built script, `dist/live-inspector.js`. Build it once (see
+[Set up](#set-up)), then:
+
+1. Copy `dist/live-inspector.js` next to your HTML file.
+2. Add the script as the first tag inside `<head>`:
+
+   ```html
+   <head>
+     <script src="live-inspector.js"></script>
+     …
+   </head>
+   ```
+
+3. Open the file in a browser. A pill reading "Inspect" appears at the
+   bottom right. Hold Alt and move the pointer over the design.
+
+Notes:
+
+- It works on a file opened from disk (`file://`) and on a served page.
+- Use Chrome or another Chromium browser. Others are untested, and the
+  colour picker only exists in Chromium.
+- On a Claude Design export, boards render when they scroll into view;
+  scroll to a board before inspecting it.
+- Edits you make in the All CSS tab are stored in that browser only. They
+  do not change the file.
+
+Once the package is published to npm, the script can also be loaded from a
+CDN with no copy step:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/live-inspector@0.2.0/dist/live-inspector.js"></script>
+```
+
+The package is not published yet (see [Release](#release)).
+
+### For pages that re-render
+
+A page can talk to the inspector through `window.LiveInspector`:
+
+| Method | What it does |
+| --- | --- |
+| `pin(el)` | Pins an element, as Alt + click does |
+| `pinnedElement()` | The pinned element, or `null` |
+| `replayOverrides(root?)` | Re-applies saved edits to the page, or inside `root` |
+| `highlight(el)` | Moves the pinned-element outline to `el` |
+
+## Set up
+
+You need [Node.js](https://nodejs.org) 22.12 or newer (20.19 or newer on the
+20 line also works) and npm. The browser
+tests also need Google Chrome installed.
 
 ```bash
 npm install
 ```
 
 ```bash
+npm run build
+```
+
+The build writes `dist/live-inspector.js` (about 78 KB, 23 KB gzipped) with
+the styles and the panel markup inlined, plus a source map.
+
+## Develop
+
+```bash
 npm run serve
 ```
 
 `serve` opens a demo page ([index.html](index.html)) that loads the source
-directly and reloads on every change.
+directly and reloads on every change. The demo has two cards, a light and a
+dark theme scope, tokens, and one colour with no token.
 
 | Script | What it does |
 | --- | --- |
 | `npm run serve` | Demo page with live reload |
-| `npm run build` | Typechecks, then writes `dist/live-inspector.js` (one file, styles and markup inlined) |
+| `npm run build` | Typechecks, then writes `dist/live-inspector.js` |
 | `npm run typecheck` | TypeScript only |
 | `npm test` | Every test: unit and browser |
 | `npm run test:unit` | Pure logic only, in Node; fast |
@@ -99,19 +180,25 @@ Start at [src/main.ts](src/main.ts): it only starts the features.
 | `src/selection.ts` | The pinned element. Pickers call `pin`; views subscribe |
 | `src/options.ts` | What the user switched on in the panel |
 | `src/root.ts` | The shadow root that isolates the inspector from the page's CSS |
-| `src/overlay/` | Inspect mode: hover boxes, distances, tooltip, layer menu |
+| `src/overlay/` | Inspect mode: hover boxes, distances, name chip, layer menu |
 | `src/outlines.ts` | Outline and name tag of the pinned element, hover outline, grid |
 | `src/launcher.ts` | The launcher pill and the inspect lock |
-| `src/icons.ts` | The icons, as SVG drawings |
 | `src/panel/` | The side panel, its markup (`panel.html`) and one file per tab |
-| `src/specs/` | What the Specs tab knows: sections, tokens, colours, units, sizing, components |
+| `src/specs/` | What the Specs tab knows: sections, tokens, colours, units, sizing, components, motion |
 | `src/edits/` | Saved edits: selectors, storage, apply and replay |
 | `src/export-diff.ts` | Comparing two Claude Design exports |
+| `src/icons.ts` | The icons, as SVG drawings |
 | `src/styles/` | The stylesheets, one per area; `tokens.css` holds every colour and size |
+| `tests/` | Browser tests, one file per feature |
+| `docs/features.md` | Every feature and the rules it follows |
 
 Each tab implements the small `Tab` interface in
 [src/panel/tab.ts](src/panel/tab.ts); adding a tab means adding a file and
 one entry in [src/panel/panel.ts](src/panel/panel.ts).
+
+If you are going to change the code, read [AGENTS.md](AGENTS.md) first. It
+holds the rules that keep the inspector safe to run on pages it does not
+control, and it is written for AI agents and people alike.
 
 ## Release
 
@@ -125,18 +212,19 @@ npm version minor
 `npm version` bumps the version, commits and tags. `npm publish` runs the
 tests and the build first (`prepublishOnly`) and ships only `dist/`.
 
-The package is marked `"private": true` and `"license": "UNLICENSED"` until a
-licence is chosen; remove `private` to publish. Once published, jsDelivr and
-unpkg serve the file:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/live-inspector@0.2.0/dist/live-inspector.js"></script>
-```
+The package is not published. It is marked `"private": true` and
+`"license": "UNLICENSED"` until a licence is chosen; remove `private` to
+publish. After that, jsDelivr and unpkg serve the file from the URL shown
+above.
 
 ## Known limits
 
 - Token lookup takes the last matching declaration in source order and
   ignores selector specificity.
+- Sizing intent (fixed, hug, fill) is inferred from styles; children of CSS
+  grid are treated as plain blocks.
+- Component names and source paths need React; source paths need the bundle
+  header a Claude Design export embeds.
 - The Changes tab compares lines without their order, so a line that only
   moved is not reported.
 - The colour picker needs a Chromium browser. It has no test: the browser
