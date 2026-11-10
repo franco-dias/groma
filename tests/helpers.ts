@@ -10,6 +10,17 @@ import "../src/main";
 
 const FIXTURE_ID = "fixture";
 
+/**
+ * The panel slides in and out. Tests read it the moment it opens or closes,
+ * so the slide takes no time here; `slidePanel()` gives a test the real thing.
+ */
+const SLIDE = "--ins-dur-slide";
+const host = (): HTMLElement => document.querySelector<HTMLElement>("groma-inspector")!;
+host().style.setProperty(SLIDE, "0ms");
+export function slidePanel(): void {
+  host().style.removeProperty(SLIDE);
+}
+
 /** Replaces the test page's content with `html` and returns its container. */
 export function page(html: string): HTMLElement {
   document.getElementById(FIXTURE_ID)?.remove();
@@ -113,7 +124,10 @@ export const openTab = (tab: string): void => ui(`.tab[data-tab="${tab}"]`)!.cli
 
 /** Leaves the inspector as a fresh page load would find it. Call it before each test. */
 export function reset(): void {
+  host().style.setProperty(SLIDE, "0ms");
+  ui('.canvas-bar [data-action="exit"]')?.click();
   releaseAlt();
+  document.dispatchEvent(new KeyboardEvent("keyup", { code: "Space" }));
   pressEscape();
   ui(".rail")?.click();
   if (ui(".panel")) {

@@ -1,0 +1,45 @@
+<!--
+  The canvas: the page in a frame that can be resized, zoomed and moved.
+
+  The stage is the only part that zooms. The chrome is placed over the frame
+  at its on-screen size, so the handles and the label keep their own size at
+  any zoom. `data-size` on a preset is "width x height".
+-->
+<div class="canvas-stage">
+  <div class="canvas-frame">
+    <iframe title="The page being inspected"></iframe>
+  </div>
+</div>
+
+<div class="canvas-chrome">
+  <div class="canvas-size"></div>
+  <div class="canvas-handle is-x" data-resize="x" title="Drag to change the width"></div>
+  <div class="canvas-handle is-y" data-resize="y" title="Drag to change the height"></div>
+  <div class="canvas-handle is-xy" data-resize="xy" title="Drag to change the size"></div>
+  <div class="canvas-blocked" hidden>
+    <b>This page cannot be shown on a canvas</b>
+    <p>The browser does not let Groma read it inside a frame. This happens when a link leads to another site.</p>
+    <button class="canvas-button is-text" data-action="exit">Back to the page</button>
+  </div>
+</div>
+
+<div class="canvas-bar" role="toolbar" aria-label="Canvas">
+  <button class="canvas-button is-text" data-size="375x812" title="Phone: 375 × 812">375</button>
+  <button class="canvas-button is-text" data-size="768x1024" title="Tablet: 768 × 1024">768</button>
+  <button class="canvas-button is-text" data-size="1280x800" title="Desktop: 1280 × 800">1280</button>
+  <span class="canvas-divider"></span>
+  <button class="canvas-button" data-action="zoom-out" aria-label="Zoom out" title="Zoom out">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M5 12h14" /></svg>
+  </button>
+  <button class="canvas-button is-text canvas-zoom" data-action="zoom-reset" title="Show the page at its real size"></button>
+  <button class="canvas-button" data-action="zoom-in" aria-label="Zoom in" title="Zoom in">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+  </button>
+  <button class="canvas-button is-text" data-action="fit" title="Show the whole frame">Fit</button>
+  <button class="canvas-button is-text" data-action="choose-file" title="The frame shows a copy of the open page. If it looks wrong, choose the HTML file to load the original." hidden>Use the file…</button>
+  <input type="file" accept=".html,text/html" hidden />
+  <span class="canvas-divider"></span>
+  <button class="canvas-button" data-action="exit" aria-label="Leave the canvas" title="Leave the canvas">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></svg>
+  </button>
+</div>

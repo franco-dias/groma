@@ -18,7 +18,7 @@ npm install
 npm run build
 ```
 
-The build writes `dist/groma.js` (about 78 KB, 23 KB gzipped) with
+The build writes `dist/groma.js` (about 100 KB, 30 KB gzipped) with
 the styles and the panel markup inlined, plus a source map.
 
 ## Scripts
@@ -69,6 +69,8 @@ Start at [src/main.ts](../src/main.ts): it only starts the features.
 | `src/selection.ts` | The pinned element. Pickers call `pin`; views subscribe |
 | `src/options.ts` | What the user switched on in the panel |
 | `src/root.ts` | The shadow root that isolates the inspector from the page's CSS |
+| `src/page.ts` | The page being inspected: this document, or the canvas frame's. Its document, its listeners and where its elements are on screen |
+| `src/canvas/` | Canvas mode: the page in a frame to resize and zoom; `view.ts` holds the arithmetic |
 | `src/overlay/` | Inspect mode: hover boxes, distances, name chip, layer menu |
 | `src/outlines.ts` | Outline and name tag of the pinned element, hover outline, grid |
 | `src/launcher.ts` | The launcher pill and the inspect lock |

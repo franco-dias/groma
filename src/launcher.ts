@@ -6,6 +6,7 @@
 import { h } from "./dom";
 import { icon } from "./icons";
 import { setInspectLock } from "./overlay/hover";
+import { onPage } from "./page";
 import { ALT_KEY } from "./platform";
 import { mount, whenBodyExists } from "./root";
 
@@ -37,7 +38,7 @@ export function startLauncher(): void {
       e.stopPropagation();
       setLocked(false);
     });
-    document.addEventListener("keydown", (e) => {
+    onPage("keydown", (e) => {
       if (e.key === "Escape") setLocked(false);
     });
   });

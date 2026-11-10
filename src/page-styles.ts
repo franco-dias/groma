@@ -1,14 +1,18 @@
 /** Reads the page's stylesheets: which declarations apply to an element. */
+import { pageDocument } from "./page";
+
+/** A style rule of any document; `instanceof CSSStyleRule` is false for a frame's rules. */
+const isStyleRule = (rule: CSSRule): rule is CSSStyleRule => "selectorText" in rule && "style" in rule;
 
 /** Visits every style rule of the page, in source order. */
 export function forEachPageRule(visit: (rule: CSSStyleRule) => void): void {
   const walk = (rules: CSSRuleList): void => {
     for (const rule of rules) {
       if ("cssRules" in rule) walk(rule.cssRules as CSSRuleList);
-      if (rule instanceof CSSStyleRule) visit(rule);
+      if (isStyleRule(rule)) visit(rule);
     }
   };
-  for (const sheet of document.styleSheets) {
+  for (const sheet of pageDocument().styleSheets) {
     try {
       walk(sheet.cssRules);
     } catch {

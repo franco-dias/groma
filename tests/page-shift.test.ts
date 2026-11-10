@@ -123,6 +123,6 @@ describe("float mode", () => {
     inspector().pin(el(".card"));
     openMenuAndChoose(pushItem());
     expect(ui(".more-menu")!.hidden).toBe(true);
-    expect(all(".more-item")).toHaveLength(3);
+    expect(all(".more-item")).toHaveLength(4);
   });
 });

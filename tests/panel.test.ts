@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { el, frames, inspector, openTab, page, pressKey, reset, texts, ui } from "./helpers";
+import { el, frames, inspector, openTab, page, pressKey, reset, slidePanel, texts, ui, wait } from "./helpers";
 
 const shown = (selector: string): boolean => getComputedStyle(ui(selector)!).display !== "none";
 const savedLayout = () => JSON.parse(localStorage.getItem("__groma_panel") ?? "{}");
@@ -137,5 +137,173 @@ describe("pinned outline", () => {
     expect(ui(".outline-pinned")!.getBoundingClientRect().width).toBe(
       fixture.getBoundingClientRect().width,
     );
+  });
+});
+
+describe("opening the panel with nothing pinned", () => {
+  const shortcut = (target: EventTarget = document): boolean =>
+    target.dispatchEvent(
+      new KeyboardEvent("keydown", {
+        code: "KeyG",
+        key: "˝",
+        altKey: true,
+        shiftKey: true,
+        bubbles: true,
+        composed: true,
+        cancelable: true,
+      }),
+    );
+
+  it("opens on Alt + Shift + G, with a hint instead of the tabs' content", () => {
+    expect(shortcut()).toBe(false);
+    expect(shown(".panel")).toBe(true);
+    expect(inspector().pinnedElement()).toBeNull();
+    expect(shown(".empty")).toBe(true);
+    expect(ui(".empty")!.textContent).toContain("Nothing pinned");
+    expect(shown('.body[data-for="specs"]')).toBe(false);
+    expect(shown(".action-bar")).toBe(false);
+  });
+
+  it("does nothing on G alone or with one modifier", () => {
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyG", altKey: true, bubbles: true }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "KeyG", shiftKey: true, bubbles: true }));
+    expect(ui(".panel") === null || !shown(".panel")).toBe(true);
+  });
+
+  it("closes on the same keys, also when the focus is in the panel, and on ✕", () => {
+    shortcut();
+    shortcut(ui(".tab-bar")!);
+    expect(shown(".panel")).toBe(false);
+    shortcut();
+    ui(".close")!.click();
+    expect(shown(".panel")).toBe(false);
+  });
+
+  it("closes a panel that shows an element, and unpins it", () => {
+    inspector().pin(el(".card"));
+    shortcut();
+    expect(shown(".panel")).toBe(false);
+    expect(inspector().pinnedElement()).toBeNull();
+  });
+
+  it("reaches the » menu and the reference", () => {
+    shortcut();
+    ui(".more-button")!.click();
+    ui('.more-item[data-tab="reference"]')!.click();
+    expect(shown('.body[data-for="reference"]')).toBe(true);
+    expect(shown(".empty")).toBe(false);
+  });
+
+  it("stays open when a setting changes, and shows an element pinned later", () => {
+    shortcut();
+    inspector().configure({ copyFormat: "sx" });
+    expect(shown(".panel")).toBe(true);
+    inspector().pin(el(".card"));
+    expect(shown(".empty")).toBe(false);
+    expect(shown('.body[data-for="specs"]')).toBe(true);
+    expect(ui(".title-size")!.textContent).toBe("200 × 100");
+  });
+
+  it("takes its width out of the page, as a panel with an element does", () => {
+    shortcut();
+    expect(parseFloat(getComputedStyle(document.documentElement).marginRight)).toBe(ui(".panel")!.offsetWidth);
+  });
+
+  it("shows only the rail when collapsed", () => {
+    shortcut();
+    ui(".more-button")!.click();
+    ui(".more-item.collapse")!.click();
+    expect(shown(".empty")).toBe(false);
+    expect(ui(".rail .name")!.textContent).toBe("Inspect");
+  });
+});
+
+describe("sliding in and out", () => {
+  const panel = (): HTMLElement => ui(".panel")!;
+  const sliding = (): boolean => panel().getAnimations().some((animation) => animation.playState === "running");
+  const offset = (): number => new DOMMatrix(getComputedStyle(panel()).transform).m41;
+
+  it("slides in from the right edge when it opens", async () => {
+    // Let the browser see the panel closed first: `reset()` has just closed it.
+    await frames();
+    slidePanel();
+    inspector().pin(el(".card"));
+    await frames();
+    expect(sliding()).toBe(true);
+    expect(offset()).toBeGreaterThan(0);
+    await wait(300);
+    expect(sliding()).toBe(false);
+    expect(offset()).toBe(0);
+  });
+
+  it("slides out before it goes", async () => {
+    inspector().pin(el(".card"));
+    slidePanel();
+    ui(".close")!.click();
+    // Closed for the rest of the inspector from this moment...
+    expect(inspector().pinnedElement()).toBeNull();
+    await frames();
+    // ...while it is still on screen, on its way out.
+    expect(shown(".panel")).toBe(true);
+    expect(offset()).toBeGreaterThan(0);
+    await wait(300);
+    expect(shown(".panel")).toBe(false);
+  });
+
+  const pageMargin = (): number => parseFloat(getComputedStyle(document.documentElement).marginRight);
+  /** The gap between the page's right edge and the panel's left edge. */
+  const gap = (): number =>
+    panel().getBoundingClientRect().left - document.documentElement.getBoundingClientRect().right;
+
+  it("pushes the page along as it slides in, never ahead of the panel", async () => {
+    await frames();
+    slidePanel();
+    inspector().pin(el(".card"));
+    expect(pageMargin()).toBe(0);
+    await frames();
+    await frames();
+    expect(pageMargin()).toBeGreaterThan(0);
+    expect(pageMargin()).toBeLessThan(panel().offsetWidth);
+    // The page's edge stays on the panel's edge all the way.
+    expect(Math.abs(gap())).toBeLessThan(1);
+    await wait(300);
+    expect(pageMargin()).toBe(panel().offsetWidth);
+  });
+
+  it("lets the page back along as it slides out, and restores it at the end", async () => {
+    inspector().pin(el(".card"));
+    const width = panel().offsetWidth;
+    slidePanel();
+    ui(".close")!.click();
+    await frames();
+    await frames();
+    expect(pageMargin()).toBeGreaterThan(0);
+    expect(pageMargin()).toBeLessThan(width);
+    expect(Math.abs(gap())).toBeLessThan(1);
+    await wait(300);
+    expect(document.documentElement.style.marginRight).toBe("");
+  });
+
+  it("leaves the page alone in float mode while it slides", async () => {
+    inspector().pin(el(".card"));
+    ui(".more-button")!.click();
+    ui('[data-action="push"]')!.click();
+    ui(".close")!.click();
+    await frames();
+    slidePanel();
+    inspector().pin(el(".card"));
+    await frames();
+    expect(pageMargin()).toBe(0);
+  });
+
+  it("comes back when it is opened again while sliding out", async () => {
+    inspector().pin(el(".card"));
+    slidePanel();
+    ui(".close")!.click();
+    await frames();
+    inspector().pin(el(".card"));
+    await wait(300);
+    expect(shown(".panel")).toBe(true);
+    expect(offset()).toBe(0);
   });
 });

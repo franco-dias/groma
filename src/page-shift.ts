@@ -2,6 +2,9 @@
  * Push mode: the side panel takes its width out of the page instead of
  * covering it.
  *
+ * While the panel slides in or out, the panel asks for a little more or less
+ * room on every frame, so the page moves with it.
+ *
  * The page is shifted by one inline margin on <html>, which narrows everything
  * laid out in normal flow. The page's own value is remembered and put back
  * when the panel closes or the user switches to float mode.

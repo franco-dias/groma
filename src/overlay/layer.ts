@@ -1,6 +1,6 @@
 /** The transparent layer that hover boxes and distance lines are drawn on. */
 import { type Box, h, placeOver } from "../dom";
-import { mount } from "../root";
+import { mountOnPage } from "../root";
 
 /** Each kind is a CSS class in styles/overlay.css. */
 export type BoxKind =
@@ -16,7 +16,7 @@ export type BoxKind =
 
 let layer: HTMLElement | null = null;
 
-const overlay = (): HTMLElement => (layer ??= mount(h("div", "overlay")));
+const overlay = (): HTMLElement => (layer ??= mountOnPage(h("div", "overlay")));
 
 /** Draws one box; boxes with no area are skipped. */
 export function addBox(box: Box, kind: BoxKind): void {

@@ -46,7 +46,7 @@ function sidesText(cs: CSSStyleDeclaration, property: "margin" | "padding" | "bo
 function layoutRows(el: Element, cs: CSSStyleDeclaration, stylesOf: StyleLookup): Spec[] {
   const rect = el.getBoundingClientRect();
   const size = layoutSize(el, rect);
-  const onBoard = boardPosition(el, rect);
+  const onBoard = boardPosition(el);
   const isFlex = cs.display.includes("flex");
   const isGrid = cs.display.includes("grid");
 
@@ -150,7 +150,8 @@ function textRows(el: Element, cs: CSSStyleDeclaration): Spec[] {
 }
 
 function iconRows(el: Element, cs: CSSStyleDeclaration): Spec[] {
-  if (!(el instanceof SVGElement)) return [];
+  // Not `instanceof SVGElement`: that is false for the elements of a frame.
+  if (!("ownerSVGElement" in el)) return [];
   return [
     { name: "fill", value: unless(cs.fill, "none"), color: true, props: ["fill", "color"] },
     { name: "stroke", value: unless(cs.stroke, "none"), color: true, props: ["stroke", "color"] },

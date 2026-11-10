@@ -1,5 +1,6 @@
 /** Artboards: the frames a design page lays its screens out on. */
-import { type Box, scaleOf } from "./dom";
+import { scaleOf } from "./dom";
+import { rectOf } from "./page";
 
 /**
  * A Claude Design export stage, a design-canvas card, or any element a page
@@ -23,10 +24,11 @@ export interface BoardPosition {
 }
 
 /** Where an element sits on its artboard. */
-export function boardPosition(el: Element, rect: Box): BoardPosition | null {
+export function boardPosition(el: Element): BoardPosition | null {
   const board = boardOf(el);
   if (!board) return null;
-  const boardRect = board.getBoundingClientRect();
+  const rect = rectOf(el);
+  const boardRect = rectOf(board);
   const scale = scaleOf(board, boardRect);
   const tenth = (value: number) => Math.round(value * 10) / 10;
   const x = tenth((rect.left - boardRect.left) / scale.x);

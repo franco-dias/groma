@@ -14,6 +14,7 @@ import {
   parseExport,
 } from "../export-diff";
 import { icon } from "../icons";
+import { pageWindow } from "../page";
 import { part, type Tab, tabBody } from "./tab";
 
 const MAX_LINES = 30;
@@ -75,7 +76,7 @@ function changedRow(board: ChangedBoard): void {
     lines.hidden = !lines.hidden;
     row.setAttribute("aria-expanded", String(!lines.hidden));
     caret.replaceChildren(icon(lines.hidden ? "chevronRight" : "chevronDown", 12));
-    if (board.id) location.hash = board.id;
+    if (board.id) pageWindow().location.hash = board.id;
   });
 }
 

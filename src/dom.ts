@@ -1,4 +1,5 @@
 /** DOM helpers shared by every module. */
+import { pageZoom, rectOf } from "./page";
 
 /** A rectangle in viewport pixels. A `DOMRect` is one. */
 export interface Box {
@@ -34,15 +35,16 @@ export function placeOver(node: HTMLElement, box: Box): void {
 }
 
 /**
- * How much CSS transforms (a zoomed artboard) scale an element on screen.
- * Computed sizes ignore transforms; the on-screen rectangle does not.
+ * How much an element is scaled on screen: by CSS transforms (a zoomed
+ * artboard) and by the canvas zoom. Computed sizes ignore both; the on-screen
+ * rectangle from `rectOf` does not.
  */
 export function scaleOf(el: Element, rect: Box): Scale {
-  // SVG elements have no offset size; treat them as unscaled.
+  // SVG elements have no offset size; treat them as scaled by the canvas only.
   const { offsetWidth, offsetHeight } = el as HTMLElement;
   return {
-    x: offsetWidth ? rect.width / offsetWidth : 1,
-    y: offsetHeight ? rect.height / offsetHeight : 1,
+    x: offsetWidth ? rect.width / offsetWidth : pageZoom(),
+    y: offsetHeight ? rect.height / offsetHeight : pageZoom(),
   };
 }
 
@@ -58,7 +60,7 @@ export function visibleBox(el: Element, rect: Box): Box {
   for (let parent = el.parentElement; parent; parent = parent.parentElement) {
     const { overflowX, overflowY } = getComputedStyle(parent);
     if (overflowX === "visible" && overflowY === "visible") continue;
-    const clip = parent.getBoundingClientRect();
+    const clip = rectOf(parent);
     left = Math.max(left, clip.left);
     top = Math.max(top, clip.top);
     right = Math.min(right, clip.right);

@@ -6,6 +6,7 @@
  *   click   pin the hovered element
  */
 import { scaleOf } from "../dom";
+import { isElement, onPage, onPageView, onPageWindow, pageDocument, rectOf } from "../page";
 import { isOwn } from "../root";
 import { pin, pinnedElement } from "../selection";
 import { drawBoxModel, drawChildrenAndGaps } from "./box-model";
@@ -31,7 +32,8 @@ function clearHover(): void {
 
 /** Shows or hides inspect mode after `altHeld` or `locked` changed. */
 function update(): void {
-  document.body.style.cursor = isInspecting() ? "crosshair" : "";
+  const body = pageDocument().body;
+  if (body) body.style.cursor = isInspecting() ? "crosshair" : "";
   if (!isInspecting()) clearHover();
 }
 
@@ -44,14 +46,14 @@ export function setInspectLock(on: boolean): void {
 function inspect(target: EventTarget | null): void {
   if (isOwn(target)) return;
   if (
-    !(target instanceof Element) ||
-    target === document.body ||
-    target === document.documentElement
+    !isElement(target) ||
+    target === target.ownerDocument.body ||
+    target === target.ownerDocument.documentElement
   ) {
     clearHover();
     return;
   }
-  const rect = target.getBoundingClientRect();
+  const rect = rectOf(target);
   // The same element in the same place needs no redraw. If the page moved it
   // (the panel pushing the layout, a scroll), draw again.
   if (target === hovered && rectKey(rect) === hoveredRect) return;
@@ -63,7 +65,7 @@ function inspect(target: EventTarget | null): void {
   if (pinned && pinned !== target && pinned.isConnected) {
     // Measuring: only the target's outline and the distances. The box model
     // would bury the lines.
-    const pinnedRect = pinned.getBoundingClientRect();
+    const pinnedRect = rectOf(pinned);
     addBox(rect, "target");
     drawDistances(pinnedRect, rect, scaleOf(pinned, pinnedRect));
   } else {
@@ -79,35 +81,40 @@ export function startHover(): void {
     altHeld = held;
     update();
   };
-  document.addEventListener("keydown", (e) => {
+  onPage("keydown", (e) => {
     if (e.key === "Alt") setAlt(true);
   });
-  document.addEventListener("keyup", (e) => {
+  onPage("keyup", (e) => {
     if (e.key === "Alt") setAlt(false);
   });
   // The Alt keyup never arrives when the window loses focus first.
-  window.addEventListener("blur", () => setAlt(false));
+  onPageWindow("blur", () => setAlt(false));
+  // The canvas moved the page, or showed another one: what was drawn is stale.
+  onPageView(() => {
+    clearHover();
+    update();
+  });
 
-  document.addEventListener(
+  onPage(
     "mousemove",
     (e) => {
       if (isInspecting()) inspect(e.target);
     },
     true,
   );
-  document.addEventListener("mouseleave", () => {
+  onPage("mouseleave", () => {
     if (isInspecting()) clearHover();
   });
 
   // A click pins. The whole press is kept from the page, not only the click.
   for (const type of ["pointerdown", "pointerup", "mousedown", "mouseup", "click"] as const) {
-    document.addEventListener(
+    onPage(
       type,
       (e) => {
         if (!isInspecting() || isOwn(e.target)) return;
         e.preventDefault();
         e.stopPropagation();
-        if (type === "click" && e.target instanceof Element) pin(e.target);
+        if (type === "click" && isElement(e.target)) pin(e.target);
       },
       true,
     );

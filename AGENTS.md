@@ -82,6 +82,24 @@ The browser tests need Google Chrome installed; they do not download one.
    stylesheets can be cross-origin, the clipboard can refuse. Catch these
    where they happen and carry on.
 
+### The page may be in a frame
+
+In canvas mode (`src/canvas/`) the inspected page is the document of a
+frame, not `document`. `src/page.ts` knows which one it is.
+
+- Read the page with `pageDocument()` and `pageWindow()`, never `document`,
+  `window` or `location`. Those are for the inspector's own UI.
+- Listen to the page with `onPage()` and `onPageWindow()`: they follow the
+  frame's document as it loads and changes.
+- Place overlays with `rectOf(el)`, which answers in this window's screen
+  pixels. `el.getBoundingClientRect()` answers in the frame's own pixels:
+  right for a value shown in the panel, wrong for a position on screen.
+- Mount anything that marks the page with `mountOnPage()`, so the canvas
+  cuts it at the frame's edge.
+- Do not use `instanceof` on a node, a rule or an event from the page: the
+  frame has its own `Element`, `SVGElement` and `CSSStyleRule`. Use
+  `isElement()` or check a property.
+
 ### Shadow DOM gotchas
 
 - An event that starts inside the inspector reaches `document` listeners
@@ -129,6 +147,9 @@ The browser tests need Google Chrome installed; they do not download one.
 - The panel must work between 320 and 560px wide with no horizontal
   scroll.
 - Feedback must not move things: copy marks and states add no size.
+- The panel slides in and out (`--ins-dur-slide`). The browser tests switch
+  the slide off in `tests/helpers.ts`, because they read the panel the moment
+  it opens or closes; `slidePanel()` turns it back on for a test.
 - The source design is the "Inspector States" file (not in this repo). The
   product departs from it on purpose in four places, which the owner knows;
   do not "fix" them:
@@ -163,7 +184,7 @@ The browser tests need Google Chrome installed; they do not download one.
   in the wild carry these attributes. Changing a default or a value's
   meaning is a major version.
 - **Storage keys**: `__groma_overrides:<path>`,
-  `__groma_html:<path>` and `__groma_panel`. Renaming
+  `__groma_html:<path>`, `__groma_panel` and `__groma_canvas`. Renaming
   one loses users' saved edits; migrate, or do not rename.
 - **Saved selectors** (`src/edits/selector.ts`): changing their shape
   orphans saved edits.
@@ -201,7 +222,11 @@ Listed in [docs/usage.md](docs/usage.md). The ones most likely to bite:
 - Sizing intent is inferred; grid children are treated as plain blocks.
 - The colour picker is Chromium-only and has no test.
 - Tests run in Chrome only, with synthetic events.
-- Elements inside iframes and other shadow roots are not inspected.
+- Elements inside the page's own iframes and other shadow roots are not
+  inspected.
+- The canvas loads the page a second time. A `file://` page, or one whose
+  server forbids framing, is shown from a copy of the open page, on which
+  the page's scripts run again.
 
 ## Trying a change on a real handoff
 

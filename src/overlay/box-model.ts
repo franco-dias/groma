@@ -4,6 +4,7 @@
  */
 import { type Sides, sidesOf } from "../box-sides";
 import { type Box, scaleOf } from "../dom";
+import { rectOf } from "../page";
 import { isOwn } from "../root";
 import { addBox, type BoxKind } from "./layer";
 
@@ -56,7 +57,7 @@ export function drawChildrenAndGaps(el: Element, rect: Box, cs: CSSStyleDeclarat
       const childStyle = getComputedStyle(child);
       return childStyle.display !== "none" && childStyle.visibility !== "hidden";
     })
-    .map((child) => child.getBoundingClientRect());
+    .map((child) => rectOf(child));
   rects.forEach((childRect) => addBox(childRect, "child"));
 
   if (!cs.display.includes("flex")) return;

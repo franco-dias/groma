@@ -1,0 +1,204 @@
+/* Canvas mode: the page in a frame that can be resized, zoomed and moved. */
+
+.canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: var(--ins-dock);
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--ins-canvas-bg);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+/* Space is held: a drag moves the canvas, also from over the page. */
+.canvas.is-panning iframe {
+  pointer-events: none;
+}
+
+.canvas.is-panning .canvas-stage {
+  cursor: grab;
+}
+
+/* The only part that zooms. */
+.canvas-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+/* A page with no background of its own shows on white, as in a browser tab. */
+.canvas-frame {
+  background: var(--ins-page-bg);
+  box-shadow: var(--ins-shadow);
+}
+
+.canvas-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Placed over the frame at its on-screen size; only its own parts take the pointer. */
+.canvas-chrome {
+  position: absolute;
+  pointer-events: none;
+}
+
+.canvas-size {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + var(--ins-s-3));
+  color: var(--ins-fg-muted);
+  white-space: nowrap;
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+/* Resize handles: a strip along the right and bottom edges, and their corner. */
+.canvas-handle {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.canvas-handle::after {
+  content: "";
+  position: absolute;
+  background: var(--ins-border-strong);
+  border-radius: var(--ins-radius-pill);
+}
+
+.canvas-handle:hover::after {
+  background: var(--ins-pin);
+}
+
+.canvas-handle.is-x {
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  width: var(--ins-s-5);
+  cursor: ew-resize;
+}
+
+.canvas-handle.is-x::after {
+  left: var(--ins-s-2);
+  top: calc(50% - 16px);
+  width: 4px;
+  height: 32px;
+}
+
+.canvas-handle.is-y {
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: var(--ins-s-5);
+  cursor: ns-resize;
+}
+
+.canvas-handle.is-y::after {
+  top: var(--ins-s-2);
+  left: calc(50% - 16px);
+  width: 32px;
+  height: 4px;
+}
+
+.canvas-handle.is-xy {
+  left: 100%;
+  top: 100%;
+  width: var(--ins-s-5);
+  height: var(--ins-s-5);
+  cursor: nwse-resize;
+}
+
+.canvas-handle.is-xy::after {
+  left: var(--ins-s-1);
+  top: var(--ins-s-1);
+  width: 6px;
+  height: 6px;
+}
+
+/* Shown over the frame when the browser does not let the inspector read it. */
+.canvas-blocked {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ins-s-4);
+  padding: var(--ins-s-6);
+  color: var(--ins-fg);
+  background: var(--ins-bg-raised);
+  text-align: center;
+  cursor: default;
+  pointer-events: auto;
+}
+
+.canvas-blocked b {
+  font: 600 13px/16px var(--ins-font-sans);
+}
+
+.canvas-blocked p {
+  margin: 0;
+  max-width: 360px;
+  color: var(--ins-fg-muted);
+}
+
+.canvas-blocked .canvas-button {
+  color: var(--ins-fg);
+  border: 1px solid var(--ins-border-strong);
+  font-family: var(--ins-font-sans);
+}
+
+/* Toolbar: frame sizes, zoom, fit, leave. */
+.canvas-bar {
+  position: absolute;
+  top: var(--ins-s-5);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-1);
+  height: 32px;
+  padding: 0 var(--ins-s-2);
+  background: var(--ins-bg);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius);
+  box-shadow: var(--ins-shadow-sm);
+  cursor: default;
+}
+
+.canvas-button {
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  color: var(--ins-fg-muted);
+  border-radius: var(--ins-radius-sm);
+  white-space: nowrap;
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+.canvas-button.is-text {
+  padding: 0 var(--ins-s-3);
+}
+
+.canvas-button:hover {
+  color: var(--ins-fg);
+  background: var(--ins-bg-hover);
+}
+
+.canvas-zoom {
+  min-width: 48px;
+}
+
+.canvas-divider {
+  width: 1px;
+  height: 16px;
+  margin: 0 var(--ins-s-2);
+  background: var(--ins-border-strong);
+}

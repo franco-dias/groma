@@ -19,6 +19,35 @@
   container-type: inline-size;
 }
 
+/*
+ * The panel slides in from the right edge and out to it. `allow-discrete`
+ * keeps it displayed until it has slid out, and `@starting-style` gives it a
+ * place to slide in from. A browser without them shows and hides it at once.
+ */
+.panel {
+  transition:
+    transform var(--ins-dur-slide) ease-out,
+    display var(--ins-dur-slide) allow-discrete;
+}
+
+.panel.is-closed {
+  display: none;
+  transform: translateX(100%);
+  transition-timing-function: ease-in;
+}
+
+@starting-style {
+  .panel {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}
+
 /* Each section belongs to one tab; only the open tab's sections show. */
 .panel:not([data-tab="specs"]) [data-for="specs"],
 .panel:not([data-tab="css"]) [data-for="css"],
@@ -293,6 +322,37 @@
 
 .resize:hover {
   background: var(--ins-pin-tint);
+}
+
+/* ── open with nothing pinned: a hint instead of the tabs' content ── */
+.empty {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ins-s-4);
+  padding: var(--ins-s-6);
+  color: var(--ins-fg-muted);
+  text-align: center;
+}
+
+.empty b {
+  color: var(--ins-fg);
+  font: 600 13px/16px var(--ins-font-sans);
+}
+
+.empty p {
+  margin: 0;
+}
+
+.panel.is-empty:not(.is-collapsed):not([data-tab="reference"]) > .empty {
+  display: flex;
+}
+
+/* The reference needs no element; everything else does. */
+.panel.is-empty [data-for]:not([data-for="reference"]) {
+  display: none;
 }
 
 /* ── collapsed: a 28px rail ── */

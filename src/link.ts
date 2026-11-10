@@ -1,5 +1,6 @@
 /** Links that reopen the page with an element pinned: `?inspect=<selector>`. */
 import { getSelector } from "./edits/selector";
+import { pageAddress, pageDocument } from "./page";
 import { isOwn } from "./root";
 import { pin } from "./selection";
 
@@ -7,7 +8,7 @@ const PARAM = "inspect";
 
 /** A link to this page with `el` pinned, scrolled to the element's board. */
 export function elementLink(el: Element): string {
-  const url = new URL(location.href);
+  const url = pageAddress();
   url.searchParams.set(PARAM, getSelector(el));
   const board = el.closest("section[id]");
   if (board) url.hash = board.id;
@@ -25,7 +26,7 @@ export function pinFromLink(): void {
   const timer = setInterval(() => {
     let el: Element | null = null;
     try {
-      el = document.querySelector(selector);
+      el = pageDocument().querySelector(selector);
     } catch {
       // Not a valid selector.
     }

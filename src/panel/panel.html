@@ -24,6 +24,9 @@
   <button class="more-item" role="menuitemcheckbox" aria-checked="true" data-action="push" title="Take the panel's width out of the page instead of covering it">
     <svg class="icon check" width="12" height="12" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>Push the page aside
   </button>
+  <button class="more-item" role="menuitemcheckbox" aria-checked="false" data-action="canvas" title="Show the page in a frame you can resize and zoom">
+    <svg class="icon check" width="12" height="12" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg>Show on a canvas
+  </button>
   <button class="more-item collapse" role="menuitem"><span class="slot"></span>Collapse panel</button>
 </div>
 
@@ -80,6 +83,12 @@
 
 <!-- ───────────── Reference: every shortcut and trick (reference.html) ───────────── -->
 <div class="body" data-for="reference"></div>
+
+<!-- Shown instead of the tabs' content while the panel is open with nothing pinned. -->
+<div class="empty">
+  <b>Nothing pinned</b>
+  <p>Hold <kbd data-key="alt"></kbd> and click an element to see its specs here.</p>
+</div>
 
 <!-- Shown instead of everything above while the panel is collapsed. -->
 <button class="rail" aria-label="Expand panel" title="Expand panel">

@@ -17,6 +17,7 @@ import { elementName, sizeText } from "../element-name";
 import { easingGlyph, icon, type Intent, intentGlyph } from "../icons";
 import { elementLink } from "../link";
 import { options } from "../options";
+import { onPage, pageAddress, pageDocument } from "../page";
 import { createStyleLookup, type StyleLookup } from "../page-styles";
 import { pin, pinnedElement, rerender } from "../selection";
 import { formatColor, isColorValue, tokensWithColor } from "../specs/colors";
@@ -45,7 +46,7 @@ interface Context {
 // ── small builders ─────────────────────────────────────────────
 
 const rootFontSize = (): number =>
-  parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  parseFloat(getComputedStyle(pageDocument().documentElement).fontSize) || 16;
 
 /** A length as the tab shows it: a bare number in px, or rem. */
 const shown = (value: string): string => shownLength(value, options.unit, rootFontSize());
@@ -97,8 +98,7 @@ function looksGenerated(className: string): boolean {
 }
 
 function renderHeader(el: Element): void {
-  const rect = el.getBoundingClientRect();
-  const board = boardPosition(el, rect)?.board;
+  const board = boardPosition(el)?.board;
   const parent = el.parentElement;
   const classes = Array.from(el.classList);
   const meaningful = classes.filter((name) => !looksGenerated(name));
@@ -111,7 +111,7 @@ function renderHeader(el: Element): void {
     crumbs.appendChild(h("span", "crumb", board));
     separator();
   }
-  if (parent && parent !== document.body) {
+  if (parent && parent !== parent.ownerDocument.body) {
     const up = crumbs.appendChild(h("button", "crumb", elementName(parent)));
     up.title = "Pin the parent";
     up.addEventListener("click", () => pin(parent));
@@ -125,7 +125,7 @@ function renderHeader(el: Element): void {
   const name = elementName(el);
   title.appendChild(h("span", "title", name === el.localName ? (meaningful[0] ?? name) : name));
   title.appendChild(h("span", "spacer"));
-  title.appendChild(h("span", "title-size", sizeText(el, rect)));
+  title.appendChild(h("span", "title-size", sizeText(el)));
 
   // Its classes: the meaningful ones on one line, or every class as a chip
   if (!classes.length) return;
@@ -242,7 +242,7 @@ function renderCompare(context: Context): void {
     const row = section.appendChild(h("div", "who"));
     row.appendChild(h("span", letter === "A" ? "letter" : "letter is-b", letter));
     row.appendChild(h("span", "name", elementName(el)));
-    row.appendChild(h("span", "board", boardPosition(el, el.getBoundingClientRect())?.board ?? ""));
+    row.appendChild(h("span", "board", boardPosition(el)?.board ?? ""));
     row.appendChild(h("span", "spacer"));
     row.appendChild(h("span", "hint", role));
   };
@@ -305,7 +305,7 @@ function tokenNotes(context: Context, specs: [label: string, spec: Spec | undefi
 
 function renderLayout(context: Context): void {
   const { el, cs } = context;
-  const onBoard = boardPosition(el, el.getBoundingClientRect());
+  const onBoard = boardPosition(el);
   const section = block("Layout", onBoard ? "X, Y on board" : "");
   section.appendChild(sizeRow(el, findSpec(context, "Layout", "size")?.note ?? "hug × hug"));
 
@@ -563,7 +563,7 @@ function mountActionBar(panel: HTMLElement): void {
     rerender();
   });
   // Esc ends a comparison, wherever the focus is on the page.
-  document.addEventListener("keydown", (e) => {
+  onPage("keydown", (e) => {
     if (e.key === "Escape" && options.compareWith) stopComparing();
   });
 
@@ -582,7 +582,7 @@ function mountActionBar(panel: HTMLElement): void {
 
   copyOnClick(part(panel, '[data-action="link"]'), () => {
     const pinned = pinnedElement();
-    return pinned ? elementLink(pinned) : location.href;
+    return pinned ? elementLink(pinned) : pageAddress().href;
   });
 
   renderActionStates = showCompare;

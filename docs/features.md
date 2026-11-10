@@ -54,10 +54,28 @@ Code: `src/overlay/distances.ts`. Tests: `tests/measure.test.ts`.
 Opens when an element is pinned, docked to the right edge. It either pushes
 the page aside or floats over it (see below).
 
+- **Alt + Shift + G** opens the panel with nothing pinned, from anywhere on
+  the page, and closes it again (unpinning the element, if there is one).
+  The empty panel shows a hint in place of the tabs' content; the » menu and
+  the reference work, so the canvas and the shortcuts are reachable before
+  anything is pinned. Pinning an element fills it. The shortcut is matched
+  by the key's place on the keyboard (`KeyG`), because Alt changes the
+  letter a key types.
+
+- It slides in from the right edge when it opens and out to it when it
+  closes, in 200ms (`--ins-dur-slide`). In push mode the page moves with
+  it: on every frame of the slide the page gives way by as much of the panel
+  as is on screen, so the page's edge stays on the panel's edge. For the
+  rest of the inspector the panel is closed from the moment it starts to
+  leave (nothing is pinned, the launcher moves back). With "reduce
+  motion" set in the system, and in a browser without `@starting-style` and
+  `transition-behavior: allow-discrete`, it shows and hides at once.
+  Collapsing to the rail is not animated.
 - Four tabs: Specs, All CSS, Layers, Changes. The Changes tab is hidden on
   pages that are not Claude Design exports.
 - The » button opens a small menu: "Shortcuts and tips" (feature 16),
-  "Push the page aside" and "Collapse panel". A click elsewhere in the
+  "Push the page aside", "Show on a canvas" (feature 17) and "Collapse
+  panel". A click elsewhere in the
   panel, or Esc, closes it.
 - **Push the page aside** is on by default. The panel then takes its width
   out of the page instead of covering it: Groma sets one inline
@@ -297,7 +315,7 @@ Code: `src/config.ts`. Tests: `tests/config.test.ts`,
 A tab that lists every shortcut and trick, opened from the » menu.
 
 - Content lives in `src/panel/reference.html`, grouped by subject: Inspect,
-  Copy, Specs, All CSS, Layers and panel, Good to know.
+  Copy, Specs, All CSS, Layers and panel, Canvas, Good to know.
 - Modifier keys are named as the user's keyboard does (⌥ and ⌘ on a Mac,
   Alt and Ctrl elsewhere).
 - It has no tab in the tab bar, and it is not the tab the panel reopens on.
@@ -306,3 +324,74 @@ A tab that lists every shortcut and trick, opened from the » menu.
 
 Code: `src/panel/reference-tab.ts`, `reference.html`, `src/platform.ts`.
 Tests: `tests/reference.test.ts`.
+
+## 17. Canvas
+
+"Show on a canvas" in the » menu puts the page in a frame on a canvas, like
+an artboard in a design tool, to try the design at any width and height. It
+is off by default; the choice and the frame's size are remembered per origin
+(`localStorage["__groma_canvas"]`).
+
+- The frame loads the page's own address again in an `<iframe>`. The page
+  therefore runs a second time inside the frame, and its media queries, `vw`
+  units and fixed elements see the frame's size. The first copy stays
+  underneath, hidden by the canvas and untouched.
+- Drag the frame's right edge, bottom edge or corner to resize it, between
+  240 × 160 and 3840 × 2400. The toolbar has three sizes: 375 × 812,
+  768 × 1024 and 1280 × 800. The label above the frame shows its size.
+- Zoom with the toolbar, or Ctrl/⌘ + wheel over the canvas or the page,
+  between 10% and 400%. "Fit" shows the whole frame, and never zooms in. A
+  wheel or a drag on the canvas itself moves the frame; a wheel over the page
+  scrolls the page.
+- A plain drag that starts over the page belongs to the page (selecting
+  text, the page's own drag interactions). **Space + drag** and a
+  **middle-button drag** move the canvas from anywhere, also from over the
+  page. While Space is held the frame lets the pointer through to the
+  canvas, and Space does not scroll the page.
+- Space is taken whatever has the focus, in the page or in the inspector,
+  except where it types: a text field, a `<textarea>`, editable content. A
+  focused button or checkbox does not swallow it (one is focused after every
+  click on it). Space released with no drag is passed on: the focused
+  control is pressed once, as the key alone would have done. With the canvas
+  off, Space is never touched.
+- A fitted frame stays fitted when the panel opens, closes or is resized.
+  Once the user zooms or moves it, the view is theirs and is left alone.
+- Everything else works in the frame as on the page: hover, pin, distances,
+  the layer menu, the grid, edits. Sizes and distances are in the page's own
+  pixels at any zoom. The marks are drawn outside the frame, in the
+  inspector's own layer, so they keep their size when the frame is zoomed;
+  they are cut at the frame's edge.
+- The panel docks beside the canvas and never covers the frame. Push mode
+  does nothing on the canvas.
+- The pinned element stays pinned when the canvas opens or closes, if the
+  other copy of the page has it too. After a resize the panel shows the
+  element as the page laid it out at the new size.
+- The copy of the script inside the frame does not start. It only points
+  `window.Groma` at the inspector outside, so a page that calls
+  `Groma.replayOverrides()` still works.
+- The browser does not let the inspector read a frame that loads a file
+  opened from disk (`file://`), or a page whose server forbids framing
+  (`X-Frame-Options`, CSP `frame-ancestors`). The frame is then filled with
+  **a copy of the open page** instead: its HTML as it is now, without the
+  inspector, handed to the frame as `srcdoc`, which the browser does let us
+  read. A page from disk goes straight to the copy; any other page gets it
+  when the first load of its address is refused.
+- The page's scripts run again on the copy, on HTML they have already
+  changed. A page that adds things as it loads could show them twice. For a
+  page from disk the toolbar has **"Use the file…"**: the user picks the
+  HTML file and the frame gets the original source. A browser does not let
+  a page remember a file, so this is asked again each time.
+- A copy has no address of its own (`about:srcdoc`). Links to an element and
+  saved edits use the address of the page (`pageAddress()` in `src/page.ts`).
+- When a link followed inside the frame leads to a page the inspector cannot
+  read (another site), the canvas says so and offers the way back.
+- If the user follows a link inside the frame, leaving the canvas goes to
+  that address, so the page underneath is not the old one.
+
+Every module reads the page through `src/page.ts`: which document it is
+(`pageDocument`, `pageWindow`), where its elements are on screen (`rectOf`)
+and how to listen to it (`onPage`).
+
+Code: `src/canvas/canvas.ts`, `view.ts`, `canvas.html`, `src/page.ts`,
+`src/root.ts` (`mountOnPage`, the clip), `src/styles/canvas.css`.
+Tests: `tests/canvas.test.ts`, `src/canvas/view.test.ts`.

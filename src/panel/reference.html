@@ -3,8 +3,9 @@
 
   Keep this file in step with the code. When you add or change a shortcut, a
   click target or a setting, change its line here in the same commit.
-  <kbd data-key="alt"> and <kbd data-key="command"> are filled in for the
-  user's keyboard (⌥ and ⌘ on a Mac, Alt and Ctrl elsewhere).
+  <kbd data-key="alt">, <kbd data-key="shift"> and <kbd data-key="command">
+  are filled in for the user's keyboard (⌥, ⇧ and ⌘ on a Mac; Alt, Shift and
+  Ctrl elsewhere).
 -->
 <section class="block">
   <div class="block-head"><h3>Inspect</h3></div>
@@ -17,6 +18,8 @@
     <dd>With an element pinned: distances from it to the hovered element, in red.</dd>
     <dt><kbd data-key="alt"></kbd> right-click</dt>
     <dd>List every layer under the pointer, to reach one that sits behind another.</dd>
+    <dt><kbd data-key="alt"></kbd> <kbd data-key="shift"></kbd> <kbd>G</kbd></dt>
+    <dd>Open the panel with nothing pinned, to reach its » menu and this reference. Again to close it.</dd>
     <dt>Inspect pill</dt>
     <dd>Bottom right. Click it to lock inspect mode on, so none of this needs <kbd data-key="alt"></kbd>.</dd>
     <dt><kbd>Esc</kbd></dt>
@@ -88,11 +91,39 @@
     <dt>Drag the left edge</dt>
     <dd>Resizes the panel. The width is remembered.</dd>
     <dt>» menu</dt>
-    <dd>This reference, “Push the page aside” and “Collapse panel”. Click the collapsed rail to bring the panel back.</dd>
+    <dd>This reference, “Push the page aside”, “Show on a canvas” and “Collapse panel”. Click the collapsed rail to bring the panel back.</dd>
     <dt>Push the page aside</dt>
     <dd>On by default: the panel takes its width out of the page instead of covering it. Switch it off if a page looks wrong pushed, for example one with elements fixed to the right edge. Your choice is remembered.</dd>
     <dt>Changes tab</dt>
     <dd>On a Claude Design export: pick an older export to list the boards that changed.</dd>
+  </dl>
+</section>
+
+<section class="block">
+  <div class="block-head"><h3>Canvas</h3></div>
+  <dl class="reference">
+    <dt>Show on a canvas</dt>
+    <dd>In the » menu: puts the page in a frame you can resize, to try the design at any width. Your choice and the frame's size are remembered.</dd>
+    <dt>Drag the frame's edges</dt>
+    <dd>Right edge, bottom edge or corner. The page lays itself out for the new size, media queries included.</dd>
+    <dt>375 · 768 · 1280</dt>
+    <dd>Phone, tablet and desktop sizes.</dd>
+    <dt><kbd data-key="command"></kbd> wheel</dt>
+    <dd>Zooms around the pointer. The toolbar also zooms; “Fit” shows the whole frame.</dd>
+    <dt>Drag or scroll the canvas</dt>
+    <dd>Moves the frame. Over the page, the wheel scrolls the page and a drag belongs to the page.</dd>
+    <dt><kbd>Space</kbd> drag</dt>
+    <dd>Moves the canvas from anywhere, also from over the page. A middle-button drag does the same. In a text field, <kbd>Space</kbd> still types.</dd>
+    <dt>Inspecting</dt>
+    <dd>Works in the frame as on the page. Sizes and distances stay in the page's own pixels at any zoom.</dd>
+    <dt>✕ in the toolbar</dt>
+    <dd>Goes back to the page. The pinned element stays pinned.</dd>
+    <dt>A second load</dt>
+    <dd>The page loads again inside the frame, so it starts fresh: an open dialog or a filled form is not carried over.</dd>
+    <dt>A file opened from disk</dt>
+    <dd>The frame shows a copy of the page as it is open. If something appears twice or looks wrong, click “Use the file…” in the toolbar and pick the HTML file.</dd>
+    <dt>“Cannot be shown”</dt>
+    <dd>A link in the frame led to another site. Go back to the page.</dd>
   </dl>
 </section>
 

@@ -5,6 +5,7 @@
 import { h } from "../dom";
 import { sizeText, tagAndClasses } from "../element-name";
 import { hideHoverOutline, showHoverOutline } from "../outlines";
+import { onPage, toWindowPoint } from "../page";
 import { isOwn, mount } from "../root";
 import { pin } from "../selection";
 import { isInspecting } from "./hover";
@@ -21,11 +22,13 @@ function closeMenu(): void {
   hideHoverOutline();
 }
 
-function openMenu(pointerX: number, pointerY: number): void {
+/** `x` and `y` are the pointer in `page`, the document the right-click happened in. */
+function openMenu(page: Document, x: number, y: number): void {
   closeMenu();
-  const layers = document
-    .elementsFromPoint(pointerX, pointerY)
-    .filter((el) => !isOwn(el) && el !== document.body && el !== document.documentElement);
+  const layers = page
+    .elementsFromPoint(x, y)
+    .filter((el) => !isOwn(el) && el !== page.body && el !== page.documentElement);
+  const { x: pointerX, y: pointerY } = toWindowPoint(x, y, page);
 
   const list = (menu = mount(h("div", "menu")));
   list.setAttribute("role", "menu");
@@ -49,18 +52,18 @@ function openMenu(pointerX: number, pointerY: number): void {
 }
 
 export function startLayerMenu(): void {
-  document.addEventListener(
+  onPage(
     "contextmenu",
     (e) => {
       if (!isInspecting() || isOwn(e.target)) return;
       e.preventDefault();
       e.stopPropagation();
-      openMenu(e.clientX, e.clientY);
+      openMenu((e.target as Node).ownerDocument ?? document, e.clientX, e.clientY);
     },
     true,
   );
   // A press anywhere else closes the menu.
-  document.addEventListener(
+  onPage(
     "mousedown",
     (e) => {
       if (menu && !e.composedPath().includes(menu)) closeMenu();

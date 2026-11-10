@@ -7,10 +7,11 @@ import { boardOf } from "./board";
 import { h, placeOver, scaleOf, visibleBox } from "./dom";
 import { elementName, sizeText } from "./element-name";
 import { options } from "./options";
-import { mount } from "./root";
+import { pageDocument, pageViewport, rectOf } from "./page";
+import { mountOnPage } from "./root";
 import { onSelection, pinnedElement } from "./selection";
 
-/** Below this distance from the top of the window, the tag moves inside the outline. */
+/** Below this distance from the top of the window (or the frame), the tag moves inside the outline. */
 const TAG_HEIGHT = 18;
 
 let pinnedOutline: HTMLElement | null = null;
@@ -26,9 +27,9 @@ let frame = 0;
  * has scrolled that corner out of view.
  */
 function placeGrid(pinned: Element): void {
-  grid ??= mount(h("div", "grid"));
-  const board = boardOf(pinned) ?? document.body;
-  const rect = board.getBoundingClientRect();
+  grid ??= mountOnPage(h("div", "grid"));
+  const board = boardOf(pinned) ?? pageDocument().body;
+  const rect = rectOf(board);
   const scale = scaleOf(board, rect);
   const visible = visibleBox(board, rect);
   placeOver(grid, visible);
@@ -46,9 +47,9 @@ function tick(): void {
   const pinned = pinnedElement();
   const showGrid = options.gridStep > 0 && pinned !== null;
   if (outlined && pinnedOutline) {
-    const rect = outlined.getBoundingClientRect();
+    const rect = rectOf(outlined);
     placeOver(pinnedOutline, rect);
-    pinTag?.classList.toggle("is-inside", rect.top < TAG_HEIGHT);
+    pinTag?.classList.toggle("is-inside", rect.top - (pageViewport()?.top ?? 0) < TAG_HEIGHT);
     // The page may replace the pinned element (a re-render, another page).
     pinnedOutline.style.visibility = outlined.isConnected ? "" : "hidden";
   }
@@ -65,7 +66,7 @@ function startTicking(): void {
 export function highlight(el: Element): void {
   if (!options.highlightPinned) return;
   if (!pinnedOutline) {
-    pinnedOutline = mount(h("div", "outline outline-pinned"));
+    pinnedOutline = mountOnPage(h("div", "outline outline-pinned"));
     pinTag = pinnedOutline.appendChild(h("div", "pin-tag"));
   }
   pinTag?.replaceChildren(h("b", "", elementName(el)), sizeText(el));
@@ -88,8 +89,8 @@ export function syncOutlines(): void {
 
 /** A dashed outline for a layer the pointer is over in the panel or a menu. */
 export function showHoverOutline(el: Element): void {
-  hoverOutline ??= mount(h("div", "outline outline-hover"));
-  placeOver(hoverOutline, el.getBoundingClientRect());
+  hoverOutline ??= mountOnPage(h("div", "outline outline-hover"));
+  placeOver(hoverOutline, rectOf(el));
   hoverOutline.style.display = "block";
 }
 

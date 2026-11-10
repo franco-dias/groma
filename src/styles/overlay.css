@@ -9,6 +9,29 @@
   pointer-events: none;
 }
 
+/*
+ * Marks on the page share one layer. In canvas mode the clip box covers the
+ * frame and cuts what leaves it; the layer inside is moved back by the box's
+ * offset (root.ts), so its nodes keep window coordinates.
+ */
+.page-clip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.page-clip.is-framed {
+  overflow: hidden;
+}
+
+.page-clip.is-framed > .page-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .overlay {
   top: 0;
   left: 0;

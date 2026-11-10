@@ -9,7 +9,7 @@ export function getSelector(el: Element): string {
   const parts: string[] = [];
   for (
     let node = el;
-    node.parentElement && node !== document.body;
+    node.parentElement && node !== node.ownerDocument.body;
     node = node.parentElement
   ) {
     const id = node.getAttribute("id");

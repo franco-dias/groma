@@ -47,8 +47,11 @@ import, the distance to the next element.
 | Alt + click | Pins the element and opens the side panel |
 | Alt + hover, with an element pinned | Distances from the pinned element, in red |
 | Alt + right-click | A menu of every layer under the pointer |
+| Alt + Shift + G | Opens the side panel with nothing pinned, and closes it |
 
 A pill at the bottom right locks inspect mode on, so none of this needs Alt.
+The panel's » menu can also show the page on a canvas: in a frame you resize
+by its edges, to check the design at any width.
 
 The side panel answers four questions:
 

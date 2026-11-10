@@ -5,11 +5,12 @@
  * replayed when the page loads. What the page had before the first edit is
  * remembered, so a reset can put it back.
  */
+import { pageAddress, pageDocument } from "../page";
 import { readStore, writeStore } from "./storage";
 
 // Scoped by page: every file:// page shares one localStorage.
-const STYLE_KEY = "__groma_overrides:" + location.pathname;
-const CONTENT_KEY = "__groma_html:" + location.pathname;
+const styleKey = (): string => "__groma_overrides:" + pageAddress().pathname;
+const contentKey = (): string => "__groma_html:" + pageAddress().pathname;
 
 type StyleOverrides = Record<string, Record<string, string>>;
 type ContentOverrides = Record<string, string>;
@@ -23,17 +24,17 @@ const inlineStyle = (el: Element): CSSStyleDeclaration => (el as HTMLElement).st
 // ── styles ─────────────────────────────────────────────────────
 
 export function savedStyles(selector: string): Record<string, string> {
-  return readStore<StyleOverrides>(STYLE_KEY)[selector] ?? {};
+  return readStore<StyleOverrides>(styleKey())[selector] ?? {};
 }
 
 /** Saves one property; `null` forgets it. */
 export function saveStyle(selector: string, prop: string, value: string | null): void {
-  const all = readStore<StyleOverrides>(STYLE_KEY);
+  const all = readStore<StyleOverrides>(styleKey());
   const props = (all[selector] ??= {});
   if (value === null) delete props[prop];
   else props[prop] = value;
   if (!Object.keys(props).length) delete all[selector];
-  writeStore(STYLE_KEY, all);
+  writeStore(styleKey(), all);
 }
 
 export function applyStyle(el: Element, prop: string, value: string): void {
@@ -67,15 +68,15 @@ function setContent(el: Element, content: string): void {
 }
 
 export function hasSavedContent(selector: string): boolean {
-  return selector in readStore<ContentOverrides>(CONTENT_KEY);
+  return selector in readStore<ContentOverrides>(contentKey());
 }
 
 /** Saves an element's content; `null` forgets it. */
 export function saveContent(selector: string, content: string | null): void {
-  const all = readStore<ContentOverrides>(CONTENT_KEY);
+  const all = readStore<ContentOverrides>(contentKey());
   if (content === null) delete all[selector];
   else all[selector] = content;
-  writeStore(CONTENT_KEY, all);
+  writeStore(contentKey(), all);
 }
 
 export function applyContent(el: Element, content: string): void {
@@ -100,13 +101,13 @@ function forEachMatch(root: ParentNode, selector: string, apply: (el: Element) =
 }
 
 /** Applies every saved edit to the page, or only inside `root`. */
-export function replayOverrides(root: ParentNode = document): void {
-  Object.entries(readStore<StyleOverrides>(STYLE_KEY)).forEach(([selector, props = {}]) => {
+export function replayOverrides(root: ParentNode = pageDocument()): void {
+  Object.entries(readStore<StyleOverrides>(styleKey())).forEach(([selector, props = {}]) => {
     forEachMatch(root, selector, (el) => {
       Object.entries(props).forEach(([prop, value]) => applyStyle(el, prop, value));
     });
   });
-  Object.entries(readStore<ContentOverrides>(CONTENT_KEY)).forEach(([selector, content = ""]) => {
+  Object.entries(readStore<ContentOverrides>(contentKey())).forEach(([selector, content = ""]) => {
     forEachMatch(root, selector, (el) => applyContent(el, content));
   });
 }

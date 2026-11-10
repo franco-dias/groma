@@ -54,7 +54,7 @@ function treeNode(node: Element, depth: number, open: Set<Element>, current: Ele
 }
 
 function renderLayers(el: Element): void {
-  const root = boardOf(el) ?? document.body;
+  const root = boardOf(el) ?? el.ownerDocument.body;
   const open = new Set<Element>();
   for (let node: Element | null = el; node; node = node.parentElement) {
     // The pinned layer itself starts closed: its children are one click away.

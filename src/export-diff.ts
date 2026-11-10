@@ -4,6 +4,7 @@
  * An export embeds its boards as JSON in `<script id="dc-data">`:
  * `boards` lists them and `sources` holds each board's source by file name.
  */
+import { pageDocument } from "./page";
 
 export interface ExportBoard {
   id: string;
@@ -50,7 +51,7 @@ export const parseExport = (html: string): ExportData | null =>
 
 /** The data of the export this page is, or null when the page is not one. */
 export const currentExport = (): ExportData | null =>
-  readExport(document.getElementById("dc-data")?.textContent);
+  readExport(pageDocument().getElementById("dc-data")?.textContent);
 
 function lineCounts(text: string): Map<string, number> {
   const counts = new Map<string, number>();

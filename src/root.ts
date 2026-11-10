@@ -10,9 +10,10 @@
  * panel, the launcher or the outlines.
  */
 import { h } from "./dom";
+import { onPageView, pageViewport } from "./page";
 import styles from "./styles/index.css?inline";
 
-const HOST_TAG = "groma-inspector";
+export const HOST_TAG = "groma-inspector";
 
 let host: HTMLElement | null = null;
 
@@ -44,6 +45,45 @@ function promoteToTopLayer(element: HTMLElement): void {
 export function mount<T extends HTMLElement>(node: T): T {
   inspectorHost().shadowRoot!.appendChild(node);
   return node;
+}
+
+let pageLayer: HTMLElement | null = null;
+
+/**
+ * Adds a node that marks something on the page (an outline, the hover boxes,
+ * the grid). In canvas mode these are cut at the edge of the frame, as the
+ * page's own content is; the node keeps window coordinates either way.
+ */
+export function mountOnPage<T extends HTMLElement>(node: T): T {
+  if (!pageLayer) {
+    pageLayer = mount(h("div", "page-clip")).appendChild(h("div", "page-layer"));
+    onPageView(clipPageLayer);
+    clipPageLayer();
+  }
+  pageLayer.appendChild(node);
+  return node;
+}
+
+/**
+ * The clip box covers the frame and cuts what leaves it. The layer inside is
+ * moved back by the box's offset, so its nodes are still placed in window
+ * coordinates.
+ */
+function clipPageLayer(): void {
+  if (!pageLayer) return;
+  const clip = pageLayer.parentElement!;
+  const viewport = pageViewport();
+  clip.classList.toggle("is-framed", viewport !== null);
+  if (!viewport) {
+    clip.removeAttribute("style");
+    pageLayer.removeAttribute("style");
+    return;
+  }
+  clip.style.left = `${viewport.left}px`;
+  clip.style.top = `${viewport.top}px`;
+  clip.style.width = `${viewport.width}px`;
+  clip.style.height = `${viewport.height}px`;
+  pageLayer.style.transform = `translate(${-viewport.left}px, ${-viewport.top}px)`;
 }
 
 /** Sets a CSS variable every inspector node can read (see styles/tokens.css). */

@@ -134,8 +134,45 @@ queries still see the full window width. For those, open the » menu in the
 panel and switch off "Push the page aside". The panel then floats over the
 page. The choice is remembered for the site.
 
+## The canvas: try any size
+
+Open the » menu in the panel and choose "Show on a canvas". (Alt + Shift + G
+opens the panel when nothing is pinned.) The page moves
+into a frame that you can resize by its edges, like an artboard, with three
+ready sizes in the toolbar (375, 768 and 1280 wide). The page inside lays
+itself out for the frame, media queries included, and you inspect it as
+usual. Zoom with the toolbar or Ctrl/⌘ + wheel; drag the canvas to move
+around. Over the page a drag belongs to the page, so hold Space and drag, or
+drag with the middle button, to move the canvas from there. The ✕ in the toolbar, or the same menu item, goes back to the page.
+The choice and the size are remembered for the site.
+
+The frame shows the page's own address again, so the page loads a second
+time inside it: it makes its requests again and starts from a fresh state.
+What you had open on the page (a dialog, a filled form) is not carried over.
+
+Two kinds of page cannot be loaded in the frame by their address: a file
+opened from disk (`file://`), and a page whose server forbids framing
+(`X-Frame-Options: DENY`, or a CSP `frame-ancestors` that excludes the page
+itself). For those the canvas fills the frame with a copy of the page as it
+is open, which works without any step from you.
+
+The page's scripts run again on that copy. If something shows twice or looks
+wrong, and the page is a file from disk, click "Use the file…" in the toolbar
+and pick the HTML file: the frame then gets the original. The browser asks
+for the file again each time the canvas opens. Opening the file with
+[the inspect command](#open-a-file-with-one-command) avoids both.
+
 ## Known limits
 
+- On the canvas, Space does not scroll the page: it is the key that moves the
+  canvas. The wheel still scrolls, Space still types in a field, and a tap of
+  Space still presses a focused button or checkbox.
+- The canvas loads the page a second time. For a file opened from disk and a
+  page whose server forbids framing it shows a copy of the open page, on
+  which the page's scripts run again; see
+  [the canvas](#the-canvas-try-any-size). A reload on the canvas returns to
+  the address in the address bar, not to a link followed inside the frame.
+  A link in the frame that leads to another site cannot be shown.
 - Push mode moves only what is laid out in normal flow; see
   [the side panel](#the-side-panel-push-or-float).
 - Token lookup takes the last matching declaration in source order and
@@ -149,4 +186,5 @@ page. The choice is remembered for the site.
 - The colour picker needs a Chromium browser. It has no test: the browser
   only opens it on a real click.
 - The tests run in Chrome only; Firefox and Safari are not covered.
-- Elements inside iframes and other shadow roots are not inspected.
+- Elements inside the page's own iframes and other shadow roots are not
+  inspected.

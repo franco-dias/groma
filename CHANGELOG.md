@@ -3,6 +3,25 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## Unreleased
+
+- New: canvas mode. "Show on a canvas" in the » menu puts the page in a frame
+  on a canvas, like an artboard: drag its edges to try any width and height,
+  pick 375, 768 or 1280 from the toolbar, zoom with Ctrl/⌘ + wheel and drag
+  the canvas to move around. Space + drag and a middle-button drag move the
+  canvas from over the page too. The page lays itself out for the frame, media
+  queries included, and inspecting works as on the page, in the page's own
+  pixels at any zoom. The choice and the size are remembered. The page loads
+  a second time inside the frame. A file opened from disk and a page whose
+  server forbids framing are shown from a copy of the open page; for a file,
+  "Use the file…" in the toolbar loads the original HTML instead.
+- New: the side panel slides in and out instead of appearing at once, and in
+  push mode the page moves aside with it. It follows the system's "reduce
+  motion" setting.
+- New: Alt + Shift + G opens the side panel with nothing pinned, and closes
+  it again. The » menu and the reference are then reachable before an element
+  is pinned.
+
 ## 0.4.0 (2026-11-10)
 
 - New: the side panel pushes the page aside instead of covering it, and the

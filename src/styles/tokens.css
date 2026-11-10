@@ -16,6 +16,9 @@
   --ins-fg: #fafafa;
   --ins-fg-muted: #a3a3a3;
   --ins-fg-subtle: #8f8f8f;
+  /* Canvas mode: the canvas itself, and what a page with no background sits on. */
+  --ins-canvas-bg: #0f0f0f;
+  --ins-page-bg: #ffffff;
 
   /* Meaning */
   --ins-token: #8ab4ff;
@@ -70,6 +73,8 @@
   --ins-radius: 8px;
   --ins-radius-pill: 9999px;
   --ins-dur: 100ms;
+  /* The side panel sliding in and out. */
+  --ins-dur-slide: 200ms;
 
   /* Width the docked panel takes; the launcher moves out of its way. */
   --ins-dock: 0px;

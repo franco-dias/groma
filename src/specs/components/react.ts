@@ -10,6 +10,7 @@
  *
  *   /* @ds-bundle: {"namespace": "Acme", "components": [{name, sourcePath}]} *\/
  */
+import { isElement, pageDocument, pageWindow } from "../../page";
 import type { ComponentInfo, ComponentReader } from "./types";
 
 interface Fiber {
@@ -33,12 +34,15 @@ interface BundleEntry {
 }
 
 let designSystem: Map<unknown, BundleEntry> | null = null;
+/** The document `designSystem` was read from: a canvas frame has its own bundle. */
+let designSystemPage: Document | null = null;
 
 /** Design-system components by React type, read once from the bundle headers. */
 function designSystemComponents(): Map<unknown, BundleEntry> {
-  if (designSystem) return designSystem;
+  if (designSystem && designSystemPage === pageDocument()) return designSystem;
   designSystem = new Map();
-  for (const script of document.querySelectorAll("script[data-src]")) {
+  designSystemPage = pageDocument();
+  for (const script of pageDocument().querySelectorAll("script[data-src]")) {
     const header = /^\/\*\s*@ds-bundle:\s*(\{.*?\})\s*\*\//s.exec(
       (script.textContent ?? "").slice(0, 200_000),
     );
@@ -48,7 +52,7 @@ function designSystemComponents(): Map<unknown, BundleEntry> {
         namespace: string;
         components: BundleEntry[];
       };
-      const exported = (window as unknown as Record<string, Record<string, unknown>>)[namespace];
+      const exported = (pageWindow() as unknown as Record<string, Record<string, unknown>>)[namespace];
       components.forEach((entry) => {
         if (exported?.[entry.name]) designSystem!.set(exported[entry.name], entry);
       });
@@ -68,7 +72,7 @@ function fiberOf(el: Element): Fiber | null {
 function rootElement(fiber: Fiber): Element | undefined {
   let node: Fiber | null = fiber;
   while (node && typeof node.type !== "string") node = node.child;
-  return node?.stateNode instanceof Element ? node.stateNode : undefined;
+  return isElement(node?.stateNode) ? node.stateNode : undefined;
 }
 
 /**

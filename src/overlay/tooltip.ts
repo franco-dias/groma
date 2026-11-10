@@ -13,10 +13,10 @@ let tooltip: HTMLElement | null = null;
 /** Shows the chip above the element's top-left corner, or below when there is no room. */
 export function showTooltip(el: Element, rect: Box): void {
   tooltip ??= mount(h("div", "tooltip"));
-  const position = boardPosition(el, rect)?.text ?? "";
+  const position = boardPosition(el)?.text ?? "";
   tooltip.replaceChildren(
     h("b", "", elementName(el)),
-    h("span", "", sizeText(el, rect)),
+    h("span", "", sizeText(el)),
     h("span", "position", position),
   );
   tooltip.style.display = "flex";

@@ -15,7 +15,12 @@ describe("» menu", () => {
     expect(ui(".more-menu")!.hidden).toBe(true);
     ui(".more-button")!.click();
     expect(ui(".more-menu")!.hidden).toBe(false);
-    expect(texts(".more-item")).toEqual(["Shortcuts and tips", "Push the page aside", "Collapse panel"]);
+    expect(texts(".more-item")).toEqual([
+      "Shortcuts and tips",
+      "Push the page aside",
+      "Show on a canvas",
+      "Collapse panel",
+    ]);
   });
 
   it("closes on a click elsewhere in the panel, and on Esc", () => {
@@ -58,6 +63,7 @@ describe("Reference tab", () => {
       "Specs",
       "All CSS",
       "Layers and panel",
+      "Canvas",
       "Good to know",
     ]);
     const terms = texts(".reference dt");
@@ -69,7 +75,7 @@ describe("Reference tab", () => {
     openReference();
     const keys = new Set(texts(".reference kbd[data-key]"));
     expect(keys.has("")).toBe(false);
-    expect([...keys].every((key) => ["Alt", "Ctrl", "⌥", "⌘"].includes(key))).toBe(true);
+    expect([...keys].every((key) => ["Alt", "Ctrl", "Shift", "⌥", "⌘", "⇧"].includes(key))).toBe(true);
   });
 
   it("gives way to a normal tab, and is not the tab the panel reopens on", () => {
