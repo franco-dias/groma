@@ -27,6 +27,7 @@ import { referenceTab } from "./reference-tab";
 import { resizeByDragging } from "./resize-handle";
 import { specsTab } from "./specs/specs-tab";
 import { part, type Tab } from "./tab";
+import { mountTextEditSwitch } from "./text-edit-switch";
 
 const TABS: Tab[] = [specsTab, cssTab, layersTab, editsTab, changesTab, referenceTab];
 
@@ -69,6 +70,7 @@ function createPanel(): HTMLElement {
   mountTabBar(element);
   part(element, ".close").addEventListener("click", unpin);
   mountMoreMenu(element);
+  mountTextEditSwitch(element);
   part(element, ".rail").addEventListener("click", () => expandPanel(element));
   resizeByDragging(element);
 

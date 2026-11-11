@@ -12,8 +12,10 @@ All notable changes to this package are recorded here. Versions follow
   rules are still read as if they applied.
 
 - New: double-click text on the page to edit it in place. With inspect mode
-  locked on (the launcher pill), a double-click on an element that holds only
-  text lets you type in it. Enter or a click elsewhere applies, Esc puts the
+  locked on, a double-click on an element that holds only text lets you type
+  in it. A switch at the foot of the panel, "Edit text inline (lock
+  inspecting)", is there on every tab and locks inspect mode for you; it and
+  the launcher pill are the same lock. Enter or a click elsewhere applies, Esc puts the
   text back. It is a content edit: saved, listed in the Edits tab, undoable
   and copied with "Copy edits".
 - Changed: an edit that sets a property back to the value it had before your

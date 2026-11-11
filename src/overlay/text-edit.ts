@@ -1,6 +1,7 @@
 /**
- * Editing text right on the page. With inspect mode locked on, a double-click
- * on an element that holds only text pins it and lets the user type in it.
+ * Editing text right on the page. With inspect mode locked on (the launcher
+ * pill, or the panel's "Edit text inline" switch), a double-click on an
+ * element that holds only text pins it and lets the user type in it.
  *   Enter, or a click elsewhere   apply       Escape   put the text back
  * The edit is a content edit, like one made in the All CSS tab: saved, listed
  * in the Edits tab, undone from there. Making the element editable changes
@@ -87,6 +88,8 @@ export function cancelTextEdit(): void {
 
 function pressKey(event: KeyboardEvent): void {
   if (!session) return;
+  // Alt going down or up is the inspector's to see, or it would count as held for good.
+  if (event.key === "Alt") return;
   // Not a shortcut of the inspector or of the page: the keys belong to the text.
   event.stopPropagation();
   if (event.isComposing) return;
@@ -98,7 +101,7 @@ function pressKey(event: KeyboardEvent): void {
 }
 
 function keepKeyUp(event: KeyboardEvent): void {
-  if (session) event.stopPropagation();
+  if (session && event.key !== "Alt") event.stopPropagation();
 }
 
 /** Starts watching for what ends an edit in place; hover.ts starts an edit. */

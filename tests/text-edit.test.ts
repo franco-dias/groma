@@ -10,7 +10,9 @@ import {
   inspector,
   openTab,
   page,
+  pressEscape,
   pressKey,
+  releaseAlt,
   reset,
   texts,
   ui,
@@ -226,5 +228,72 @@ describe("double-clicking text when not locked", () => {
     doubleClick(title);
 
     expect(title.hasAttribute("contenteditable")).toBe(false);
+  });
+});
+
+describe("Alt pressed while text is being edited", () => {
+  it("is still seen going up, so inspect mode ends with the lock", () => {
+    lock();
+    doubleClick(title);
+    holdAlt();
+    releaseAlt();
+    pressKey(title, "Enter");
+    unlock();
+
+    expect(document.body.style.cursor).toBe("");
+  });
+});
+
+const box = (): HTMLInputElement => ui<HTMLInputElement>('.panel-foot [data-option="text-edit"]')!;
+const openPanel = (): void => inspector().pin(note);
+const isPillLocked = (): boolean => ui(".launcher")!.classList.contains("is-locked");
+
+describe("the switch at the foot of the panel", () => {
+  it("is off, names what it does, and shows on every tab", () => {
+    openPanel();
+
+    expect(box().checked).toBe(false);
+    expect(texts(".panel-foot .foot-label")).toEqual(["Edit text inline (lock inspecting)"]);
+    expect(texts(".panel-foot .hint")).toEqual(["Double-click text on the page"]);
+    for (const tab of ["specs", "css", "layers", "edits"]) {
+      openTab(tab);
+      expect(getComputedStyle(ui(".panel-foot")!).display).not.toBe("none");
+    }
+  });
+
+  it("locks inspect mode on, and a double-click on text then edits it", () => {
+    openPanel();
+    box().click();
+    expect(isPillLocked()).toBe(true);
+    expect(document.body.style.cursor).toBe("crosshair");
+
+    doubleClick(title);
+    expect(title.isContentEditable).toBe(true);
+  });
+
+  it("unlocks when it is unchecked", () => {
+    openPanel();
+    box().click();
+    box().click();
+
+    expect(isPillLocked()).toBe(false);
+    expect(document.body.style.cursor).toBe("");
+  });
+
+  it("shows the lock made from the pill, and its end on Escape", () => {
+    openPanel();
+    lock();
+    expect(box().checked).toBe(true);
+
+    pressEscape();
+    expect(box().checked).toBe(false);
+  });
+
+  it("fits a panel 320px wide", () => {
+    openPanel();
+    ui(".panel")!.style.width = "320px";
+    const foot = ui(".panel-foot")!;
+
+    expect(foot.scrollWidth).toBeLessThanOrEqual(foot.clientWidth);
   });
 });
