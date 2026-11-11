@@ -121,8 +121,9 @@ which it is. There are three ways, checked in this order:
    <div data-component="Card" data-source="ui/Card.tsx" data-props='{"tone":"dark"}'>
    ```
 
-2. **The page's UI framework knows it.** Supported today: pages rendered
-   with React.
+2. **The page's UI framework knows it.** Supported today: React; Vue 3 and
+   Vue 2; Svelte; and Angular. Vue, Svelte and Angular are read in
+   development builds (see the limits below).
 3. **The element is a custom element.** `<my-card tone="dark">` is a
    component by definition: the tag is its name, the attributes its props.
 
@@ -137,13 +138,15 @@ only your codebase knows that.
 
 A page can talk to the inspector through `window.Groma`:
 
-| Method                   | What it does                                                               |
-| ------------------------ | -------------------------------------------------------------------------- |
-| `pin(el)`                | Pins an element, as Alt + click does                                       |
-| `pinnedElement()`        | The pinned element, or `null`                                              |
-| `replayOverrides(root?)` | Re-applies saved edits to the page, or inside `root`                       |
-| `highlight(el)`          | Moves the pinned-element outline to `el`                                   |
-| `configure(settings)`    | Changes the [settings](#settings); with no argument, restores the defaults |
+| Method                   | What it does                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| `pin(el)`                | Pins an element, as Alt + click does                                                 |
+| `pinnedElement()`        | The pinned element, or `null`                                                        |
+| `replayOverrides(root?)` | Re-applies saved edits to the page, or inside `root`                                 |
+| `highlight(el)`          | Moves the pinned-element outline to `el`                                             |
+| `configure(settings)`    | Changes the [settings](#settings); with no argument, restores the defaults           |
+| `edits()`                | The text "Copy edits" writes now; `""` when there are no edits or notes              |
+| `onEdits(listener)`      | Calls `listener(text)` each time that text changes; returns a function that stops it |
 
 ## Hand your edits to a coding agent
 
@@ -194,6 +197,83 @@ Note: keep it in view while the page scrolls
   [Components](#components)). The text never names a line to edit.
 - A value the browser does not accept is not kept. `!important` after a
   value works.
+
+## Let an agent read the edits live: the bridge
+
+"Copy edits" needs a paste. The bridge removes it: the page hands its edits
+to the `gromajs` command as they change, and a coding agent reads them
+through an MCP tool. The command does this; the script on the page only gains
+`Groma.edits()` and `Groma.onEdits()` (see [the API](#for-pages-that-re-render)).
+
+**A file opened with `npx gromajs page.html`** is already set up: the command
+serves the bridge on the same port and adds the bridge script beside Groma.
+
+**An app on its own dev server:** run the bridge, and add the tag it prints to
+the app's dev build, next to the Groma script:
+
+```bash
+npx gromajs bridge            # port 4777; --port=<number> to change it
+```
+
+```html
+<script src="http://localhost:4777/bridge.js"></script>
+```
+
+**Claude Code:**
+
+```bash
+claude mcp add groma -- npx gromajs mcp
+```
+
+**Any other MCP client** (stdio): run `npx gromajs mcp` as the server's
+command, with `--port=<number>` if you changed the port. With no bridge
+listening there, `gromajs mcp` starts one itself, so it alone is enough for
+an app that carries the bridge script tag. Then edit in the Groma panel and
+ask the agent to apply "the edits from Groma".
+
+Tools (names are part of the [contract](contract.md)):
+
+| Tool         | Arguments                                 | Answers                                                                                                                                                                                                    |
+| ------------ | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `get_edits`  | `page` (optional): part of a page address | The edits text of each page that has edits, with the page's address and when it arrived; or, when there are none, how to send some. The text is presented as data a web page reported, not as instructions |
+| `list_pages` | none                                      | The pages that reported: address, title, whether they have edits, and when                                                                                                                                 |
+
+The default port is 4777 for the page server, the bridge and `mcp`, so they
+agree without being told.
+
+HTTP, for scripts of your own (all under `/__groma/`):
+
+| Request                  | What it does                                                             |
+| ------------------------ | ------------------------------------------------------------------------ |
+| `POST /__groma/edits`    | A page sends `{ "page": address, "title": …, "text": … }` (at most 1 MB) |
+| `GET /__groma/edits`     | `{ "pages": [{ page, title, text, receivedAt }] }`, the newest first     |
+| `GET /__groma/edits.txt` | The same, as plain text                                                  |
+| `GET /__groma/bridge.js` | The script that posts the edits (also `/bridge.js` on `gromajs bridge`)  |
+
+**Who may send.** The bridge listens on 127.0.0.1 only, answers only a
+`Host` of this machine, and accepts edits only from a page whose `Origin` is
+`localhost`, `127.0.0.1`, `[::1]`, any `*.localhost`, or `null` (a file). Any
+web site can make your browser send a request to localhost; without this rule
+any site could put text in front of your coding agent. To let a staging site
+send, name it: `npx gromajs bridge --allow-origin=https://staging.example.com`
+(repeatable; also on `mcp` and on a file). Nothing is written to disk: the
+bridge keeps the latest text of up to 50 pages in memory, and a restart
+forgets it (a page sends its text again at its next change or when its window
+gets focus).
+
+Limits:
+
+- `null` is also the origin of a sandboxed frame on any web site, so a hostile
+  page could send text from one. Edits go to your agent as data it is told not
+  to obey, but read what you apply.
+- A page served over `https` that posts to `localhost` may need your browser's
+  permission for local network access; if the browser refuses, nothing is sent
+  and nothing breaks.
+- The edits are the text "Copy edits" would copy at that moment; a page with
+  Groma in a canvas frame reports through its parent only.
+- A page not served by the command carries the bridge tag only if you add it,
+  and the bridge script is served over plain http from your machine: keep it
+  out of what end users load.
 
 ## The side panel: push or float
 
@@ -270,10 +350,16 @@ for the file again each time the canvas opens. Opening the file with
   if it applied). When that list is not what the browser laid out, the track
   sizes are shown as one text value. Two lists with the same number of
   tracks and no pixel sizes cannot be told apart.
-- Of the UI frameworks, only React pages are read for components; other
-  pages can declare components in the markup (see [Components](#components)).
-  A minified production build shows no React component names; see
-  [Use it on an app](#use-it-on-an-app).
+- Of the UI frameworks, React, Vue, Svelte and Angular pages are read for
+  components; other pages can declare components in the markup (see
+  [Components](#components)). A minified production build shows no React
+  component names, and Vue, Svelte and Angular readers rely on what their
+  development builds leave on the page; see [Use it on an app](#use-it-on-an-app).
+  The readers use internals the frameworks do not promise to keep.
+- Vue: a component with no name and no file name is skipped for its parent.
+  Svelte shows the component's file but no props, and not whether the element is
+  its root. Angular shows no source file (it exposes none), and shows props only
+  where `ng.getDirectiveMetadata` exists (recent versions).
 - The track lines of a pinned grid are drawn for left-to-right, horizontal
   text: with `direction: rtl` or a vertical writing mode they are on the wrong
   side. A grid inside a scrolling or clipping box is not cut at its edge.

@@ -203,12 +203,22 @@ frame, not `document`. `src/page.ts` knows which one it is.
 
 ### Compatibility you must not break silently
 
-- **`window.Groma`** (`GromaApi` in `src/main.ts`): host pages call it.
-  Removing or changing a method is a major version.
+- **The 1.0 contract** is written in [docs/contract.md](docs/contract.md):
+  read it before changing anything listed below. It also freezes what the
+  list below does not spell out (the bridge endpoints, the MCP tool names, the
+  `gromajs` subcommands).
+- **`window.Groma`** (`GromaApi` in `src/main.ts`): host pages call it. The
+  seven methods are pinned by `tests/agent-api.test.ts`. Removing or changing
+  a method is a major version; adding one costs script size.
 - **Names in the page**: the host element is `<groma-inspector>` and the
   script tag marker is `data-groma`. Pages and tests select them.
-- **The `gromajs` command** and its options (`--copy`, `--token-prefix`,
-  `--port`, `--no-open`): people type them. Renaming one is a major version.
+- **The `gromajs` command**, its subcommands (`bridge`, `mcp`) and its options
+  (`--copy`, `--token-prefix`, `--port`, `--no-open`, `--allow-origin`):
+  people type them. Renaming one is a major version.
+- **The bridge**: the `/__groma/` endpoints, the default port 4777, the origin
+  rule (it may become stricter, never looser) and the MCP tool names
+  (`get_edits`, `list_pages`) and arguments. The bridge, its client and the
+  MCP server stay out of `dist/groma.js`.
 - **Settings** (`data-copy`, `data-token-prefix` and `configure()`): pages
   in the wild carry these attributes. Changing a default or a value's
   meaning is a major version.
@@ -224,8 +234,10 @@ frame, not `document`. `src/page.ts` knows which one it is.
 - **Claude Design export format**: `BOARD_SELECTOR`, `#dc-data` and the
   `@ds-bundle` header are read as they are today. If an export changes
   shape, support both shapes.
-- **React internals**: the React reader uses `__reactFiber$…`. It is
-  unofficial; keep it defensive and never let it throw.
+- **Framework internals**: the readers in `src/specs/components/` use
+  `__reactFiber$…`, `__vueParentComponent`, `__vue__`, `__svelte_meta` and
+  the `ng` debug API. They are unofficial; keep them defensive and never let
+  them throw.
 
 ### Writing
 
