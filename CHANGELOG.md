@@ -5,6 +5,12 @@ All notable changes to this package are recorded here. Versions follow
 
 ## Unreleased
 
+- Changed: saved edits are no longer put back on the page by themselves, on
+  load or when an element is pinned. On a page that renders late only some of
+  them came back. When a page loads with saved edits, the panel now shows a bar
+  under the tabs with their number, with "Apply" to put them back and
+  "Discard" to remove them.
+  `Groma.replayOverrides()` works as before.
 - New: the Edits tab lists everything you changed on the page, on any
   element, as before → after, with a ↩ per line. It also shows while the
   panel is open with nothing pinned.
@@ -12,6 +18,43 @@ All notable changes to this package are recorded here. Versions follow
   the page, the viewport, and per element its selector, component, source
   path, text and each edit as before → after. A new value that one of the
   page's tokens holds is marked with the token's name.
+- New: edit in the Specs tab. A double-click on a value that is one CSS
+  property (width, height, gap, radius, a side of margin or padding, a colour,
+  the font size and the rest of the typography) turns it into a field. Enter
+  applies, Esc cancels, the arrow keys change a number, and a bare number
+  means pixels. A single click still copies.
+- New: the Box block of the Specs tab names the element's `box-sizing`.
+- New: fixed, hug and fill can be chosen. A click on the word beside the size
+  opens a menu; the choice sets the width or height, and `flex-grow` or
+  `align-self` in a flex parent, as one step to undo.
+- New: a flex container shows its direction, `justify-content` and
+  `align-items` as buttons to click, in place of the Direction, Align and
+  Justify text. Each row says whether it works along or across the direction,
+  and the drawings turn with the direction. `space-between`, `space-around`
+  and `space-evenly` are a menu on the Justify row, each named with its
+  property.
+- New: a grid container shows `justify-items` and `align-items` as the same
+  buttons, named "across each cell" and "down each cell".
+- New: a grid's columns and rows are listed one by one. − and + remove or add
+  a track; a double-click on a size edits it; the drawing before it makes the
+  track fixed, hug (`auto`) or fill (`1fr`). Rows show when the page declares
+  them. A list such as `repeat(auto-fill, …)` stays one text value, with the
+  number of tracks laid out.
+- New: fixed, hug and fill work on an item of a grid, with `justify-self` and
+  `align-self`. An item that fills its cell now reads "fill" on both axes; the
+  height read "hug" before.
+- New: an item placed in a grid by hand shows its `grid-column` and
+  `grid-row`, to edit.
+- Fixed: "fill" was shown for the width of every absolutely positioned
+  block. An absolute or fixed element now reads "fill" only on an axis where
+  both of its sides are set.
+- New: a double-click on "margin" or "padding" in the box diagram edits all
+  four sides at once.
+- Changed: in the Specs tab, values that only copy are dimmed and values that
+  can be edited are tinted under the pointer. Width and height stand further
+  apart.
+- Fixed: a size declared with `fit-content`, `max-content` or `min-content`
+  was reported as "fill" on a block element. It is "hug".
 - New: notes. Write an instruction on the pinned element in the Edits tab; it
   is saved and copied with the edits.
 - New: undo and redo for edits, notes and resets, with the buttons in the

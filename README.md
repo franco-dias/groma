@@ -62,15 +62,33 @@ by its edges, to check the layout at any width.
   <img src="docs/images/groma-canvas.png" width="800" alt="Groma's canvas: the page in a frame 375 pixels wide, with the zoom controls above it and the side panel describing the pinned title.">
 </p>
 
-The side panel answers four questions:
+The side panel answers five questions:
 
 - **Specs**: what do I need to build this? Size and sizing intent, a box
   diagram, colours with their design tokens, typography, motion, and the
-  component the element belongs to. A click copies any value.
+  component the element belongs to. A click copies any value; a double-click
+  edits it.
 - **All CSS**: what is every computed property? Values are editable, to try
   a change on the spot.
 - **Layers**: where does this sit in the tree?
+- **Edits**: what did I change? Every edit on the page as before → after,
+  with undo, and one button to copy them all.
 - **Changes**: what changed since the last export? (Claude Design exports.)
+
+## Edit the page, then hand the edits to an agent
+
+Change the page where you see it: double-click a size, a gap, a colour or a
+side of the box in the Specs tab; click the buttons that set a flex or grid
+container's direction and alignment; choose fixed, hug or fill for a width
+or a height. Write a note on an element for what a value cannot say.
+
+"Copy edits" in the Edits tab puts it all on the clipboard as one text for a
+coding agent: the page, and per element its selector, its component and
+each edit as before → after, with the design token that holds the new value
+when there is one. Groma describes the change; it does not write the code.
+The format is in [docs/usage.md](docs/usage.md#hand-your-edits-to-a-coding-agent).
+
+Edits are saved in your browser and never change the file.
 
 ## Try it
 

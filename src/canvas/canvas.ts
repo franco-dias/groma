@@ -17,7 +17,7 @@
  * loads the original HTML instead when the copy looks wrong.
  */
 import { h, placeOver } from "../dom";
-import { replayOverrides } from "../edits/overrides";
+import { carryEdits } from "../edits/overrides";
 import { getSelector } from "../edits/selector";
 import { readStore, writeStore } from "../edits/storage";
 import { frameLoaded, onPage, onPageWindow, pageViewChanged, setFrame, toWindowPoint } from "../page";
@@ -409,7 +409,7 @@ function onFrameLoad(repin: string | null): void {
     },
     true,
   );
-  replayOverrides();
+  carryEdits();
   if (!canvas.firstAddress) {
     canvas.firstAddress = address;
     pinBySelector(page, repin);
@@ -453,7 +453,7 @@ function close(repin: string | null): void {
   }
   // shortcut: an edit reset on the canvas stays on the page underneath until a
   // reload; upgrade by undoing saved edits here when that confuses someone.
-  replayOverrides();
+  carryEdits();
   pinBySelector(document, repin);
 }
 

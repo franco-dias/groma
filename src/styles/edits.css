@@ -112,3 +112,69 @@
   color: var(--ins-fg);
   font-family: var(--ins-font-sans);
 }
+
+/*
+ * Edits saved on an earlier visit that are not on the page. It must not be
+ * missed: until they are applied, every value in the panel is the page's own.
+ *
+ * It slides open and shut by the height of its one row; while shut it is not
+ * there for the keyboard or a screen reader either.
+ */
+.apply-bar {
+  flex: none;
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+  transition:
+    grid-template-rows var(--ins-dur-slide) ease-out,
+    visibility 0s;
+}
+
+.apply-bar.is-off {
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition-delay: 0s, var(--ins-dur-slide);
+}
+
+/* The row that shrinks to nothing: it has no padding of its own to keep it open. */
+.apply-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.apply-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-4);
+  padding: var(--ins-s-4) var(--ins-s-5);
+  color: var(--ins-warn);
+  background: var(--ins-warn-bg);
+  border-bottom: 1px solid var(--ins-warn);
+  font: 500 12px/16px var(--ins-font-sans);
+  /* Room under it: the bar is not part of the tab below. */
+  margin-bottom: var(--ins-s-4);
+}
+
+.apply-bar .icon {
+  flex: none;
+}
+
+.apply-text {
+  flex: 1;
+  min-width: 0;
+  text-wrap: pretty;
+}
+
+.apply-button {
+  flex: none;
+  height: 24px;
+  padding: 0 var(--ins-s-5);
+  color: var(--ins-pin-fg);
+  background: var(--ins-pin);
+  border-radius: var(--ins-radius-md);
+  font: 600 12px/16px var(--ins-font-sans);
+}
+
+.apply-button:hover {
+  background: var(--ins-pin-tag);
+}

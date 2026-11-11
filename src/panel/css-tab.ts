@@ -13,6 +13,7 @@ import { options } from "../options";
 import { syncOutlines } from "../outlines";
 import { rerender, type SelectionChange } from "../selection";
 import { isColorValue } from "../specs/colors";
+import { nudged as nudgedValue } from "../specs/units";
 import { CSS_GROUPS, DEFAULT_VALUES } from "./css-properties";
 import { part, type Tab, tabBody } from "./tab";
 
@@ -116,16 +117,14 @@ function editableRow(row: CssRow, el: Element, selector: string): HTMLElement {
       valueEl.textContent = shown;
       valueEl.blur();
     }
-    const number = /^(-?\d*\.?\d+)(.*)/.exec(valueEl.textContent ?? "");
-    if (number && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
-      e.preventDefault();
-      const step = e.shiftKey ? 10 : e.altKey ? 0.1 : 1;
-      const next = parseFloat(number[1]) + (e.key === "ArrowUp" ? step : -step);
-      const decimals = step === 0.1 || number[1].includes(".") ? 1 : 0;
-      valueEl.textContent = next.toFixed(decimals) + number[2];
-      commit(valueEl.textContent, true);
-      nudged = true;
-    }
+    if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+    const step = e.shiftKey ? 10 : e.altKey ? 0.1 : 1;
+    const next = nudgedValue(valueEl.textContent ?? "", e.key === "ArrowUp" ? 1 : -1, step);
+    if (next === null) return;
+    e.preventDefault();
+    valueEl.textContent = next;
+    commit(next, true);
+    nudged = true;
   });
 
   if (overridden) {

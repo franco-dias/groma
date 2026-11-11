@@ -308,16 +308,116 @@ describe("leaving the page as it was", () => {
   });
 });
 
-describe("a page that renders again", () => {
-  it("puts the saved edits back when an element is pinned, so the list matches the page", () => {
-    editStyle(".title", "padding-top", "16px");
-    ui(".close")!.click();
-    // The page renders the element again, without the edit.
-    el(".title").outerHTML = '<h2 class="title">Title</h2>';
-    expect(getComputedStyle(el(".title")).paddingTop).toBe("12px");
+// Saved edits used to be put back when an element was pinned (and when the
+// page loaded). They no longer are: the panel says which edits of an earlier
+// visit are not on the page and the user applies them, so the test for the
+// pin is replaced by these.
+describe("edits saved on an earlier visit", () => {
+  const bar = (): HTMLElement => ui(".apply-bar")!;
+  const barShown = (): boolean => getComputedStyle(bar()).visibility === "visible";
+  const path = location.pathname;
 
+  /** Saves edits as an earlier visit left them: in storage, not on the page. */
+  function savedBefore(styles: Record<string, Record<string, string>>, content?: Record<string, string>): void {
+    localStorage.setItem("__groma_overrides:" + path, JSON.stringify(styles));
+    if (content) localStorage.setItem("__groma_html:" + path, JSON.stringify(content));
+  }
+
+  it("shows no bar for the edits of this visit, even when the page draws the element again", () => {
+    editStyle(".title", "padding-top", "16px");
+    expect(barShown()).toBe(false);
+
+    const title = el(".title");
+    title.outerHTML = title.outerHTML.replace(/ style="[^"]*"/, "");
     inspector().pin(el(".text"));
-    expect(getComputedStyle(el(".title")).paddingTop).toBe("16px");
+    expect(barShown()).toBe(false);
+    // And nothing puts the edit back by itself.
+    expect(getComputedStyle(el(".title")).paddingTop).toBe("12px");
+  });
+
+  it("says how many are not on the page, on every tab, and lists them", () => {
+    savedBefore({ "#fixture .title": { "padding-top": "21px", color: "red" }, "#fixture .text": { color: "blue" } });
+    inspector().pin(el(".text"));
+
+    expect(getComputedStyle(el(".title")).paddingTop).toBe("12px");
+    expect(barShown()).toBe(true);
+    expect(texts(".apply-text")).toEqual(["3 saved edits are not on the page"]);
+    expect(texts(".apply-bar button")).toEqual(["Discard", "Apply"]);
+    for (const tab of ["specs", "css", "layers", "edits"]) {
+      openTab(tab);
+      expect(barShown()).toBe(true);
+    }
+    expect(rows()).toHaveLength(3);
+  });
+
+  it("puts them back with Apply, and the bar goes", () => {
+    savedBefore({ "#fixture .title": { "padding-top": "22px" } });
+    inspector().pin(el(".text"));
+    expect(texts(".apply-text")).toEqual(["1 saved edit is not on the page"]);
+
+    action("apply-edits").click();
+    expect(getComputedStyle(el(".title")).paddingTop).toBe("22px");
+    expect(barShown()).toBe(false);
+  });
+
+  it("removes them with Discard, keeps the edits of this visit, and undoes it in one step", () => {
+    savedBefore({ "#fixture .title": { "padding-top": "23px", "margin-top": "9px" } });
+    editStyle(".text", "color", "blue");
+    expect(barShown()).toBe(true);
+
+    action("discard-edits").click();
+    expect(barShown()).toBe(false);
+    openTab("edits");
+    expect(rows()).toEqual(["colorrgb(0, 0, 0) → blue↩"]);
+    expect(getComputedStyle(el(".text")).color).toBe("rgb(0, 0, 255)");
+
+    // One step back brings both discarded edits back, on the page.
+    action("undo").click();
+    expect(rows()).toHaveLength(3);
+    expect(getComputedStyle(el(".title")).paddingTop).toBe("23px");
+  });
+
+  it("stays away while the user looks at the original page", () => {
+    savedBefore({ "#fixture .title": { "padding-top": "24px" } });
+    inspector().pin(el(".text"));
+    openTab("edits");
+    expect(barShown()).toBe(true);
+
+    action("original").click();
+    expect(barShown()).toBe(false);
+
+    // Leaving that view puts every saved edit on the page: nothing is left to say.
+    action("original").click();
+    expect(getComputedStyle(el(".title")).paddingTop).toBe("24px");
+    expect(barShown()).toBe(false);
+  });
+
+  it("does not count an edit whose element is not on the page", () => {
+    savedBefore({ "#fixture .gone": { "padding-top": "25px" } });
+    inspector().pin(el(".text"));
+    expect(barShown()).toBe(false);
+  });
+
+  it("counts saved content too", () => {
+    savedBefore({}, { "#fixture .title": "Title from before" });
+    inspector().pin(el(".text"));
+    expect(barShown()).toBe(true);
+
+    action("apply-edits").click();
+    expect(el(".title").textContent).toBe("Title from before");
+  });
+
+  it("slides open and shut, and is out of reach while shut", () => {
+    // With the panel open and nothing to say, the bar takes no room at all.
+    inspector().pin(el(".title"));
+    expect(shown(".panel")).toBe(true);
+    expect(bar().classList.contains("is-off")).toBe(true);
+    expect(bar().getBoundingClientRect().height).toBe(0);
+
+    savedBefore({ "#fixture .title": { "padding-top": "26px" } });
+    inspector().pin(el(".text"));
+    expect(bar().getBoundingClientRect().height).toBeGreaterThan(30);
+    expect(getComputedStyle(bar()).transitionProperty).toContain("grid-template-rows");
   });
 });
 

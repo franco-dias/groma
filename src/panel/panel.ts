@@ -11,7 +11,6 @@
  */
 import { isCanvasOn, setCanvas } from "../canvas/canvas";
 import { h } from "../dom";
-import { replayOverrides } from "../edits/overrides";
 import { elementName } from "../element-name";
 import { options } from "../options";
 import { onPage, onPageView } from "../page";
@@ -174,12 +173,7 @@ function showPanel(el: Element | null, change: SelectionChange): void {
   panel.classList.remove(CLOSED);
   panel.classList.toggle("is-empty", el === null);
   part(panel, ".rail .name").textContent = el ? `Inspect · ${elementName(el)}` : "Inspect";
-  if (change === "pinned") {
-    setCollapsed(panel, false);
-    // A page that renders late, or again, may not carry the saved edits any
-    // more; what the tabs list as edited must be what the page shows.
-    replayOverrides();
-  }
+  if (change === "pinned") setCollapsed(panel, false);
   TABS.forEach((tab) => (el ? tab.render(el, change) : tab.renderUnpinned?.()));
   reportDock();
 }

@@ -50,11 +50,8 @@ function start(): void {
   startLayerMenu();
   startLauncher();
 
-  // Saved edits: now for a page that is already parsed, then again as the
-  // page fills in. Pages that render later still call replayOverrides().
-  replayOverrides();
-  document.addEventListener("DOMContentLoaded", () => replayOverrides());
-  window.addEventListener("load", () => replayOverrides());
+  // Saved edits are not put back here: the user does that from the panel,
+  // which says when some are missing. A page can still call replayOverrides().
   pinFromLink();
 
   window.Groma = { pin, pinnedElement, replayOverrides, highlight, configure };

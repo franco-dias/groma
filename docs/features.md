@@ -131,19 +131,112 @@ Code: `src/outlines.ts`. Tests: `tests/panel.test.ts`, `tests/specs.test.ts`.
 ## 5. Specs tab
 
 What a developer needs to build the element. A click on any value, token or
-code box copies it.
+code box copies it. A double-click on a value that is one CSS property edits
+it (see "Editing a value" below).
 
 - **Header**: breadcrumb (board › parent › element; the parent is a button
   that pins it), tag, name, size, classes. Generated class names are muted.
 - **Component** (feature 6).
 - **Layout**: size with its sizing intent, position on the board, display,
-  direction, alignment, gap, radius, border, opacity. Values too long for
-  half a row get a full row.
+  gap, radius, border, opacity. Values too long for half a row get a full
+  row.
+- **Flex container**: an element with `display: flex` shows three rows of
+  buttons under the cells: Direction (row, column), Justify (start, center,
+  end, and one button for the ways to share out the space) and Align (start,
+  center, end, stretch). The button of
+  the current value is checked; the defaults are read as what they do
+  (`normal` is start for Justify and stretch for Align), and a reversed
+  direction checks its axis. A click edits `flex-direction`,
+  `justify-content` or `align-items` like any other edit; a click on the
+  checked button does nothing.
+  - Each row says which axis it works on: "along the direction" for Justify,
+    "across the direction" for Align. The label's tooltip names the CSS
+    property and each button's tooltip its declaration
+    (`align-items: center`).
+  - The drawings are made for a row and turned by the stylesheet to the axis
+    they move the items on, so each shows what it does on the page: in a
+    column, Justify's are upright and Align's lie flat.
+  - The last button of Justify opens a menu of `space-between`,
+    `space-around` and `space-evenly`, each followed by the property it sets
+    (`justify-content`); the one in use is checked, and the button then
+    carries its drawing and names it in its tooltip. `align-items` has no
+    such values, so Align has no menu. The menu is the same small menu as the
+    sizing intent's: one open at a time, closed by a click elsewhere in the
+    tab or by Esc.
+  - A value no button stands for (`baseline`) is shown after
+    the buttons as text, to copy and to edit. `flex-wrap` is named beside the
+    direction when the container wraps.
+- **Grid container**: an element with `display: grid` shows two rows of the
+  same buttons (start, center, end, stretch): Justify sets `justify-items`
+  and says "across each cell", Align sets `align-items` and says "down each
+  cell". The default (`normal`) checks stretch. The drawings are not turned
+  with anything: a grid has no direction.
+- **Columns and rows of a grid**: one row each, under the buttons
+  (`src/specs/tracks.ts`).
+  - The number of tracks, between − and +. − removes the last track and is
+    off when one is left; + adds a track like the last one.
+  - Then each track's size, as the page declares it (`repeat(3, 1fr)` is
+    three sizes). A click copies it and a double-click edits it like any
+    value; a bare number means pixels, and an emptied field removes the
+    track.
+  - Before each size, a drawing says whether the track is fixed, hugs
+    (`auto`, or a content size) or fills (a share of the space, `fr`). A
+    click opens the menu of the three: hug writes `auto`, fill writes `1fr`,
+    fixed writes the size the track has now in pixels.
+  - Every change is one edit of `grid-template-columns` or
+    `grid-template-rows`. Equal tracks are written as `repeat(n, size)`.
+  - A list that is not one size per track (`auto-fill`, `auto-fit`, named
+    lines, `subgrid`, a variable) stays one text value to edit, beside the
+    number of tracks the browser laid out ("3 laid out"). So does a declared
+    list that the browser did not lay out: a different number of columns, or
+    a pixel size that is not the track's.
+  - Rows are shown only when the page declares them; rows a grid adds by
+    itself are not counted.
+  - A grid with no declared columns shows no Columns row.
+  - More than four equal tracks (a 12-column grid) are shown as one size
+    marked "each"; editing it, or its intent, changes them all. − and +
+    still count one by one.
+  - A size inside a function is shown as written (`minmax(100px, 1fr)`), in
+    pixels whatever the unit switch says.
+  - A pixel size counts as laid out when it is within half a pixel of the
+    track, since layout snaps sizes to fractions of a pixel.
+- **Grid item**: an element placed in a grid by hand shows Column and Row
+  cells (`span 2`, `1 / 3`), to edit as `grid-column` and `grid-row`. An item
+  the grid places itself shows neither.
 - **Sizing intent**: per axis, `fixed` (a declared size), `hug` (sized by
   content) or `fill` (sized by the parent). Derived from declared styles
-  and the parent's flex settings.
+  and the parent's flex or grid settings. A size declared with `fit-content`,
+  `max-content` or `min-content` is `hug`.
+- **Changing the intent**: each word is a button that opens a menu of the
+  three, with the current one checked; a click elsewhere in the tab, or Esc,
+  closes it. A choice sets what the element's context needs, and what
+  `sizingIntent` reads back as that intent:
+  - in a block parent: the property alone (`100%` to fill, `fit-content` to
+    hug, the size it has now for fixed);
+  - along a flex parent's direction: the property (`auto`, or the size) and
+    `flex-grow` (`1` to fill, `0` otherwise). Fixed and hug also set
+    `flex-basis: auto`: an item with `flex: 1` has a basis of 0 and would
+    shrink to nothing once it stops growing;
+  - across a flex parent's direction: `auto` and `align-self` (`stretch` to
+    fill; to hug, `flex-start` under a parent that stretches its items and
+    `auto` under one that does not);
+  - in a grid cell: `auto` and `justify-self` for the width, `align-self` for
+    the height (`stretch` to fill; to hug, `start` under a grid that
+    stretches its items and `auto` under one that does not).
+  Choosing the intent the element already has makes no edit, even where it
+  has it by default. A property that already has the value is left alone. The edits of one
+  choice are listed apart in the Edits tab and are one step to undo
+  (`together()` in `src/edits/changes.ts`). An item of a grid with no declared size reads
+  as `fill` on an axis the grid stretches it on, which is the default. An
+  element with `position: absolute` or `fixed` is not an item of its parent's
+  layout: with no declared size it reads `fill` on an axis where both sides
+  are declared (`top` and `bottom`), `hug` otherwise, and is sized like a
+  child of a block.
 - **Box**: margin around padding around the content size. Clicking
-  "margin" or "padding" copies all four sides.
+  "margin" or "padding" copies all four sides; a double-click on the name
+  edits them at once, as the shorthand (`12px 16px`). The block's title carries the
+  element's `box-sizing`, which says which box `width` and `height` set; it
+  copies and edits like any other value.
 - **Colors** (feature 7).
 - **Typography**: family, weight, size, line height, tracking. Only for
   elements with text of their own.
@@ -154,8 +247,42 @@ code box copies it.
   `css`, the default: `24px`, and `padding: 12px 16px` for a box name.
   `sx`: `24`, and `py: 12, px: 16`. In rem, both formats copy rem.
 
-Code: `src/panel/specs-tab.ts`, `src/specs/*`. Tests: `tests/specs.test.ts`,
-unit tests in `src/specs/`.
+**Editing a value.** A double-click turns a value into a field; a single
+click still copies.
+
+- Editable: width and height (each half of the size), box-sizing, display,
+  gap, radius, opacity, stroke width, columns, shadow,
+  gradient, each side of margin and padding and the four at once, each colour (background, border,
+  text, fill, stroke), and family, weight, size, line height, tracking,
+  transform, align and decoration of the text.
+- Not editable, because they are made of several properties or are derived:
+  the position on the board, the border (widths and style), "position", the
+  content size in the box, a picked colour. In the Layout and Typography
+  blocks such a value is dimmed, and a value that can be edited is tinted
+  under the pointer, so the two read apart before any click.
+- In the size, the × between width and height stands back, so they read as
+  two values.
+- The field holds the CSS value of the property, with its unit (`8px` where
+  the tab shows `8`; the whole family list; `rgba(…)` for a translucent
+  colour). For the size it holds the CSS `width` or `height`, which on an
+  element sized by its content box is smaller than the size shown. On such
+  an element the tooltip of the two fields says so; the Box block names the
+  `box-sizing` on every element.
+- Enter or leaving the field applies; Esc cancels typing. Arrow keys change a
+  number by 1 (Shift: 10, Alt: 0.1), applied live, as in the All CSS tab; a
+  run of them is one step to undo. Emptying the field removes the edit.
+- A bare number is taken as pixels where the property wants a length (`24`
+  for a gap, `12 16` for the sides of a box), and stays a number where it is
+  a value of its own (opacity, weight). A value the browser rejects is
+  dropped.
+- The edit is the same as one from the All CSS tab: it goes through `edit()`
+  (feature 10), is saved, shows in the Edits tab and in "Copy edits", and can
+  be undone. An edited value is shown in the edit colour.
+- While a value is a field, a click in it places the caret and does not copy.
+  The double-click itself still copies the value once, as its first click.
+
+Code: `src/panel/specs-tab.ts` (`editable`), `src/specs/*`. Tests:
+`tests/specs.test.ts`, `tests/specs-edit.test.ts`, unit tests in `src/specs/`.
 
 ## 6. Component
 
@@ -250,9 +377,35 @@ editable.
   on Ctrl/⌘+Enter; Reset restores the original.
 - Edits are saved in `localStorage`, per page path, keyed by a selector
   that leads back to the same element (ids and classes escaped).
-- Saved edits are replayed on load, and again each time an element is
-  pinned, so what the tabs list as edited is on the page. Pages that render
-  late call `Groma.replayOverrides(root?)` to get them back without a pin.
+- Saved edits are not put back on the page by themselves: not when the page
+  loads, and not when an element is pinned. A page that renders late would
+  get some of them and not others, so the user decides.
+  - When the page loads with edits saved on an earlier visit, a bar slides
+    in under the tabs and says how many are not on the page, on every tab,
+    with "Discard" and "Apply" buttons. It slides out once they are applied
+    or discarded.
+  - The bar is only about edits from an earlier visit. An edit made during
+    this visit never brings it up, even if the page draws the element again
+    and the edit is gone from it; switching "Show original" on and off puts
+    every edit back.
+  - The bar stays away while "Show original" is on: the user chose to look
+    at the page without the edits.
+  - "Apply" puts every saved edit back. It also leaves the view of the
+    original page.
+  - "Discard" removes the saved edits the bar counts and keeps those that
+    are on the page. It is one step, which undo brings back; notes stay.
+  - An edit whose element is not on the page is not counted: there is
+    nothing to put it on. It is listed as "Not on the page now".
+  - The edits stay listed in the Edits tab and can be copied whether they
+    are on the page or not.
+  - The canvas shows the page anew in a frame. Edits that were on the page
+    in this visit (made, or applied) are carried over to the frame and back;
+    edits not yet applied are not.
+  - A page can still call `Groma.replayOverrides(root?)` itself, after it
+    renders.
+- An edit made from a tab that still shows an element the page has removed
+  is not kept. If the page drew the element again, the edit goes to the one
+  that is there now.
 - A value the browser would ignore (`banana` for a padding) is not kept: the
   row goes back to what it showed, and an edit that was there stays.
   `!important` typed after a value is applied as its priority.
@@ -440,6 +593,9 @@ hand it to whoever changes the source: a coding agent, or a person.
   field undoes its own typing). They cover style edits, content edits, notes
   and resets. A run of arrow-key nudges on one value is one step. The
   history is kept in memory: a reload keeps the edits and forgets the steps.
+- The bar's actions carry their names beside the icons: "Undo", "Redo" and
+  "Show original". Below 360px of panel width the names drop and the icons
+  remain, with their tooltips.
 - **Show the original page** (the eye): puts back what the page had, for
   every edit, without removing the edits; pressed again, it applies them
   again. While it is on, `Groma.replayOverrides()` does nothing, so a page

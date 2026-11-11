@@ -23,10 +23,12 @@ The loop that does not exist yet: edit the page, then hand over what changed.
 - **Notes.** A plain-text instruction attached to an element ("make this
   sticky"), with no edit needed. It travels in the same export.
 - **Undo and redo.**
+- **Edit values in the Specs tab**, not only in All CSS: a double-click on a
+  value turns it into a field. Moved here from 0.8, because it is what makes
+  editing quick enough for the rest to matter.
 
 ## 0.8: Edit like Figma
 
-- Edit values in the Specs tab, not only in All CSS.
 - Drag a number to scrub it.
 - Suggest the page's tokens while typing a value, and when picking a colour.
 - Double-click text on the page to edit it in place.
