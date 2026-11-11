@@ -102,7 +102,7 @@
 </style><script>window.__gromaVersion = "0.6.1";</script><script>window.__resources = {"https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js": "assets/react.production.min.js", "https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js": "assets/react-dom.production.min.js"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Groma · Survey any HTML design before you build it</title><meta name="description" content="An open-source inspector for HTML designs. Read the box model, specs, tokens, components and distances of every element. One script, no dependencies."><meta property="og:title" content="Groma · Survey any HTML design before you build it"><meta property="og:description" content="An open-source inspector for HTML designs. Read the box model, specs, tokens, components and distances of every element. One script, no dependencies."><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="canonical" href="https://gromajs.dev/"><link rel="alternate" hreflang="en" href="https://gromajs.dev/"><link rel="alternate" hreflang="pt-BR" href="https://gromajs.dev/pt-br/"><link rel="alternate" hreflang="x-default" href="https://gromajs.dev/"><meta property="og:url" content="https://gromajs.dev/"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://gromajs.dev/media/groma-social.png"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="640"><meta property="og:image:alt" content="Groma on a product page: the side panel shows a button's component and props, its box model and the token behind each color, with the distance to the next button in red."><meta name="twitter:image" content="https://gromajs.dev/media/groma-social.png">
+<title>Groma · Inspect any web page like a design file</title><meta name="description" content="An open-source inspector for web pages and apps. Read the box model, specs, tokens, components and distances of every element. One script, no dependencies."><meta property="og:title" content="Groma · Inspect any web page like a design file"><meta property="og:description" content="An open-source inspector for web pages and apps. Read the box model, specs, tokens, components and distances of every element. One script, no dependencies."><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="canonical" href="https://gromajs.dev/"><link rel="alternate" hreflang="en" href="https://gromajs.dev/"><link rel="alternate" hreflang="pt-BR" href="https://gromajs.dev/pt-br/"><link rel="alternate" hreflang="x-default" href="https://gromajs.dev/"><meta property="og:url" content="https://gromajs.dev/"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://gromajs.dev/media/groma-social.png"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="640"><meta property="og:image:alt" content="Groma on a product page: the side panel shows a button's component and props, its box model and the token behind each color, with the distance to the next button in red."><meta name="twitter:image" content="https://gromajs.dev/media/groma-social.png">
 <script src="assets/runtime.js"></script>
 <meta name="hz:slide-selector" content="[data-canvas-width]"><meta name="hz:canvas-width" content="1280"><meta name="hz:canvas-height" content="7740"><style>
 /* A flex row, so the keycap and the text share one centre line. */
@@ -770,7 +770,7 @@ button { cursor:pointer; }
 .k1 { color:var(--color-accent-soft); } .k2 { color:var(--color-cyan); } .k3 { color:var(--color-text-tertiary); }
 
 /* use cases */
-.uses { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+.uses { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
 .use { padding:24px; display:flex; flex-direction:column; gap:12px; min-width:0; transition:transform .3s; }
 .use:hover { transform:translateY(-2px); }
 .use-ic { width:40px; height:40px; border-radius:10px; display:grid; place-items:center; background:var(--color-accent-10); border:1px solid var(--color-accent-soft-25); color:var(--color-accent-soft); }
@@ -827,9 +827,8 @@ kbd.ac { color:var(--color-accent-soft); }
   .h1 { font-size:40px; line-height:1.06; }
   .close .h2 { font-size:40px; }
   .lead { font-size:16px; }
-  .hero { padding:64px 0 48px; }
-  .term { gap:8px; padding-left:16px; font-size:13px; height:52px; width:100%; }
-  .term code { flex:1; text-align:left; }
+  .hero { padding:64px 16px 48px; }
+  .term { gap:8px; padding-left:16px; font-size:13px; height:52px; }
   .caret { display:none; }
   .nav a.hide-s { display:none; }
   .top { padding-bottom:64px; }
@@ -890,11 +889,11 @@ kbd.ac { color:var(--color-accent-soft); }
   <div class="spot" aria-hidden="true"></div>
   <section class="wrap hero" aria-labelledby="hero-title" data-component="Hero" data-source="src/components/Hero.tsx" data-props='{"align": "center"}'>
     <span class="pill load" data-component="VersionPill" data-source="src/components/VersionPill.tsx" data-props='{"version": "0.6.1", "license": "MIT", "dot": true}'><i aria-hidden="true"></i><span>v<span data-version>0.6.1</span> · MIT · zero dependencies</span></span>
-    <h1 id="hero-title" class="h1 load d1"><span class="g">Survey any HTML design </span><span class="g sweep">before you build it</span><span class="g">.</span></h1>
-    <p class="lead load d2">An open-source inspector for HTML designs. See spacings, tokens, and component props, like you would in a design tool.</p>
-    <div class="term load d3" data-component="CommandLine" data-source="src/components/CommandLine.tsx" data-props='{"command": "npx gromajs your-design.html", "copyable": true, "caret": true}'>
+    <h1 id="hero-title" class="h1 load d1"><span class="g">Inspect any web page </span><span class="g sweep">like a design file</span><span class="g">.</span></h1>
+    <p class="lead load d2">An open-source inspector for web pages, apps and design handoffs. Read spacings, tokens, distances and component props straight off the page, with one script.</p>
+    <div class="term load d3" data-component="CommandLine" data-source="src/components/CommandLine.tsx" data-props='{"command": "npx gromajs your-page.html", "copyable": true, "caret": true}'>
       <span class="ps" aria-hidden="true">$</span>
-      <code>npx gromajs <span class="arg">your-design.html</span></code>
+      <code>npx gromajs <span class="arg">your-page.html</span></code>
       <span class="caret" aria-hidden="true"></span>
       <button type="button" class="{{ cpHero }}" sc-camel-on-click="{{ copyHero }}" aria-label="Copy command">
         <sc-if value="{{ heroOk }}" hint-placeholder-val="{{ false }}">
@@ -918,8 +917,8 @@ kbd.ac { color:var(--color-accent-soft); }
       <div class="frame" data-component="ProductFrame" data-source="src/components/ProductFrame.tsx" data-props='{"aspect": "16:10", "beam": true, "glow": true}'>
         <span class="beam" aria-hidden="true"></span>
         <!-- MOTION GRAPHIC GOES HERE --><video class="mg-video" autoplay muted loop playsinline preload="auto" poster="media/groma-motion-poster.jpg" aria-label="Groma on a product page: a click pins an element and the panel shows its component and props, the token behind each color and the distance to another element; then the page is zoomed and moved on a canvas." style="display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:inherit" data-component="MotionGraphic" data-source="src/components/MotionGraphic.tsx" data-props='{"autoplay": true, "loop": true, "muted": true}'><source src="media/groma-motion.webm" type="video/webm"><source src="media/groma-motion.mp4" type="video/mp4"></video><style>.frame .mg{display:none}</style>
-        <div class="mg" role="img" aria-label="Groma inspecting a design: a selected card shows its box model and a name chip, a red line marks the distance to the next element, and the side panel lists its specs, token and component.">
-          <div class="mg-bar"><i></i><i></i><i></i><div class="mg-url">file:// <b>your-design.html</b></div></div>
+        <div class="mg" role="img" aria-label="Groma inspecting a page: a selected card shows its box model and a name chip, a red line marks the distance to the next element, and the side panel lists its specs, token and component.">
+          <div class="mg-bar"><i></i><i></i><i></i><div class="mg-url">file:// <b>your-page.html</b></div></div>
           <div class="mg-body">
             <div class="mg-page">
               <div class="mg-nav"><div class="mg-sk" style="width: 9cqw; height: 1.4cqw; background: var(--color-gray-650)"></div><div style="display: flex; gap: 1.6cqw"><div class="mg-sk" style="width: 4cqw"></div><div class="mg-sk" style="width: 4cqw"></div><div class="mg-sk" style="width: 4cqw"></div></div></div>
@@ -1222,7 +1221,7 @@ kbd.ac { color:var(--color-accent-soft); }
           <div class="lkd">
             <div class="lk-url">
               <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>
-              <span>your-design.html<b>?inspect=…</b></span>
+              <span>your-page.html<b>?inspect=…</b></span>
               <button type="button" class="{{ lkCls }}" sc-camel-on-click="{{ copyLink }}">
                 <sc-if value="{{ lkOk }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" style="stroke-width: 2"><path d="M20 6 9 17l-5-5"></path></svg>copied</sc-if>
                 <sc-if value="{{ lkIdle }}" hint-placeholder-val="{{ true }}">copy</sc-if>
@@ -1256,8 +1255,8 @@ kbd.ac { color:var(--color-accent-soft); }
       <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "01", "title": "Run it on a file"}'>
         <span class="num">01</span>
         <h3>Run it on a file</h3>
-        <p>Opens the design with Groma attached. It doesn't install anything in your project or touch the file. You need Node.js 18.3 or newer.</p>
-        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "shell", "copyable": true}'><span class="code-t"><span class="k1">npx</span> gromajs <span class="k2">your-design.html</span></span><button type="button" class="{{ cpW1 }}" sc-camel-on-click="{{ copyW1 }}" aria-label="Copy command"><sc-if value="{{ w1Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w1Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
+        <p>Opens the page with Groma attached. It doesn't install anything in your project or touch the file. You need Node.js 18.3 or newer.</p>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "shell", "copyable": true}'><span class="code-t"><span class="k1">npx</span> gromajs <span class="k2">your-page.html</span></span><button type="button" class="{{ cpW1 }}" sc-camel-on-click="{{ copyW1 }}" aria-label="Copy command"><sc-if value="{{ w1Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w1Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
       </div>
       <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "02", "title": "Add the script"}'>
         <span class="num">02</span>
@@ -1280,28 +1279,33 @@ kbd.ac { color:var(--color-accent-soft); }
   <span class="ruler" aria-hidden="true"></span>
   <span class="coord" aria-hidden="true">x {{ co.uses.x }} · y {{ co.uses.y }}</span>
   <div class="wrap {{ c.uses }}">
-    <div class="sh" data-component="SectionHeader" data-source="src/components/SectionHeader.tsx" data-props='{"eyebrow": "Use cases", "title": "When the handoff is the HTML", "dimension": true}'>
+    <div class="sh" data-component="SectionHeader" data-source="src/components/SectionHeader.tsx" data-props='{"eyebrow": "Use cases", "title": "Before you build, and after", "dimension": true}'>
       <span class="eye">Use cases</span>
       <span class="hw" ref="{{ dref.uses }}">
-        <h2 id="uses-title" class="h2">When the handoff is the HTML</h2>
+        <h2 id="uses-title" class="h2">Before you build, and after</h2>
         <span class="dim" aria-hidden="true"><span>{{ d.uses }}</span></span>
       </span>
     </div>
     <div class="uses">
-      <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Build from an AI-generated design", "icon": true}'>
+      <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Build from an HTML design", "icon": true}'>
         <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v3"></path><path d="M12 18v3"></path><path d="M3 12h3"></path><path d="M18 12h3"></path><rect x="7" y="7" width="10" height="10" rx="2"></rect></svg></span>
-        <h3>Build from an AI-generated design</h3>
-        <p>The design shows up as working HTML instead of a design file. Read what you need to build it straight off the page.</p>
+        <h3>Build from an HTML design</h3>
+        <p>The design arrives as working HTML instead of a design file. Read what you need to build it straight off the page.</p>
       </article>
       <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Review a page against its design", "icon": true}'>
         <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="8" height="16" rx="1.5"></rect><rect x="13" y="4" width="8" height="16" rx="1.5"></rect><path d="M6 9h2"></path><path d="M16 9h2"></path></svg></span>
         <h3>Review a page against its design</h3>
         <p>Pin an element and check its size and spacing against what got built. Then send a link that opens on that same element.</p>
       </article>
+      <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Audit an app that&#39;s already built", "icon": true}'>
+        <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 3 9 5-9 5-9-5z"></path><path d="m3 13 9 5 9-5"></path><path d="m3 17.5 9 5 9-5"></path></svg></span>
+        <h3>Audit an app that's already built</h3>
+        <p>Find which token and component a screen uses before you change it, and how it looks at 375 px.</p>
+      </article>
       <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Check a layout at every width", "icon": true}'>
         <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M9 5v14"></path><path d="m14 10-2 2 2 2"></path><path d="m17 10 2 2-2 2"></path></svg></span>
         <h3>Check a layout at every width</h3>
-        <p>Put the page on a canvas and drag the frame's edges to find where the layout breaks, before anyone builds it.</p>
+        <p>Put the page on a canvas and drag the frame's edges to find where the layout breaks.</p>
       </article>
     </div>
   </div>
@@ -1335,10 +1339,10 @@ kbd.ac { color:var(--color-accent-soft); }
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="close-glow" aria-hidden="true"></div>
   <div class="wrap {{ c.close }}" style="display: flex; flex-direction: column; align-items: center">
-    <h2 id="close-title" class="h2"><span class="g">Survey any HTML design </span><span class="g sweep">before you build it</span><span class="g">.</span></h2>
-    <div class="term" data-component="CommandLine" data-source="src/components/CommandLine.tsx" data-props='{"command": "npx gromajs your-design.html", "copyable": true, "caret": true}'>
+    <h2 id="close-title" class="h2"><span class="g">Inspect any web page </span><span class="g sweep">like a design file</span><span class="g">.</span></h2>
+    <div class="term" data-component="CommandLine" data-source="src/components/CommandLine.tsx" data-props='{"command": "npx gromajs your-page.html", "copyable": true, "caret": true}'>
       <span class="ps" aria-hidden="true">$</span>
-      <code>npx gromajs <span class="arg">your-design.html</span></code>
+      <code>npx gromajs <span class="arg">your-page.html</span></code>
       <span class="caret" aria-hidden="true"></span>
       <button type="button" class="{{ cpClose }}" sc-camel-on-click="{{ copyClose }}" aria-label="Copy command">
         <sc-if value="{{ closeOk }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if>
@@ -1465,7 +1469,7 @@ class Component extends DCLogic {
       } catch (e) {}
       fallback(); done();
     };
-    var CMD = 'npx gromajs your-design.html';
+    var CMD = 'npx gromajs your-page.html';
     this.copyHero = function () { self.copyText(CMD, 'hero'); };
     this.copyClose = function () { self.copyText(CMD, 'close'); };
     this.copyW1 = function () { self.copyText(CMD, 'w1'); };

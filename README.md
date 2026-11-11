@@ -5,11 +5,12 @@
   </picture>
 </h1>
 
-Survey any HTML design before you build it.
+Inspect any web page like a design file.
 
-Groma is a Figma-style inspector for design handoff pages. Add one script to
-an HTML design file and inspect it the way you would inspect a frame in
-Figma's Dev Mode: box model, specs, design tokens, components and distances.
+Groma is a Figma-style inspector for web pages. Add one script to a design
+handoff, a local build or a staging app, and inspect it the way you would
+inspect a frame in Figma's Dev Mode: box model, specs, design tokens,
+components and distances.
 
 It has no runtime dependencies and ships as a single file.
 
@@ -19,27 +20,27 @@ It has no runtime dependencies and ships as a single file.
 
 > A *groma* was the Roman surveyor's instrument: a staff with a cross and
 > plumb lines, used to lay out straight lines and right angles before roads
-> and cities were built. This one does the same job on a design.
+> and cities were built. This one does the same job on a web page.
 
 ## Why this exists
 
-More and more designs are now produced by AI tools, and they arrive as
-working HTML, not as Figma files. That is good for speed: a design can go
-from an idea to something you can click in minutes, and be revised just as
-fast. But it leaves the engineer who has to build it without the tools a
-design file used to give them.
+The page is often all an engineer gets. Designs made with AI tools arrive as
+working HTML, not as Figma files, and the app you are about to change has no
+design file at all. A page can go from an idea to something you can click in
+minutes, and be revised just as fast. But it leaves the engineer without the
+tools a design file used to give them.
 
 - **Browser devtools answer the wrong question.** They show computed CSS,
   hundreds of properties per element. They do not say which design token a
   colour came from, which component an element is, whether a width is fixed
   or fills its parent, or how far two elements are from each other.
-- **The handoff is the HTML itself.** There is no separate spec to read, so
-  the inspection has to happen on the page.
+- **The page is the spec.** There is no separate file to read, so the
+  inspection has to happen on the page.
 - **Designs change often.** When a new version takes minutes to produce,
   you need to see what changed between two exports without comparing them
   by eye.
 
-Groma puts those answers on the page. It reads the design the way
+Groma puts those answers on the page. It reads the page the way
 an engineer needs it: the value to type, the token to use, the component to
 import, the distance to the next element.
 
@@ -55,7 +56,7 @@ import, the distance to the next element.
 
 A pill at the bottom right locks inspect mode on, so none of this needs Alt.
 The panel's » menu can also show the page on a canvas: in a frame you resize
-by its edges, to check the design at any width.
+by its edges, to check the layout at any width.
 
 <p align="center">
   <img src="docs/images/groma-canvas.png" width="800" alt="Groma's canvas: the page in a frame 375 pixels wide, with the zoom controls above it and the side panel describing the pinned title.">
@@ -73,12 +74,12 @@ The side panel answers four questions:
 
 ## Try it
 
-Open any HTML design file with Groma attached. You need
+Open any HTML file with Groma attached. You need
 [Node.js](https://nodejs.org) 18.3 or newer; nothing is installed in your
 project and the file is not edited:
 
 ```bash
-npx gromajs path/to/design.html
+npx gromajs path/to/page.html
 ```
 
 Then hold Alt and move the pointer over the page.
@@ -102,7 +103,7 @@ npm install
 npm run serve
 ```
 
-## Add it to a design file
+## Add it to a page
 
 Build the script once:
 
@@ -121,7 +122,7 @@ It works on a file opened from disk and on a served page, in Chrome and
 other Chromium browsers. Groma is on npm, so you can also load it from a CDN with no copy step:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@0.6.2/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@0.6.3/dist/groma.js"></script>
 ```
 
 ## Learn more

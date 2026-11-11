@@ -1,13 +1,13 @@
 # Using Groma
 
-Everything about running Groma on a design file: the command, the script
+Everything about running Groma on a page: the command, the script
 tag, the settings, how components are found, the API for host pages and the
 known limits. What each feature does is in [features.md](features.md).
 
 ## Open a file with one command
 
 ```bash
-npx gromajs path/to/design.html
+npx gromajs path/to/page.html
 ```
 
 This serves the file's folder on `localhost:4777` with the inspector attached
@@ -34,7 +34,7 @@ the inspector built from the source.
 Edits made in the All CSS tab are stored per address, so keep the same
 port to find them again.
 
-## Add the script to the file
+## Add the script to a page
 
 You need the built script, `dist/groma.js`. Build it once (see
 [Set up](development.md#set-up)), then:
@@ -50,7 +50,7 @@ You need the built script, `dist/groma.js`. Build it once (see
    ```
 
 3. Open the file in a browser. A pill reading "Inspect" appears at the
-   bottom right. Hold Alt and move the pointer over the design.
+   bottom right. Hold Alt and move the pointer over the page.
 
 Notes:
 
@@ -63,14 +63,33 @@ Notes:
   do not change the file.
 
 The script is also on npm, so it can be loaded from a CDN with no copy step.
-Pin the version, so a later release cannot change a design file that already
+Pin the version, so a later release cannot change a page that already
 works:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@0.6.2/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@0.6.3/dist/groma.js"></script>
 ```
 
-unpkg serves the same file at `https://unpkg.com/gromajs@0.6.2/dist/groma.js`.
+unpkg serves the same file at `https://unpkg.com/gromajs@0.6.3/dist/groma.js`.
+
+## Use it on an app
+
+The same script inspects an app that is already built. Add it to the app's
+HTML in a development, preview or staging build, with the CDN tag above or a
+copy of `dist/groma.js` that you serve yourself. `npx gromajs` serves files
+only; it does not open a live address.
+
+- **Keep it out of what end users load.** Add the tag behind a flag or in a
+  non-production build.
+- **A strict Content Security Policy can block the CDN.** Serve `groma.js`
+  from your own origin and allow it in `script-src`.
+- **Component names need a build that keeps them.** The React reader takes
+  names that start with a capital letter, and a minified production build
+  usually renames components to one or two letters, so none is shown. A
+  development or staging build, a custom element or a `data-component`
+  attribute still gives a name (see [Components](#components)).
+- **The canvas needs a page that allows framing.** For one that does not, it
+  shows a copy of the open page.
 
 A list of every shortcut is also inside the inspector: open the » menu in
 the panel's tab bar and choose "Shortcuts and tips".
@@ -185,6 +204,8 @@ for the file again each time the canvas opens. Opening the file with
   grid are treated as plain blocks.
 - Of the UI frameworks, only React pages are read for components; other
   pages can declare components in the markup (see [Components](#components)).
+  A minified production build shows no React component names; see
+  [Use it on an app](#use-it-on-an-app).
 - The Changes tab compares lines without their order, so a line that only
   moved is not reported.
 - The colour picker needs a Chromium browser. It has no test: the browser

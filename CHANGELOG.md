@@ -3,11 +3,22 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.6.3 (2026-11-10)
 
-- Changed: the tagline is now "Survey any HTML design before you build it." in
-  the README, the package description and the landing page. Groma works on any
-  HTML page, not only on designs made with AI.
+No code changes: the script is identical to 0.6.2. This release updates what
+the npm page and the landing page say.
+
+- Changed: the tagline is now "Inspect any web page like a design file." in
+  the README, the package description, the landing page and the page title.
+  Groma works on any web page, an app or a design handoff, not only on designs
+  made with AI. The README, the landing page and the package keywords follow.
+- New: `docs/usage.md` has a section on using Groma on an app: where to add
+  the script, the Content Security Policy, and why a minified production
+  build shows no React component names.
+- Changed, landing page: the command line on a phone is as wide as its text,
+  not the full width, and the intro text no longer touches the screen's
+  edges. The use cases have a fourth card, "Audit an app that's
+  already built", and the command shows `your-page.html`.
 - Changed: the README shows two screenshots, the inspector and the canvas.
 
 ## 0.6.2 (2026-11-11)

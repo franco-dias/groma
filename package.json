@@ -1,16 +1,16 @@
 {
   "name": "gromajs",
   "version": "0.6.2",
-  "description": "Groma: survey any HTML design before you build it. A Figma-style inspector for design handoff pages: box model, specs, design tokens, components and distances on any HTML page.",
+  "description": "Groma: inspect any web page like a design file. A Figma-style inspector for web pages, apps and design handoffs: box model, specs, design tokens, components and distances, with one script.",
   "keywords": [
     "groma",
     "inspector",
     "design-handoff",
+    "web-inspector",
     "design-tokens",
     "devtools",
     "figma",
-    "dev-mode",
-    "ai-design"
+    "dev-mode"
   ],
   "author": "Gabriel Franco (https://github.com/franco-dias)",
   "license": "MIT",
