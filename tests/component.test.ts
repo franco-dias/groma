@@ -1,22 +1,25 @@
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { all, clipboard, el, frames, inspector, page, reset, texts, ui, wait } from "./helpers";
+import { all, clipboard, getElement, frames, inspector, page, reset, texts, ui, wait } from "./helpers";
 
 /** The props listed in the component block, as { name: "value" }. */
 function props(): Record<string, string> {
   const cells = all(".props > *").map((cell) => cell.textContent ?? "");
   const entries: [string, string][] = [];
-  for (let i = 0; i < cells.length; i += 2) entries.push([cells[i], cells[i + 1]]);
+  for (let index = 0; index < cells.length; index += 2) entries.push([cells[index], cells[index + 1]]);
   return Object.fromEntries(entries);
 }
 
 /** What React leaves on a DOM node: enough of a fiber for the inspector to read. */
-interface FakeFiber {
+// React leaves null where there is no parent, child or node; the reader has to cope with that.
+type FakeFiber = {
   type: unknown;
+  // oxlint-disable-next-line unicorn/no-null -- what React leaves on a fiber
   return: FakeFiber | null;
+  // oxlint-disable-next-line unicorn/no-null -- what React leaves on a fiber
   child: FakeFiber | null;
   stateNode: unknown;
   memoizedProps: Record<string, unknown>;
-}
+};
 
 function Button() {}
 
@@ -38,22 +41,46 @@ beforeEach(() => {
   // <Button variant="contained" size="small" disabled onClick={…}> rendering button > span
   const component: FakeFiber = {
     type: Button,
+    // oxlint-disable-next-line unicorn/no-null -- what React leaves on a fiber
     return: null,
+    // oxlint-disable-next-line unicorn/no-null -- what React leaves on a fiber
     child: null,
+    // oxlint-disable-next-line unicorn/no-null -- what React leaves on a fiber
     stateNode: null,
-    memoizedProps: { variant: "contained", size: "small", disabled: true, tabIndex: 3, onClick() {}, children: "Save" },
+    memoizedProps: {
+      variant: "contained",
+      size: "small",
+      disabled: true,
+      tabIndex: 3,
+      onClick() {},
+      children: "Save",
+    },
   };
-  const root: FakeFiber = { type: "button", return: component, child: null, stateNode: el(".root"), memoizedProps: {} };
-  const inner: FakeFiber = { type: "span", return: root, child: null, stateNode: el(".inner"), memoizedProps: {} };
+  const root: FakeFiber = {
+    type: "button",
+    return: component,
+    // oxlint-disable-next-line unicorn/no-null -- what React leaves on a fiber
+    child: null,
+    stateNode: getElement(".root"),
+    memoizedProps: {},
+  };
+  const inner: FakeFiber = {
+    type: "span",
+    return: root,
+    // oxlint-disable-next-line unicorn/no-null -- what React leaves on a fiber
+    child: null,
+    stateNode: getElement(".inner"),
+    memoizedProps: {},
+  };
   component.child = root;
   root.child = inner;
-  Object.assign(el(".root"), { __reactFiber$test: root });
-  Object.assign(el(".inner"), { __reactFiber$test: inner });
+  Object.assign(getElement(".root"), { __reactFiber$test: root });
+  Object.assign(getElement(".inner"), { __reactFiber$test: inner });
 });
 
 describe("component on a React page", () => {
   it("names the component, lists the props the design passes and where its source is", () => {
-    inspector().pin(el(".root"));
+    inspector().pin(getElement(".root"));
     expect(texts(".component h3")).toEqual(["Component"]);
     expect(texts(".code .name")).toEqual(["Button"]);
     expect(props()).toEqual({ variant: "contained", size: "small", disabled: "true", tabIndex: "3" });
@@ -61,12 +88,12 @@ describe("component on a React page", () => {
   });
 
   it("does not suggest code: no JSX anywhere in the block", () => {
-    inspector().pin(el(".root"));
+    inspector().pin(getElement(".root"));
     expect(ui(".component")!.textContent).not.toMatch(/[<>{}]/);
   });
 
   it("uses the component's name for the element everywhere", async () => {
-    inspector().pin(el(".root"));
+    inspector().pin(getElement(".root"));
     await frames();
     expect(texts(".title")).toEqual(["Button"]);
     expect(texts(".crumb.is-current")).toEqual(["Button"]);
@@ -74,7 +101,7 @@ describe("component on a React page", () => {
   });
 
   it("copies the name, or one prop value, on click", async () => {
-    inspector().pin(el(".root"));
+    inspector().pin(getElement(".root"));
     ui(".code")!.click();
     await wait(20);
     expect(clipboard.text).toBe("Button");
@@ -86,19 +113,19 @@ describe("component on a React page", () => {
   });
 
   it("says when the element only sits inside a component, and can select it", () => {
-    inspector().pin(el(".inner"));
+    inspector().pin(getElement(".inner"));
     expect(texts(".component h3")).toEqual(["Inside component"]);
     expect(ui(".code")!.classList.contains("is-inside")).toBe(true);
     // The element keeps its own name; it is not the component.
     expect(texts(".title")).toEqual(["inner"]);
 
     ui(".select-row .ghost-button")!.click();
-    expect(inspector().pinnedElement()).toBe(el(".root"));
+    expect(inspector().pinnedElement()).toBe(getElement(".root"));
   });
 
   it("shows no component block when the page says nothing about components", () => {
     page(`<div class="plain">Plain</div>`);
-    inspector().pin(el(".plain"));
+    inspector().pin(getElement(".plain"));
     expect(ui(".component")).toBeNull();
   });
 });
@@ -114,7 +141,7 @@ describe("component declared in the markup", () => {
   });
 
   it("reads the name, the props and the source from data attributes", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(texts(".component h3")).toEqual(["Component"]);
     expect(texts(".code .name")).toEqual(["Card"]);
     expect(props()).toEqual({ tone: "dark", elevated: "true" });
@@ -123,14 +150,14 @@ describe("component declared in the markup", () => {
   });
 
   it("knows an element inside a declared component", () => {
-    inspector().pin(el(".label"));
+    inspector().pin(getElement(".label"));
     expect(texts(".component h3")).toEqual(["Inside component"]);
     ui(".select-row .ghost-button")!.click();
-    expect(inspector().pinnedElement()).toBe(el(".card"));
+    expect(inspector().pinnedElement()).toBe(getElement(".card"));
   });
 
   it("ignores props that are not valid JSON", () => {
-    inspector().pin(el(".broken"));
+    inspector().pin(getElement(".broken"));
     expect(texts(".code .name")).toEqual(["Broken"]);
     expect(ui(".props")).toBeNull();
   });
@@ -147,20 +174,20 @@ describe("custom element", () => {
   });
 
   it("is a component: the tag is the name and the attributes are the props", () => {
-    inspector().pin(el("my-card"));
+    inspector().pin(getElement("my-card"));
     expect(texts(".component h3")).toEqual(["Component"]);
     expect(texts(".code .name")).toEqual(["my-card"]);
     expect(props()).toEqual({ tone: "dark", open: "true" });
   });
 
   it("contains the elements in it", () => {
-    inspector().pin(el(".label"));
+    inspector().pin(getElement(".label"));
     expect(texts(".component h3")).toEqual(["Inside component"]);
     expect(texts(".code .name")).toEqual(["my-card"]);
   });
 
   it("is not reported for an element far below an app shell", () => {
-    inspector().pin(el(".deep"));
+    inspector().pin(getElement(".deep"));
     expect(ui(".component")).toBeNull();
   });
 });
@@ -168,7 +195,7 @@ describe("custom element", () => {
 describe("when several sources name a component", () => {
   it("prefers what the page declares", () => {
     page(`<my-card data-component="Card"><span class="label">Label</span></my-card>`);
-    inspector().pin(el("my-card"));
+    inspector().pin(getElement("my-card"));
     expect(texts(".code .name")).toEqual(["Card"]);
   });
 });

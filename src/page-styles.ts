@@ -4,20 +4,39 @@ import { pageDocument } from "./page";
 /** A style rule of any document; `instanceof CSSStyleRule` is false for a frame's rules. */
 const isStyleRule = (rule: CSSRule): rule is CSSStyleRule => "selectorText" in rule && "style" in rule;
 
+/** Calls `visit` for each style rule inside `rules`, in source order, nested ones first. */
+function walkRules(rules: CSSRuleList, visit: (rule: CSSStyleRule) => void): void {
+  const visitRule = (rule: CSSRule): void => {
+    // Cast: a rule with `cssRules` is a group of rules.
+    if ("cssRules" in rule) walkRules(rule.cssRules as CSSRuleList, visit);
+    if (isStyleRule(rule)) visit(rule);
+  };
+  Array.from(rules).forEach(visitRule);
+}
+
+/** Reads a sheet's rules; those of a cross-origin sheet cannot be read, and it has none to offer. */
+function readRules(sheet: CSSStyleSheet): CSSRuleList | undefined {
+  try {
+    return sheet.cssRules;
+  } catch {
+    return undefined;
+  }
+}
+
 /** Visits every style rule of the page, in source order. */
 export function forEachPageRule(visit: (rule: CSSStyleRule) => void): void {
-  const walk = (rules: CSSRuleList): void => {
-    for (const rule of rules) {
-      if ("cssRules" in rule) walk(rule.cssRules as CSSRuleList);
-      if (isStyleRule(rule)) visit(rule);
-    }
-  };
-  for (const sheet of pageDocument().styleSheets) {
-    try {
-      walk(sheet.cssRules);
-    } catch {
-      // Cross-origin stylesheet: its rules cannot be read.
-    }
+  Array.from(pageDocument().styleSheets).forEach((sheet) => {
+    const rules = readRules(sheet);
+    if (rules) walkRules(rules, visit);
+  });
+}
+
+function matchesSelector(element: Element, selector: string): boolean {
+  try {
+    return element.matches(selector);
+  } catch {
+    // A selector this browser cannot match (vendor pseudo-elements).
+    return false;
   }
 }
 
@@ -25,27 +44,26 @@ export function forEachPageRule(visit: (rule: CSSStyleRule) => void): void {
  * The declarations that apply to an element, weakest first: matching rules
  * in source order, then its inline style.
  */
-function appliedStyles(el: Element): CSSStyleDeclaration[] {
+function appliedStyles(element: Element): CSSStyleDeclaration[] {
   const styles: CSSStyleDeclaration[] = [];
   forEachPageRule((rule) => {
-    try {
-      if (el.matches(rule.selectorText)) styles.push(rule.style);
-    } catch {
-      // A selector this browser cannot match (vendor pseudo-elements).
-    }
+    if (matchesSelector(element, rule.selectorText)) styles.push(rule.style);
   });
-  styles.push((el as HTMLElement).style);
+  // Cast: every element of the page has a `style` (SVG too); the type only says so for HTML.
+  styles.push((element as HTMLElement).style);
   return styles;
 }
 
-export type StyleLookup = (el: Element) => CSSStyleDeclaration[];
+export type StyleLookup = (element: Element) => CSSStyleDeclaration[];
 
 /** `appliedStyles` with a cache, for one render that asks about the same elements often. */
 export function createStyleLookup(): StyleLookup {
   const cache = new Map<Element, CSSStyleDeclaration[]>();
-  return (el) => {
-    let styles = cache.get(el);
-    if (!styles) cache.set(el, (styles = appliedStyles(el)));
+  return (element) => {
+    const cached = cache.get(element);
+    if (cached) return cached;
+    const styles = appliedStyles(element);
+    cache.set(element, styles);
     return styles;
   };
 }

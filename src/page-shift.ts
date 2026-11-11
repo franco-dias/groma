@@ -13,15 +13,15 @@
  * sized in `vw`, and media queries still see the full window width.
  */
 
-interface Original {
+type Original = {
   /** The inline margin the page had set, and its priority. */
   inline: string;
   priority: string;
   /** The margin the page had before the panel (from any stylesheet), in pixels. */
   base: number;
-}
+};
 
-let original: Original | null = null;
+let original: Original | undefined;
 
 /** Makes `width` pixels of room on the right of the page. */
 export function shiftPage(width: number): void {
@@ -43,5 +43,5 @@ export function shiftPage(width: number): void {
 export function restorePage(): void {
   if (!original) return;
   document.documentElement.style.setProperty("margin-right", original.inline, original.priority);
-  original = null;
+  original = undefined;
 }

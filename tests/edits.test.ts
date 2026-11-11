@@ -1,6 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { getSelector } from "../src/edits/selector";
-import { all, el, inspector, openTab, page, pressKey, reset, texts, typeOver, ui, wait } from "./helpers";
+import {
+  all,
+  getElement,
+  inspector,
+  openTab,
+  page,
+  pressKey,
+  pressShortcut,
+  reset,
+  texts,
+  typeOver,
+  ui,
+  wait,
+} from "./helpers";
 
 const STORE = "__groma_overrides:" + location.pathname;
 const savedEdits = (): Record<string, Record<string, string>> =>
@@ -13,7 +26,7 @@ const field = (property: string, custom = false): HTMLElement =>
 const body = (): HTMLElement => ui('.body[data-for="css"]')!;
 
 function pinInCssTab(selector: string): HTMLElement {
-  const target = el(selector);
+  const target = getElement(selector);
   inspector().pin(target);
   openTab("css");
   return target;
@@ -69,7 +82,7 @@ describe("editing a CSS value", () => {
     typeOver(field("color"), "red");
     expect(box.style.color).toBe("red");
 
-    ui('.row.is-overridden .reset')!.click();
+    ui(".row.is-overridden .reset")!.click();
     expect(box.style.color).toBe("green");
     expect(savedEdits()).toEqual({});
   });
@@ -87,9 +100,9 @@ describe("editing a CSS value", () => {
     const value = field("padding-top");
     pressKey(value, "ArrowUp");
     expect(box.style.paddingTop).toBe("13px");
-    pressKey(value, "ArrowUp", { shiftKey: true });
+    pressShortcut(value, { key: "ArrowUp", shiftKey: true });
     expect(box.style.paddingTop).toBe("23px");
-    pressKey(value, "ArrowDown", { altKey: true });
+    pressShortcut(value, { key: "ArrowDown", altKey: true });
     expect(box.style.paddingTop).toBe("22.9px");
   });
 
@@ -124,10 +137,11 @@ describe("editing a CSS value", () => {
   });
 });
 
+const names = () => texts('.body[data-for="css"] .row .name');
+
 describe("the All CSS list", () => {
   it("hides default values until asked, and filters by property name", () => {
     pinInCssTab(".box");
-    const names = () => texts('.body[data-for="css"] .row .name');
     expect(names()).not.toContain("position");
 
     ui<HTMLInputElement>('[data-option="hideDefaults"]')!.click();
@@ -164,7 +178,7 @@ describe("replaying saved edits", () => {
     const box = pinInCssTab(".box");
     typeOver(field("padding-top"), "40px");
     box.style.paddingTop = "12px";
-    inspector().replayOverrides(el("section"));
+    inspector().replayOverrides(getElement("section"));
     expect(box.style.paddingTop).toBe("12px");
   });
 });
@@ -177,13 +191,14 @@ describe("selectors", () => {
   });
 });
 
-describe("editing content", () => {
-  const editor = (): HTMLElement => ui(".editor")!;
-  const apply = (text: string) => {
-    editor().textContent = text;
-    pressKey(editor(), "Enter", { ctrlKey: true });
-  };
+const editor = (): HTMLElement => ui(".editor")!;
 
+const apply = (text: string) => {
+  editor().textContent = text;
+  pressShortcut(editor(), { key: "Enter", ctrlKey: true });
+};
+
+describe("editing content", () => {
   it("changes an element's text on Ctrl/⌘+Enter and restores it on Reset", () => {
     const heading = pinInCssTab(".heading");
     apply("Changed");

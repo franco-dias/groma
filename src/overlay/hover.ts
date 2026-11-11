@@ -5,32 +5,30 @@
  *           element is pinned, the distances from it to the hovered one
  *   click   pin the hovered element
  */
-import { scaleOf } from "../dom";
-import { isElement, onPage, onPageView, onPageWindow, pageDocument, rectOf } from "../page";
+import { isElement, onPage, onPageCapture, onPageView, onPageWindow, pageDocument, rectOf } from "../page";
 import { isOwn } from "../root";
-import { pin, pinnedElement } from "../selection";
-import { drawBoxModel, drawChildrenAndGaps } from "./box-model";
-import { drawDistances } from "./distances";
-import { addBox, clearBoxes } from "./layer";
+import { pin } from "../selection";
+import { drawHovered } from "./draw-hovered";
+import { clearBoxes } from "./layer";
 import { hideTooltip, showTooltip } from "./tooltip";
 
-let altHeld = false;
-let locked = false;
-let hovered: Element | null = null;
+let isAltHeld = false;
+let isLocked = false;
+let hovered: Element | undefined;
 let hoveredRect = "";
 
-export const isInspecting = (): boolean => altHeld || locked;
+export const isInspecting = (): boolean => isAltHeld || isLocked;
 
 const rectKey = (rect: DOMRect): string => `${rect.left},${rect.top},${rect.width},${rect.height}`;
 
 function clearHover(): void {
   clearBoxes();
   hideTooltip();
-  hovered = null;
+  hovered = undefined;
   hoveredRect = "";
 }
 
-/** Shows or hides inspect mode after `altHeld` or `locked` changed. */
+/** Shows or hides inspect mode after `isAltHeld` or `isLocked` changed. */
 function update(): void {
   const body = pageDocument().body;
   if (body) body.style.cursor = isInspecting() ? "crosshair" : "";
@@ -38,18 +36,32 @@ function update(): void {
 }
 
 /** Keeps inspect mode on without holding Alt. */
-export function setInspectLock(on: boolean): void {
-  locked = on;
+export function lockInspect(): void {
+  isLocked = true;
   update();
 }
 
-function inspect(target: EventTarget | null): void {
+export function unlockInspect(): void {
+  isLocked = false;
+  update();
+}
+
+function holdAlt(): void {
+  isAltHeld = true;
+  update();
+}
+
+function releaseAlt(): void {
+  isAltHeld = false;
+  update();
+}
+
+const isPageRoot = (element: Element): boolean =>
+  element === element.ownerDocument.body || element === element.ownerDocument.documentElement;
+
+function inspect(target: unknown): void {
   if (isOwn(target)) return;
-  if (
-    !isElement(target) ||
-    target === target.ownerDocument.body ||
-    target === target.ownerDocument.documentElement
-  ) {
+  if (!isElement(target) || isPageRoot(target)) {
     clearHover();
     return;
   }
@@ -60,63 +72,49 @@ function inspect(target: EventTarget | null): void {
   clearBoxes();
   hovered = target;
   hoveredRect = rectKey(rect);
-
-  const pinned = pinnedElement();
-  if (pinned && pinned !== target && pinned.isConnected) {
-    // Measuring: only the target's outline and the distances. The box model
-    // would bury the lines.
-    const pinnedRect = rectOf(pinned);
-    addBox(rect, "target");
-    drawDistances(pinnedRect, rect, scaleOf(pinned, pinnedRect));
-  } else {
-    const cs = getComputedStyle(target);
-    drawBoxModel(target, rect, cs);
-    drawChildrenAndGaps(target, rect, cs);
-  }
+  drawHovered(target, rect);
   showTooltip(target, rect);
 }
 
-export function startHover(): void {
-  const setAlt = (held: boolean) => {
-    altHeld = held;
-    update();
-  };
-  onPage("keydown", (e) => {
-    if (e.key === "Alt") setAlt(true);
+function watchAlt(): void {
+  onPage("keydown", (event) => {
+    if (event.key === "Alt") holdAlt();
   });
-  onPage("keyup", (e) => {
-    if (e.key === "Alt") setAlt(false);
+  onPage("keyup", (event) => {
+    if (event.key === "Alt") releaseAlt();
   });
   // The Alt keyup never arrives when the window loses focus first.
-  onPageWindow("blur", () => setAlt(false));
+  onPageWindow("blur", releaseAlt);
   // The canvas moved the page, or showed another one: what was drawn is stale.
   onPageView(() => {
     clearHover();
     update();
   });
+}
 
-  onPage(
-    "mousemove",
-    (e) => {
-      if (isInspecting()) inspect(e.target);
-    },
-    true,
-  );
+function watchPointer(): void {
+  onPageCapture("mousemove", (event) => {
+    if (isInspecting()) inspect(event.target);
+  });
   onPage("mouseleave", () => {
     if (isInspecting()) clearHover();
   });
+}
 
-  // A click pins. The whole press is kept from the page, not only the click.
+/** A click pins. The whole press is kept from the page, not only the click. */
+function watchPress(): void {
   for (const type of ["pointerdown", "pointerup", "mousedown", "mouseup", "click"] as const) {
-    onPage(
-      type,
-      (e) => {
-        if (!isInspecting() || isOwn(e.target)) return;
-        e.preventDefault();
-        e.stopPropagation();
-        if (type === "click" && isElement(e.target)) pin(e.target);
-      },
-      true,
-    );
+    onPageCapture(type, (event) => {
+      if (!isInspecting() || isOwn(event.target)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (type === "click" && isElement(event.target)) pin(event.target);
+    });
   }
+}
+
+export function startHover(): void {
+  watchAlt();
+  watchPointer();
+  watchPress();
 }

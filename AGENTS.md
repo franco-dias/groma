@@ -50,10 +50,29 @@ npm run inspect -- <file.html>   # any HTML file with the inspector attached
 npm test             # unit + browser tests
 npm run typecheck
 npm run build        # typecheck, then dist/groma.js
+npm run lint         # oxlint: the limits of the code style (.oxlintrc.json)
+npm run format       # oxfmt: formats the code, styles and docs in place
 ```
 
-Before you say a change is done: `npm test` and `npm run build` both pass.
+Before you say a change is done: `npm test`, `npm run build`, `npm run lint`
+and `npm run format:check` all pass.
 The browser tests need Google Chrome installed; they do not download one.
+
+## Code style
+
+The code follows the owner's `franco-style` skills (TypeScript, testing,
+errors and sanitization, delivery; the React ones do not apply here). Load
+them before writing or reviewing code. Where they and this file differ, this
+file wins. The formatter owns the layout: never format by hand. The linter
+keeps the limits a tool can check: functions of 20 lines at most, files of
+100, two parameters, one level of nesting, no nested ternaries, no `any`, no
+`!`, no `null` where `undefined` will do.
+
+- A rule is switched off only on the line that needs it, with the reason:
+  `// oxlint-disable-next-line <rule> -- <why>`. The usual reasons are the
+  DOM (it answers `null`) and the compatibility contracts below
+  (`pinnedElement()` answers `null`).
+- The panel's markup (`*.html`) is laid out by hand and is not formatted.
 
 ## Rules
 
@@ -71,7 +90,8 @@ The browser tests need Google Chrome installed; they do not download one.
    the page must behave exactly as without the script. The only standing
    UI is the launcher pill.
 5. **Never change the page except for the user's own edits**, and keep what
-   the page had so Reset can restore it (`src/edits/overrides.ts`). One
+   the page had so Reset can restore it (`src/edits/style-overrides.ts`,
+   `content-overrides.ts`). One
    exception, by design: in push mode the panel sets an inline `margin-right`
    on `<html>`, remembers the page's value and puts it back when the panel
    closes (`src/page-shift.ts`). Do not add other page changes.
@@ -130,10 +150,14 @@ frame, not `document`. `src/page.ts` knows which one it is.
 - The pinned element lives in `src/selection.ts`. Code that picks an
   element calls `pin()`; code that shows it subscribes with
   `onSelection()`. After an edit or an option change, call `rerender()`.
-- A panel tab is one file that implements `Tab` (`src/panel/tab.ts`) and is
-  listed in `src/panel/panel.ts`. Tabs do not import each other.
-- A user's edit to the page goes through `edit()` in `src/edits/changes.ts`,
-  so it is saved, listed in the Edits tab and can be undone.
+- A panel tab implements `Tab` (`src/panel/tab.ts`) and is listed in
+  `src/panel/panel.ts`. It is one file, or an entry file with sibling modules
+  in its own folder (`src/panel/specs/`, `css/`, `edits/`, `changes/`). Tabs do
+  not import each other, and a tab's modules are not imported from outside its
+  folder.
+- A user's edit to the page goes through `edit()`, `nudgeEdit()` or
+  `removeEdit()` in `src/edits/changes.ts`, so it is saved, listed in the
+  Edits tab and can be undone.
 - Logic that needs no page (formatting, parsing, comparing) goes in
   `src/specs/` or a plain module, with a unit test beside it.
 - Markup goes in `src/panel/panel.html`; styles in `src/styles/`. Do not

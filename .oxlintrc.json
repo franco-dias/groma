@@ -1,0 +1,52 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  // The limits of the franco-style skills that a tool can check. What it
+  // cannot check (naming, one job per function, why-comments) is in the skills.
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "categories": { "correctness": "error", "suspicious": "error" },
+  "ignorePatterns": ["dist/**", "landing/**", "extension-build/**"],
+  "rules": {
+    // Size and flow
+    "max-lines-per-function": ["error", { "max": 20, "skipBlankLines": true, "skipComments": true }],
+    "max-lines": ["error", { "max": 100, "skipBlankLines": true, "skipComments": true }],
+    "max-params": ["error", { "max": 2 }],
+    "max-depth": ["error", { "max": 1 }],
+    "no-nested-ternary": "error",
+    "no-else-return": ["error", { "allowElseIf": false }],
+    "no-negated-condition": "error",
+    // Types and data
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "typescript/consistent-type-imports": "error",
+    "typescript/ban-ts-comment": "error",
+    "unicorn/no-null": "error",
+    // Functions and names
+    "eqeqeq": "error",
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-param-reassign": "error",
+    "no-await-in-loop": "error",
+    "id-length": ["error", { "min": 2, "exceptions": ["x", "y", "h", "_"] }],
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }],
+    // Modules
+    "import/no-default-export": "error",
+    "import/no-cycle": "error"
+  },
+  "overrides": [
+    {
+      // A suite is one long function of many short tests, and a test may assert that a node is there.
+      "files": ["tests/**", "**/*.test.ts", "**/*.test.mjs"],
+      "rules": {
+        "max-lines-per-function": "off",
+        "max-lines": "off",
+        "typescript/no-non-null-assertion": "off"
+      }
+    },
+    {
+      // The tools that read these files ask for a default export.
+      "files": ["*.config.ts"],
+      "rules": { "import/no-default-export": "off" }
+    }
+  ]
+}

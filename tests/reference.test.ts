@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { all, el, inspector, openTab, page, pressKey, reset, texts, ui } from "./helpers";
+import { all, getElement, inspector, openTab, page, pressKey, reset, texts, ui } from "./helpers";
 
 const shown = (selector: string): boolean => getComputedStyle(ui(selector)!).display !== "none";
 const savedTab = (): string => JSON.parse(localStorage.getItem("__groma_panel") ?? "{}").tab;
@@ -7,7 +7,7 @@ const savedTab = (): string => JSON.parse(localStorage.getItem("__groma_panel") 
 beforeEach(() => {
   reset();
   page(`<div class="card" style="width: 200px; height: 100px">Card</div>`);
-  inspector().pin(el(".card"));
+  inspector().pin(getElement(".card"));
 });
 
 describe("» menu", () => {
@@ -41,12 +41,12 @@ describe("» menu", () => {
   });
 });
 
-describe("Reference tab", () => {
-  const openReference = () => {
-    ui(".more-button")!.click();
-    ui('.more-item[data-tab="reference"]')!.click();
-  };
+const openReference = () => {
+  ui(".more-button")!.click();
+  ui('.more-item[data-tab="reference"]')!.click();
+};
 
+describe("Reference tab", () => {
   it("opens from the » menu and replaces the other tabs' content", () => {
     openReference();
     expect(shown('.body[data-for="reference"]')).toBe(true);

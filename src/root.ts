@@ -9,32 +9,35 @@
  * at the highest z-index that comes later in the document, cannot cover the
  * panel, the launcher or the outlines.
  */
-import { h } from "./dom";
+import { h, placeOver } from "./dom";
 import { onPageView, pageViewport } from "./page";
 import styles from "./styles/index.css?inline";
 
 export const HOST_TAG = "groma-inspector";
 
-let host: HTMLElement | null = null;
+type Inspector = { host: HTMLElement; shadow: ShadowRoot };
 
-function inspectorHost(): HTMLElement {
-  if (!host) {
-    host = document.body.appendChild(document.createElement(HOST_TAG));
-    host.attachShadow({ mode: "open" }).appendChild(h("style", "", styles));
-    promoteToTopLayer(host);
-    // A page may replace its <body>, or its whole <html>, after it loads (a
-    // design export that unpacks itself does). The host goes with the old
-    // one; put it back, with everything it holds.
-    new MutationObserver(comeBack).observe(document, { childList: true, subtree: true });
-  }
-  return host;
+let inspector: Inspector | undefined;
+
+function getInspector(): Inspector {
+  if (inspector) return inspector;
+  const host = document.body.appendChild(document.createElement(HOST_TAG));
+  const shadow = host.attachShadow({ mode: "open" });
+  shadow.appendChild(h("style", "", styles));
+  promoteToTopLayer(host);
+  inspector = { host, shadow };
+  // A page may replace its <body>, or its whole <html>, after it loads (a
+  // design export that unpacks itself does). The host goes with the old
+  // one; put it back, with everything it holds.
+  new MutationObserver(comeBack).observe(document, { childList: true, subtree: true });
+  return inspector;
 }
 
 function comeBack(): void {
-  if (!host || host.isConnected || !document.body) return;
-  document.body.appendChild(host);
+  if (!inspector || inspector.host.isConnected || !document.body) return;
+  document.body.appendChild(inspector.host);
   // Leaving the document also took it out of the top layer.
-  promoteToTopLayer(host);
+  promoteToTopLayer(inspector.host);
 }
 
 /**
@@ -53,25 +56,34 @@ function promoteToTopLayer(element: HTMLElement): void {
 }
 
 /** Adds a top-level inspector node (overlay, panel, menu…) to the page. */
-export function mount<T extends HTMLElement>(node: T): T {
-  inspectorHost().shadowRoot!.appendChild(node);
+export function mount<TNode extends HTMLElement>(node: TNode): TNode {
+  getInspector().shadow.appendChild(node);
   return node;
 }
 
-let pageLayer: HTMLElement | null = null;
+/** The box that cuts what leaves the canvas frame, and the layer inside it that holds the nodes. */
+type PageLayers = { clip: HTMLElement; layer: HTMLElement };
+
+let pageLayers: PageLayers | undefined;
+
+function getPageLayers(): PageLayers {
+  if (pageLayers) return pageLayers;
+  const clip = mount(h("div", "page-clip"));
+  const layer = clip.appendChild(h("div", "page-layer"));
+  const layers = { clip, layer };
+  pageLayers = layers;
+  onPageView(() => clipPageLayer(layers));
+  clipPageLayer(layers);
+  return layers;
+}
 
 /**
  * Adds a node that marks something on the page (an outline, the hover boxes,
  * the grid). In canvas mode these are cut at the edge of the frame, as the
  * page's own content is; the node keeps window coordinates either way.
  */
-export function mountOnPage<T extends HTMLElement>(node: T): T {
-  if (!pageLayer) {
-    pageLayer = mount(h("div", "page-clip")).appendChild(h("div", "page-layer"));
-    onPageView(clipPageLayer);
-    clipPageLayer();
-  }
-  pageLayer.appendChild(node);
+export function mountOnPage<TNode extends HTMLElement>(node: TNode): TNode {
+  getPageLayers().layer.appendChild(node);
   return node;
 }
 
@@ -80,38 +92,36 @@ export function mountOnPage<T extends HTMLElement>(node: T): T {
  * moved back by the box's offset, so its nodes are still placed in window
  * coordinates.
  */
-function clipPageLayer(): void {
-  if (!pageLayer) return;
-  const clip = pageLayer.parentElement!;
+function clipPageLayer({ clip, layer }: PageLayers): void {
   const viewport = pageViewport();
-  clip.classList.toggle("is-framed", viewport !== null);
+  clip.classList.toggle("is-framed", viewport !== undefined);
   if (!viewport) {
     clip.removeAttribute("style");
-    pageLayer.removeAttribute("style");
+    layer.removeAttribute("style");
     return;
   }
-  clip.style.left = `${viewport.left}px`;
-  clip.style.top = `${viewport.top}px`;
-  clip.style.width = `${viewport.width}px`;
-  clip.style.height = `${viewport.height}px`;
-  pageLayer.style.transform = `translate(${-viewport.left}px, ${-viewport.top}px)`;
+  placeOver(clip, viewport);
+  layer.style.transform = `translate(${-viewport.left}px, ${-viewport.top}px)`;
 }
 
 /** Sets a CSS variable every inspector node can read (see styles/tokens.css). */
 export function setRootVariable(name: string, value: string): void {
-  inspectorHost().style.setProperty(name, value);
+  getInspector().host.style.setProperty(name, value);
 }
 
 /**
  * True for the inspector's own UI. Events that start inside the shadow root
  * reach the page's listeners with the host element as their target.
  */
-export function isOwn(node: EventTarget | null): boolean {
+export function isOwn(node: unknown): boolean {
   return node instanceof Element && node.localName === HOST_TAG;
 }
 
 /** Runs `start` once the page has a `<body>` to mount into. */
 export function whenBodyExists(start: () => void): void {
-  if (document.body) start();
-  else document.addEventListener("DOMContentLoaded", start, { once: true });
+  if (document.body) {
+    start();
+    return;
+  }
+  document.addEventListener("DOMContentLoaded", start, { once: true });
 }
