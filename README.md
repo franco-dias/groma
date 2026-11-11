@@ -5,7 +5,7 @@
   </picture>
 </h1>
 
-Survey any design before you build it.
+Survey the AI design piece before you build it.
 
 Groma is a Figma-style inspector for design handoff pages. Add one script to
 an HTML design file and inspect it the way you would inspect a frame in
