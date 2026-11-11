@@ -1,6 +1,6 @@
 {
   "name": "gromajs",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Groma: survey any design before you build it. A Figma-style inspector for design handoff pages: box model, specs, design tokens, components and distances on any HTML page.",
   "keywords": [
     "groma",

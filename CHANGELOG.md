@@ -3,7 +3,10 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.6.1 (2026-11-10)
+
+- Changed: a new logo, the one the landing page uses: a groma seen from the
+  side, in blue on a dark tile. The files in `docs/images/` keep their names.
 
 - Fixed: on a page that replaces its `<body>` or its whole document after it
   loads, as a self-unpacking design export does, the inspector's launcher and
