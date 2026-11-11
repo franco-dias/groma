@@ -85,6 +85,13 @@ export function click(target: Element): void {
   mouse(target, "click");
 }
 
+/** Two full presses, then the double-click the browser sends after them. */
+export function doubleClick(target: Element): void {
+  click(target);
+  click(target);
+  mouse(target, "dblclick");
+}
+
 export const rightClick = (target: Element): MouseEvent => mouse(target, "contextmenu");
 
 /** Types `text` over an editable value and leaves the field, as Tab or a click elsewhere would. */

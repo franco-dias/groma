@@ -5,12 +5,14 @@ import {
   all,
   click,
   clipboard,
+  doubleClick,
   getElement,
   frames,
   holdAlt,
   hover,
   inspector,
   page,
+  pressKey,
   reset,
   rightClick,
   texts,
@@ -130,6 +132,20 @@ describe("inspecting on the canvas", () => {
     hover(framed("#card"));
     expectOver(ui(".overlay .content-box")!, onScreen(framed("#card")));
     expect(texts(".tooltip span")[0]).toBe("200 × 100");
+  });
+
+  it("edits text in place in the frame while locked, and leaves the frame's attributes as they were", async () => {
+    await openCanvas();
+    ui(".launcher")!.click();
+    const card = framed("#card");
+    doubleClick(card);
+    expect(card.isContentEditable).toBe(true);
+    card.textContent = "Framed";
+    pressKey(card, "Enter");
+
+    expect(card.hasAttribute("contenteditable")).toBe(false);
+    expect(card.textContent).toBe("Framed");
+    expect(inspector().pinnedElement()).toBe(card);
   });
 
   it("pins on a click and outlines the element where it shows", async () => {

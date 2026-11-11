@@ -21,6 +21,7 @@ import { listEdits } from "../../edits/edit-list";
 import { findPinnedElement, rerender } from "../../selection";
 import { type Tab, tabBody } from "../tab";
 import { mountEditBar, updateEditBar } from "./edit-bar";
+import { endDiscardNotice } from "./discard-notice";
 import { createEditedElement } from "./edited-element";
 import { createNoteEditor } from "./note-editor";
 
@@ -72,6 +73,10 @@ export const editsTab: Tab = {
     body = tabBody(element, "edits");
     mountEditBar(element, refresh);
   },
-  render: draw,
+  render(element, change) {
+    // Another element: whatever the bar offered about the discard is stale.
+    if (change === "pinned") endDiscardNotice();
+    draw(element);
+  },
   renderUnpinned: () => draw(undefined),
 };

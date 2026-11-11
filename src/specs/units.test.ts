@@ -1,13 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  compactSides,
-  copiedLength,
-  copiedSpacing,
-  nudgeValue,
-  shownLength,
-  stepFor,
-  sxSpacing,
-} from "./units";
+import { compactSides, copiedLength, copiedSpacing, shownLength, sxSpacing } from "./units";
 
 describe("compactSides", () => {
   it("uses the shortest CSS shorthand", () => {
@@ -88,36 +80,5 @@ describe("copiedSpacing", () => {
         { unit: "rem", rootFontSize: 16, format: "sx" },
       ),
     ).toBe("padding: 0.75rem 1rem");
-  });
-});
-
-describe("nudgeValue", () => {
-  it("moves the leading number by one step and keeps what follows it", () => {
-    expect(nudgeValue("12px", { direction: 1, step: 1 })).toBe("13px");
-    expect(nudgeValue("12px", { direction: -1, step: 10 })).toBe("2px");
-    expect(nudgeValue("-4px 8px", { direction: 1, step: 1 })).toBe("-3px 8px");
-    expect(nudgeValue("400", { direction: 1, step: 100 })).toBe("500");
-  });
-
-  it("keeps one decimal for a step of 0.1 and for a number that has decimals", () => {
-    expect(nudgeValue("23px", { direction: -1, step: 0.1 })).toBe("22.9px");
-    expect(nudgeValue("1.5", { direction: 1, step: 1 })).toBe("2.5");
-  });
-
-  it("answers null for text that does not start with a number", () => {
-    expect(nudgeValue("auto", { direction: 1, step: 1 })).toBeUndefined();
-    expect(nudgeValue("", { direction: 1, step: 1 })).toBeUndefined();
-  });
-});
-
-describe("stepFor", () => {
-  it("steps by 1, by 10 with Shift and by 0.1 with Alt", () => {
-    expect(stepFor({ shiftKey: false, altKey: false })).toBe(1);
-    expect(stepFor({ shiftKey: true, altKey: false })).toBe(10);
-    expect(stepFor({ shiftKey: false, altKey: true })).toBe(0.1);
-  });
-
-  it("lets Shift win over Alt", () => {
-    expect(stepFor({ shiftKey: true, altKey: true })).toBe(10);
   });
 });

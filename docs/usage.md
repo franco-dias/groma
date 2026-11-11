@@ -257,16 +257,19 @@ for the file again each time the canvas opens. Opening the file with
 - Push mode moves only what is laid out in normal flow; see
   [the side panel](#the-side-panel-push-or-float).
 - Token lookup takes the last matching declaration in source order and
-  ignores selector specificity.
+  ignores selector specificity. Rules inside an `@media` or `@supports`
+  block that does not apply now are skipped; `@container` rules are not
+  evaluated, so one is read as if it applied.
 - Sizing intent (fixed, hug, fill) is inferred from styles, and set with the
   properties that fit a block, a flex or a grid parent. In a grid, an image
   or an element with an aspect ratio reads as "fill" although it does not
   stretch by default.
 - A grid's columns and rows are read from the last declaration in the
-  stylesheets, even one inside a media query that does not apply now. When
-  that list is not what the browser laid out, the track sizes are shown as
-  one text value. Two lists with the same number of tracks and no pixel
-  sizes cannot be told apart.
+  stylesheets that applies now (a media query that does not match is
+  skipped; selector specificity is ignored, and a container query is read as
+  if it applied). When that list is not what the browser laid out, the track
+  sizes are shown as one text value. Two lists with the same number of
+  tracks and no pixel sizes cannot be told apart.
 - Of the UI frameworks, only React pages are read for components; other
   pages can declare components in the markup (see [Components](#components)).
   A minified production build shows no React component names; see
