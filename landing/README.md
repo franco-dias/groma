@@ -47,7 +47,9 @@ when you edit it:
 
 ## Deploy
 
-Serve this folder from any static host. There is no build step.
+It is live at https://gromajs.dev (`www.gromajs.dev` redirects to it), served
+by Vercel from this folder. Any static host serves it the same way; there is
+no build step.
 
 On Vercel: Root Directory `landing`, Framework Preset "Other", no build
 command, output directory `.`. `vercel.json` makes `/pt-br` redirect to

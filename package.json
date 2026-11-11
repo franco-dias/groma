@@ -51,7 +51,7 @@
     "type": "git",
     "url": "git+https://github.com/franco-dias/groma.git"
   },
-  "homepage": "https://github.com/franco-dias/groma#readme",
+  "homepage": "https://gromajs.dev",
   "bugs": {
     "url": "https://github.com/franco-dias/groma/issues"
   }
