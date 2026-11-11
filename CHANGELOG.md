@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.7.1 (2026-11-11)
 
 - Internal: the code now follows one written style, checked by a formatter
   (oxfmt) and a linter (oxlint): small functions, small files, no flags that
