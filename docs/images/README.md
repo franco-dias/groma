@@ -31,6 +31,19 @@ renderer that drops animations (or a reader who prefers reduced motion)
 shows the finished logo. Do not change that: animate *from* a start state,
 never *to* the resting one.
 
+## Screenshots
+
+The README's pictures, taken with Groma attached to a product page (a design
+file, not part of this repo), at 1600 × 1000 and twice the pixel density, then
+scaled to 1600 wide. The labels are drawn into the page before the shot, so
+they stay aligned with what they name.
+
+| File | What it shows | Used for |
+| --- | --- | --- |
+| `groma-inspect.png` | A pinned button: component and props, box model, color tokens, and the distance to its neighbor | The top of the README |
+| `groma-canvas.png` | The canvas: the page at 375px in a frame, with the panel on the pinned title | The README, under the canvas paragraph |
+| `groma-social.png` | The same shot cropped to 1280 × 640 | GitHub's social preview (Settings → Social preview) and link previews |
+
 ## The name
 
 The name is "Groma" in Geist SemiBold (Copyright 2024 The Geist Project

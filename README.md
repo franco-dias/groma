@@ -13,6 +13,10 @@ Figma's Dev Mode: box model, specs, design tokens, components and distances.
 
 It has no runtime dependencies and ships as a single file.
 
+<p align="center">
+  <img src="docs/images/groma-inspect.png" width="800" alt="Groma on a product page. The side panel shows the pinned button's component and props, its box model and the design token behind each color, and a red line marks the 12 pixel distance to the next button.">
+</p>
+
 > A *groma* was the Roman surveyor's instrument: a staff with a cross and
 > plumb lines, used to lay out straight lines and right angles before roads
 > and cities were built. This one does the same job on a design.
@@ -52,6 +56,10 @@ import, the distance to the next element.
 A pill at the bottom right locks inspect mode on, so none of this needs Alt.
 The panel's » menu can also show the page on a canvas: in a frame you resize
 by its edges, to check the design at any width.
+
+<p align="center">
+  <img src="docs/images/groma-canvas.png" width="800" alt="Groma's canvas: the page in a frame 375 pixels wide, with the zoom controls above it and the side panel describing the pinned title.">
+</p>
 
 The side panel answers four questions:
 
