@@ -14,15 +14,32 @@ on the page ([CHANGELOG.md](../CHANGELOG.md)).
 
 ## 0.9: Inspect parity
 
-- Effects: shadows, blurs, filters, gradients.
-- On a grid: the track lines drawn on the page, and `justify-content` and
-  `align-content`.
-- Colour format switch (hex, rgb, hsl) and contrast ratio.
-- "Copy as CSS" for the element's declared styles.
-- Assets: copy an SVG, download an image, show its natural size.
-- States: the `:hover`, `:focus` and `:disabled` rules that apply to the
-  element, read from the stylesheets.
-- Keyboard navigation to parent, child and sibling.
+What Figma's inspect panel answers and Groma does not yet. In this order,
+the small and sure ones first:
+
+1. **Colour format and contrast.** A switch in the Colors block shows and
+   copies colours as hex, rgb or hsl. The text colour gets its contrast ratio
+   against the background behind it, with the WCAG level it meets.
+2. **Copy as CSS.** One button copies the element's declared styles as CSS
+   declarations: what the page's rules and its inline style say, not the
+   hundreds of computed values.
+3. **Effects.** Shadows, filters, backdrop filters and gradients as a block
+   of their own, each part readable (offset, blur, spread, colour; the stops
+   of a gradient), in place of two raw strings in the Layout block.
+4. **Theme variables for shadows and transitions.** Where the page keeps
+   its shadows, durations and easings in variables, they are offered while a
+   shadow or a transition is being edited, and named where the element uses
+   or matches one, as colour and length tokens already are.
+5. **States.** The `:hover`, `:focus`, `:active` and `:disabled` rules that
+   apply to the element, read from the stylesheets, as what each state
+   changes.
+6. **Assets.** For an image: its natural size beside the size shown, and its
+   address to copy or download. For an inline SVG: copy its markup.
+7. **Keyboard navigation.** With an element pinned: arrow keys move the pin
+   to the parent, the first child and the siblings.
+8. **Grid, the rest.** The track lines drawn on the page while a grid
+   container is pinned, and `justify-content` and `align-content` as buttons
+   when the tracks leave room to distribute.
 
 ## 1.0: Agent bridge
 

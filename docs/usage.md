@@ -274,6 +274,20 @@ for the file again each time the canvas opens. Opening the file with
   pages can declare components in the markup (see [Components](#components)).
   A minified production build shows no React component names; see
   [Use it on an app](#use-it-on-an-app).
+- The track lines of a pinned grid are drawn for left-to-right, horizontal
+  text: with `direction: rtl` or a vertical writing mode they are on the wrong
+  side. A grid inside a scrolling or clipping box is not cut at its edge.
+- "Download" in the Asset block is a link with a `download` attribute. For an
+  image from another origin the browser may open it in a tab instead of saving
+  it; save it from there.
+- The States block reads `:hover`, `:focus` and the other states from the
+  stylesheets, ignoring selector specificity. A state inside `:is()`, `:where()`
+  or `:not()` is not understood, and a rule that is only reached through one
+  is not listed.
+- The contrast ratio uses the background colours of the element and its
+  ancestors. `opacity`, blend modes, a pseudo-element or a sibling painted
+  behind the text, and colours written in a form other than hex or `rgb()`
+  are not taken into account (the line is left out for the last).
 - The Changes tab compares lines without their order, so a line that only
   moved is not reported.
 - The colour picker needs a Chromium browser. It has no test: the browser

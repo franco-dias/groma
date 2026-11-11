@@ -3,6 +3,56 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## Unreleased
+
+- New: colour format. A HEX | RGB | HSL switch in the Colors block of the
+  Specs tab shows every colour, and copies it, as `#2F6BFF`,
+  `rgb(47 107 255)` or `hsl(223 100% 59%)` (`rgb(47 107 255 / 50%)` when
+  translucent). Remembered per site.
+- New: contrast. The Text colour row shows the ratio against the background
+  behind the text (`4.52 : 1`) and the WCAG level it meets: AAA, AA or Fails
+  AA. Over an image or gradient it says so and shows no number.
+- New: Copy CSS. A button in the Specs tab's element header copies the styles
+  the element declares (the page's rules that apply now, plus its inline style
+  and your edits) as CSS declarations, one per line: shorthands and `var()`
+  as written, not the computed values.
+- New: on a grid, "Distribute" rows for `justify-content` and
+  `align-content` (start, center, end, stretch, and a menu of the space
+  values), shown when the tracks leave room or the property is set. While a
+  grid container is pinned, its track lines are drawn on the page: a dashed
+  line at each column and row edge, the gaps lightly filled.
+- New: keyboard navigation. With an element pinned, the arrow keys move the
+  pin: up to the parent, down to the first child, left and right to the
+  siblings. They work with the focus in the panel (not in a field or a menu)
+  or with inspect mode locked on; otherwise the keys are the page's, as
+  before.
+- New: an Asset block at the top of the Specs tab, for an image (a preview,
+  its natural size beside the size shown, a `2×` note, its file name, "Copy
+  address" and "Download"), an inline SVG (its viewBox and size, "Copy SVG")
+  and an element with a `url(...)` background (the name and "Copy address").
+  Nothing is fetched.
+- New: a States block in the Specs tab, after Typography. It lists what the
+  element's `:hover`, `:focus`, `:focus-visible`, `:focus-within`, `:active`,
+  `:disabled` and `:checked` rules change, read from the stylesheets without
+  triggering the state, as property and value rows. A click copies
+  `property: value`.
+- New: token suggestions for shadows and motion. Typing in a shadow field (the
+  Effects labels) lists the page's shadow tokens, each drawn on a small
+  square; the Motion block's durations and easings (and a new "Transition"
+  label for the whole property) are editable and list time, timing-function
+  and transition tokens. A duration or easing edit changes that transition's
+  entry only and is one edit of the whole list. A hand-written shadow that
+  equals a token reads "matches token", and a declared token is named.
+  Animations stay read-only.
+- New: an Effects block in the Specs tab, after the Box. Each shadow, text
+  shadow, filter, backdrop filter and gradient layer has a row of its own: a
+  shadow as swatch, offsets, blur, spread and colour; a filter as name and
+  argument; a gradient as a painted strip, its kind and angle, and its stops.
+  A click copies the part, the label copies the whole property, and a
+  double-click on the label edits it. A colour that equals a token reads
+  "matches token". Changed: the Layout block no longer shows Shadow and
+  Gradient as raw text.
+
 ## 0.8.0 (2026-11-11)
 
 - Fixed: the Specs tab no longer reads a declaration from an `@media` or

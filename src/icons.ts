@@ -10,6 +10,7 @@ const ICONS = {
   chevronDown: '<path d="m6 9 6 6 6-6"/>',
   chevronRight: '<path d="m9 18 6-6-6-6"/>',
   chevronUp: '<path d="m18 15-6-6-6 6"/>',
+  download: '<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',
   copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>',
   file:
     '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>' +

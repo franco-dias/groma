@@ -6,6 +6,7 @@ import { icon } from "../../icons";
 import { pin } from "../../selection";
 import { looksGenerated } from "../../specs/class-names";
 import { copyOnClick } from "../copy";
+import { createCopyCssButton } from "./copy-css";
 
 /** Whether the class list in the header shows every class. */
 let areClassesExpanded = false;
@@ -44,6 +45,7 @@ function createTitleRow(element: Element, meaningful: string[]): HTMLElement {
     h("span", "title", name === element.localName ? (meaningful[0] ?? name) : name),
     h("span", "spacer"),
     h("span", "title-size", sizeText(element)),
+    createCopyCssButton(element),
   );
   return title;
 }

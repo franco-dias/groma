@@ -2,8 +2,8 @@
  * The Specs tab: what a developer needs to build the pinned element.
  *
  * From top to bottom: the element header (where it is, what it is, its
- * classes), then one block per subject: comparison, component, layout, box,
- * colours, typography, motion. A click on any value, token or name copies
+ * classes), then one block per subject: asset, comparison, component, layout, box,
+ * effects, colours, typography, states, motion. A click on any value, token or name copies
  * it. A double-click on a value that is one CSS property (a size, a side of
  * the box, a colour, a font size) turns it into a field: the edit is made on
  * the page like one from the All CSS tab, and is listed in the Edits tab.
@@ -19,14 +19,17 @@
  */
 import { part, type Tab, tabBody } from "../tab";
 import { mountActionBar, updateActionBar } from "./action-bar";
+import { renderAsset } from "./asset-block";
 import { renderBox } from "./box-block";
 import { renderColors } from "./color-block";
 import { renderCompare } from "./compare-block";
 import { renderComponent } from "./component-block";
+import { renderEffects } from "./effects-block";
 import { renderHeader } from "./element-header";
 import { renderLayout } from "./layout-block";
 import { renderMotion } from "./motion-block";
 import { closeMenu, isMenuOpen } from "./row-menu";
+import { renderStates } from "./states-block";
 import { createContext } from "./specs-context";
 import { renderTypography } from "./typography-block";
 
@@ -40,12 +43,15 @@ function renderSpecs(element: Element): void {
   const scrollTop = body.scrollTop;
   closeMenu();
   body.replaceChildren();
+  renderAsset(context);
   renderCompare(context);
   renderComponent(context);
   renderLayout(context);
   renderBox(context);
+  renderEffects(context);
   renderColors(context);
   renderTypography(context);
+  renderStates(context);
   renderMotion(context);
   body.scrollTop = scrollTop;
 }

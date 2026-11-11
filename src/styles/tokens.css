@@ -27,6 +27,7 @@
   --ins-pin-fg: #ffffff;
   --ins-pin-tint: rgba(47, 107, 255, 0.2);
   --ins-hover-line: #3b82f6;
+  --ins-track-gap-bg: rgba(59, 130, 246, 0.14);
   --ins-measure: #d92d20;
   --ins-measure-fg: #ffffff;
   --ins-warn: #f5b84a;
@@ -47,6 +48,9 @@
   --ins-box-content-bg: rgba(111, 168, 220, 0.16);
   --ins-box-content-line: #4c6f93;
 
+  /* A light tile for a shadow to fall on: a shadow is dark, and so is the panel. */
+  --ins-shadow-stage: #e4e4e8;
+  --ins-shadow-card: #ffffff;
   --ins-swatch-ring: rgba(255, 255, 255, 0.22);
   --ins-checker: repeating-conic-gradient(#4a4a4a 0 25%, #2a2a2a 0 50%) 0 0 / 6px 6px;
   --ins-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.2);

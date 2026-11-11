@@ -6,7 +6,7 @@
  */
 
 /** What kind of token a property takes. */
-export type Fit = "color" | "length";
+export type Fit = "color" | "length" | "shadow" | "time" | "easing" | "transition";
 
 const COLOR_PROPS = new Set(["color", "background-color", "border-color", "fill", "stroke"]);
 const LENGTH_PROPS = new Set([
@@ -23,11 +23,21 @@ const LENGTH_PROPS = new Set([
   "letter-spacing",
   "stroke-width",
 ]);
+const SHADOW_PROPS = new Set(["box-shadow", "text-shadow"]);
+const TIME_PROPS = new Set(["transition-duration", "transition-delay"]);
 const LENGTH_SIDES = /^(padding|margin)-(top|right|bottom|left)$/;
 
-/** The kind of token a property takes: colours for `color`, lengths for a gap or a side of the box; none for the rest. */
+/**
+ * The kind of token a property takes: colours for `color`, lengths for a gap
+ * or a side of the box, shadows for a shadow, times for a duration or a
+ * delay, timing functions, whole transitions; none for the rest.
+ */
 export function findFit(prop: string): Fit | undefined {
   if (COLOR_PROPS.has(prop)) return "color";
+  if (SHADOW_PROPS.has(prop)) return "shadow";
+  if (TIME_PROPS.has(prop)) return "time";
+  if (prop === "transition-timing-function") return "easing";
+  if (prop === "transition") return "transition";
   return LENGTH_PROPS.has(prop) || LENGTH_SIDES.test(prop) ? "length" : undefined;
 }
 

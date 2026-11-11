@@ -67,9 +67,5 @@ export function wholeRowCells(context: SpecsContext): LayoutCell[] {
     const spec = findSpec(context, address);
     return { label, value: spec?.value, spec, prop };
   };
-  return [
-    cell({ label: "Position", address: ["Layout", "position"] }),
-    cell({ label: "Shadow", address: ["Shape", "shadow"], prop: "box-shadow" }),
-    cell({ label: "Gradient", address: ["Shape", "gradient"], prop: "background-image" }),
-  ];
+  return [cell({ label: "Position", address: ["Layout", "position"] })];
 }

@@ -22,6 +22,8 @@
     <dd>Open the panel with nothing pinned, to reach its » menu and this reference. Again to close it.</dd>
     <dt>Double-click text</dt>
     <dd>With inspect locked on: type in an element that holds only text, right on the page. “Edit text inline” at the foot of the panel locks it for you. <kbd>Enter</kbd> or a click elsewhere applies, <kbd>Esc</kbd> puts the text back.</dd>
+    <dt><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></dt>
+    <dd>With an element pinned: move the pin to its parent, its first child, and the previous and next sibling. They work with the focus in the panel (not in a field or a menu) or with inspect locked on; otherwise they are the page's.</dd>
     <dt>Inspect pill</dt>
     <dd>Bottom right. Click it to lock inspect mode on, so none of this needs <kbd data-key="alt"></kbd>.</dd>
     <dt><kbd>Esc</kbd></dt>
@@ -53,7 +55,7 @@
     <dt>Drag a number</dt>
     <dd>Press on a value that is a number and drag sideways to change it live: 1 per pixel, <kbd>Shift</kbd> 10, <kbd>Alt</kbd> 0.1. A rem length moves 0.25 per pixel, opacity 0.01. <kbd>Esc</kbd> during the drag puts the value back. The whole drag is one step to undo. A press that does not move is still a click.</dd>
     <dt>Tokens under a field</dt>
-    <dd>While you type a colour or a length, the page's tokens that fit are listed. Click one, or use <kbd>↓</kbd> <kbd>↑</kbd> and <kbd>Enter</kbd>, to write <code>var(--token)</code>. <kbd>Esc</kbd> closes the list first.</dd>
+    <dd>While you type a colour, a length, a shadow, a duration, an easing or a whole transition, the page's tokens that fit are listed. Click one, or use <kbd>↓</kbd> <kbd>↑</kbd> and <kbd>Enter</kbd>, to write <code>var(--token)</code>. <kbd>Esc</kbd> closes the list first.</dd>
     <dt>px · rem</dt>
     <dd>Switch the unit lengths are shown and copied in.</dd>
     <dt>Grid</dt>
@@ -62,10 +64,24 @@
     <dd>Makes the pinned element the baseline. Pin another to see only what differs.</dd>
     <dt>Copy link</dt>
     <dd>A link that reopens this page with the element pinned. Paste it in a ticket.</dd>
+    <dt>HEX · RGB · HSL</dt>
+    <dd>In the Colors block: switch how colours are shown and copied. The Text row also shows its contrast ratio and WCAG level against the background behind it.</dd>
+    <dt>Copy CSS</dt>
+    <dd>Beside the element's size: copies the styles it declares (its rules and inline style, with your edits) as CSS, one declaration per line.</dd>
+    <dt>Asset</dt>
+    <dd>For an image, an inline SVG or a background image: its size and name, with buttons to copy the address (or the SVG's markup) and to download an image.</dd>
+    <dt>States</dt>
+    <dd>What the element's :hover, :focus, :active, :disabled and :checked rules change, read from the stylesheets. Click a row to copy <code>property: value</code>.</dd>
+    <dt>Motion</dt>
+    <dd>Double-click a transition's duration or easing to edit that one entry; double-click “Transition” to edit the whole property. Animations are read only.</dd>
+    <dt>Effects</dt>
+    <dd>Shadows, filters and gradients, a part per row. Click a row to copy that part as CSS, the label to copy the whole property, double-click the label to edit it as text.</dd>
     <dt>Pick colour</dt>
     <dd>Pick any pixel on screen and see which token has that colour.</dd>
     <dt>Breadcrumb</dt>
     <dd>Click the parent's name to pin the parent.</dd>
+    <dt>Grid: Distribute</dt>
+    <dd>On a grid whose tracks leave room: where the columns (justify-content) and the rows (align-content) sit in the grid. While a grid is pinned, its track lines are drawn on the page.</dd>
     <dt>Direction · Justify · Align</dt>
     <dd>On a flex container: click a button to set it. Justify moves the items along the direction (justify-content), Align across it (align-items); the drawings turn with the direction. The last Justify button opens space-between, space-around and space-evenly.</dd>
     <dt>Justify · Align on a grid</dt>

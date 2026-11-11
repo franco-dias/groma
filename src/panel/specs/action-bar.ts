@@ -11,28 +11,7 @@ import { copyOnClick } from "../copy";
 import { saveLayout } from "../layout";
 import { part } from "../tab";
 import { stopComparing } from "./compare-block";
-
-/** What a row of exclusive choices reads, and does when one is chosen. */
-type Choices = { current: () => string; choose: (value: string) => void };
-
-/** A row of exclusive choices; marks the one equal to `current()`. */
-function mountSegments(group: HTMLElement, { current, choose }: Choices): void {
-  const segments = Array.from(group.querySelectorAll<HTMLElement>(".segment"));
-  const show = (): void => {
-    segments.forEach((segment) => {
-      segment.setAttribute("aria-checked", String(segment.dataset.value === current()));
-    });
-    group.classList.toggle("is-on", group.querySelector('.is-on[aria-checked="true"]') !== null);
-  };
-  segments.forEach((segment) => {
-    segment.addEventListener("click", () => {
-      choose(segment.dataset.value ?? "");
-      show();
-      rerender();
-    });
-  });
-  show();
-}
+import { mountSegments } from "./segments";
 
 function mountSwitches(panel: HTMLElement): void {
   mountSegments(part(panel, '[data-option="unit"]'), {

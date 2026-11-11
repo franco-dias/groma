@@ -87,7 +87,8 @@ export const forEachPageRule = (visit: (rule: CSSStyleRule) => void): void =>
 export const forEachApplyingPageRule = (visit: (rule: CSSStyleRule) => void): void =>
   walkPageRules({ visit, entersGroup: groupApplies });
 
-function matchesSelector(element: Element, selector: string): boolean {
+/** Whether `element` matches `selector`; false for one this browser cannot match. */
+export function matchesSelector(element: Element, selector: string): boolean {
   try {
     return element.matches(selector);
   } catch {

@@ -386,7 +386,8 @@ button.crumb:hover {
   font: 400 11px/16px var(--ins-font-mono);
 }
 
-.badge {
+.badge,
+.level {
   flex: none;
   display: flex;
   align-items: center;
@@ -400,7 +401,8 @@ button.crumb:hover {
   font: 500 10px/14px var(--ins-font-sans);
 }
 
-.badge.is-warn {
+.badge.is-warn,
+.level.is-warn {
   color: var(--ins-warn);
   background: var(--ins-warn-bg);
   border-color: transparent;
@@ -788,6 +790,7 @@ button.crumb:hover {
  * turned to the axis it moves the items on.
  */
 .flex-control[data-prop="align-items"] .segment .icon,
+.flex-control[data-prop="align-content"] .segment .icon,
 .is-column .flex-control[data-prop="justify-content"] .segment .icon,
 .flex-control[data-prop="flex-direction"] [data-value="column"] .icon {
   transform: rotate(90deg);
@@ -928,4 +931,197 @@ button.crumb:hover {
   min-width: 0;
   max-width: 45%;
   color: var(--ins-fg-muted);
+}
+
+/* ── the colour format switch in the Colors block's head ── */
+.color-format .segment {
+  height: 16px;
+  padding: 0 var(--ins-s-3);
+  font: 500 10px/16px var(--ins-font-sans);
+}
+
+/* ── contrast under the Text colour; its level badge looks like the token badges ── */
+.contrast-line {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-3);
+  height: var(--ins-row-sm);
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+.contrast-line .value {
+  color: var(--ins-fg);
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+.level.is-ok {
+  color: var(--ins-ok);
+  background: var(--ins-ok-bg);
+  border-color: transparent;
+}
+
+/* ── effects: shadows, filters, gradients ── */
+.effect-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ins-s-1);
+  padding: var(--ins-s-2) 0;
+}
+
+.effect-group > * {
+  max-width: 100%;
+}
+
+.effect-label {
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+/* While it is a field, the label is as wide as the group: the whole property is a long text. */
+.effect-label.is-editing {
+  align-self: stretch;
+  color: var(--ins-fg);
+  font: 400 12px/16px var(--ins-font-mono);
+  overflow-wrap: anywhere;
+}
+
+.effect-row {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+
+.effect-line,
+.effect-stop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ins-s-3);
+  min-height: var(--ins-row-sm);
+  min-width: 0;
+  font: 400 12px/16px var(--ins-font-mono);
+}
+
+.effect-stop {
+  padding-left: var(--ins-s-4);
+}
+
+.effect-line .name {
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+.effect-line .hint,
+.effect-stop .hint,
+.effect-token .hint {
+  color: var(--ins-fg-muted);
+}
+
+.effect-token,
+.effect-declared {
+  padding-left: var(--ins-s-4);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+.effect-token .css-var {
+  color: var(--ins-token);
+  font-family: var(--ins-font-mono);
+}
+
+.effect-line.is-gradient {
+  flex-wrap: nowrap;
+}
+
+.gradient-strip {
+  flex: 1 1 auto;
+  min-width: var(--ins-s-7);
+  height: var(--ins-s-5);
+  border-radius: var(--ins-radius-xs);
+  background: var(--gradient), var(--ins-checker);
+  box-shadow: inset 0 0 0 1px var(--ins-swatch-ring);
+}
+
+.gradient-kind {
+  flex: none;
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-mono);
+}
+
+/* A long argument (a drop-shadow's) wraps inside the row instead of running past the panel. */
+.effect-line .value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* A token that is a shadow, drawn: a card with that shadow on a light tile. */
+.shadow-chip {
+  position: relative;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  overflow: hidden;
+  border-radius: var(--ins-radius-xs);
+  background: var(--ins-shadow-stage);
+}
+
+.shadow-chip::after {
+  content: "";
+  position: absolute;
+  inset: var(--ins-s-2);
+  background: var(--ins-shadow-card);
+  box-shadow: var(--shadow);
+}
+
+.token-item svg {
+  flex: none;
+  color: var(--ins-fg-muted);
+}
+
+/* ── asset: a file's preview, name, size and buttons ── */
+.asset-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ins-s-4);
+  padding: var(--ins-s-3) 0;
+}
+
+.asset-preview {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: var(--ins-s-7);
+  padding: var(--ins-s-1);
+  background: var(--ins-checker);
+  border-radius: var(--ins-radius-sm);
+  box-shadow: inset 0 0 0 1px var(--ins-swatch-ring);
+}
+
+.asset-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ins-s-1);
+  min-width: 0;
+  flex: 1;
+}
+
+.asset-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 400 12px/16px var(--ins-font-mono);
+}
+
+.asset-size {
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-mono);
+  overflow-wrap: anywhere;
+}
+
+.asset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ins-s-3);
+  padding-top: var(--ins-s-2);
 }

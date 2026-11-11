@@ -21,7 +21,9 @@ import { type Config, configure, configureFromScriptTag } from "./config";
 import { replayOverrides } from "./edits/replay";
 import { startLauncher } from "./launcher";
 import { pinFromLink } from "./link";
+import { startNavigation } from "./navigate-keys";
 import { highlight, startOutlines } from "./outlines";
+import { startGridLines } from "./overlay/grid-lines";
 import { startHover } from "./overlay/hover";
 import { startLayerMenu } from "./overlay/layer-menu";
 import { startPanel } from "./panel/panel";
@@ -51,9 +53,11 @@ function start(): void {
   configureFromScriptTag();
   startOutlines();
   startPanel();
+  startGridLines();
   startHover();
   startLayerMenu();
   startLauncher();
+  startNavigation();
 
   // Saved edits are not put back here: the user does that from the panel,
   // which says when some are missing. A page can still call replayOverrides().
