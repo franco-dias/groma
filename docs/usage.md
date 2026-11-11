@@ -146,6 +146,53 @@ A page can talk to the inspector through `window.Groma`:
 | `configure(settings)` | Changes the [settings](#settings); with no argument, restores the defaults |
 
 ## The side panel: push or float
+## Hand your edits to a coding agent
+
+Change values in the All CSS tab, on as many elements as you like. For
+something a value cannot say ("make this sticky"), pin the element, open the
+Edits tab and write a note. The Edits tab lists it all as before → after;
+the eye shows the page without your edits, and the arrows undo and redo.
+
+"Copy edits" puts one Markdown text on the clipboard. Paste it into your
+agent's prompt. It looks like this:
+
+```markdown
+# Edits to apply
+
+These edits were made on the live page with Groma. …
+
+- Page: http://localhost:3000/pricing
+- Viewport: 1440 × 900
+
+## 1. Button
+
+- Selector: `#hero > button.cta`
+- Component: `Button` (`ui/Button.tsx`)
+- Text: "Get started"
+
+Edits:
+- `padding-top`: `12px` → `16px` (matches `--space-4`)
+- `color`: `rgb(0, 128, 0)` → `red`
+
+Note: keep it in view while the page scrolls
+```
+
+- "Before" is the computed value the page had: a width reads in pixels even
+  when the stylesheet says `50%`.
+- "matches" names the page's tokens that hold the new value, so the agent
+  can use the token. Colours match in any spelling; a length matches only
+  when it is written the same way (`1rem` does not match a token of `16px`).
+- "Before" is the value when you first edited the property. If you changed a
+  parent first, a child's "before" can already include that change (an
+  inherited text colour, for example).
+- On a page that sets `data-token-prefix`, only tokens with that prefix are
+  named. Without it, any variable with the same value is: a radius token can
+  be named for a gap. The text tells the agent to check.
+- The component and its source path are there when the page gives them (see
+  [Components](#components)). The text never names a line to edit.
+- A value the browser does not accept is not kept. `!important` after a
+  value works.
+
 
 The panel pushes the page aside by default, so it never covers what you are
 inspecting. Groma does this by adding the panel's width to the page's right
@@ -188,6 +235,12 @@ for the file again each time the canvas opens. Opening the file with
 ## Known limits
 
 - On the canvas, Space does not scroll the page: it is the key that moves the
+- On a page that renders after it loads, or again later, saved edits are put
+  back when you pin an element, not by themselves. A page can call
+  `Groma.replayOverrides()` after it renders to get them back at once.
+- A saved edit is found again by a selector that keeps the element's classes.
+  If a class comes and goes (`.is-active`), the edit shows as "Not on the page
+  now" while it is gone.
   canvas. The wheel still scrolls, Space still types in a field, and a tap of
   Space still presses a focused button or checkbox.
 - The canvas loads the page a second time. For a file opened from disk and a

@@ -69,7 +69,7 @@
   <div class="block-head"><h3>All CSS</h3></div>
   <dl class="reference">
     <dt>Type over a value</dt>
-    <dd>Changes it on the page. <kbd>Enter</kbd> or clicking away saves; <kbd>Esc</kbd> cancels.</dd>
+    <dd>Changes it on the page. <kbd>Enter</kbd> or clicking away saves; <kbd>Esc</kbd> cancels. A value the browser does not accept is dropped; “!important” after a value works.</dd>
     <dt><kbd>↑</kbd> <kbd>↓</kbd></dt>
     <dd>Change a number by 1. With <kbd>Shift</kbd> by 10, with <kbd data-key="alt"></kbd> by 0.1.</dd>
     <dt>↩ on a row</dt>
@@ -79,7 +79,25 @@
     <dt>Search</dt>
     <dd>Filters properties by name. “Hide defaults” off shows every property.</dd>
     <dt>Your edits</dt>
-    <dd>Are saved in this browser for this page and come back on reload. They never change the file.</dd>
+    <dd>Are saved in this browser for this page and come back on reload. On a page that renders late, pin any element to put them back. They never change the file.</dd>
+  </dl>
+</section>
+
+<section class="block">
+  <div class="block-head"><h3>Edits</h3></div>
+  <dl class="reference">
+    <dt>Edits tab</dt>
+    <dd>Everything you changed on this page, on any element, as before → after. Click an element's name to pin it.</dd>
+    <dt>Copy edits</dt>
+    <dd>Copies the whole list as a text for a coding agent: each element, how to find it, what changed, and the token that holds a new value when there is one.</dd>
+    <dt>Note</dt>
+    <dd>With an element pinned: write what should change, in your own words. It is saved when you click away and copied with your edits.</dd>
+    <dt>↩ on a line</dt>
+    <dd>Removes that edit or note.</dd>
+    <dt>Undo · redo</dt>
+    <dd>The two arrows. Also <kbd data-key="command"></kbd> <kbd>Z</kbd> and <kbd data-key="shift"></kbd> <kbd data-key="command"></kbd> <kbd>Z</kbd> after a click in the panel, outside a field. A reload keeps your edits but forgets the steps.</dd>
+    <dt>Eye</dt>
+    <dd>Shows the page without your edits; again to bring them back. They stay saved.</dd>
   </dl>
 </section>
 

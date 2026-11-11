@@ -2,22 +2,12 @@
  * The All CSS tab: every computed property of the pinned element.
  *
  * Values are editable. An edit is applied to the page at once, saved, and
- * replayed on the next load (see edits/overrides.ts). The top of the tab
- * edits the element's text or form value.
+ * replayed on the next load (see edits/changes.ts). The top of the tab
+ * edits the element's text or form value. The Edits tab lists every edit.
  */
 import { h } from "../dom";
-import {
-  applyContent,
-  applyStyle,
-  getContent,
-  hasSavedContent,
-  hasValue,
-  restoreContent,
-  restoreStyle,
-  saveContent,
-  savedStyles,
-  saveStyle,
-} from "../edits/overrides";
+import { CONTENT, edit } from "../edits/changes";
+import { getContent, hasSavedContent, hasValue, savedStyles } from "../edits/overrides";
 import { getSelector } from "../edits/selector";
 import { options } from "../options";
 import { syncOutlines } from "../outlines";
@@ -90,7 +80,7 @@ const readOnlyRow = (row: CssRow): HTMLElement => rowShell(row).rowEl;
 function editableRow(row: CssRow, el: Element, selector: string): HTMLElement {
   const { rowEl, valueEl } = rowShell(row);
   let shown = row.value;
-  let overridden = !!row.overridden;
+  const overridden = !!row.overridden;
   let nudged = false;
 
   valueEl.contentEditable = "true";
@@ -98,16 +88,9 @@ function editableRow(row: CssRow, el: Element, selector: string): HTMLElement {
   valueEl.dataset.row = (row.custom ? "custom:" : "") + row.name;
 
   /** Saves and applies a value. An empty value removes the edit. */
-  const commit = (value: string) => {
-    if (value) {
-      saveStyle(selector, row.name, value);
-      applyStyle(el, row.name, value);
-      overridden = true;
-      shown = value;
-    } else if (overridden) {
-      saveStyle(selector, row.name, null);
-      restoreStyle(el, row.name);
-    }
+  const commit = (value: string, nudge = false) => {
+    // A value the browser rejects is not kept: the row goes back to what it showed.
+    if (edit(selector, row.name, value || null, el, nudge) && value) shown = value;
   };
 
   valueEl.addEventListener("focus", () => {
@@ -140,7 +123,7 @@ function editableRow(row: CssRow, el: Element, selector: string): HTMLElement {
       const next = parseFloat(number[1]) + (e.key === "ArrowUp" ? step : -step);
       const decimals = step === 0.1 || number[1].includes(".") ? 1 : 0;
       valueEl.textContent = next.toFixed(decimals) + number[2];
-      commit(valueEl.textContent);
+      commit(valueEl.textContent, true);
       nudged = true;
     }
   });
@@ -186,11 +169,9 @@ function contentEditor(el: Element, selector: string): HTMLElement {
   editor.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
-      const content = editor.textContent ?? "";
-      applyContent(el, content);
-      saveContent(selector, content);
-      reset.hidden = false;
+      edit(selector, CONTENT, editor.textContent ?? "", el);
       editor.blur();
+      rerender();
     }
     if (e.key === "Escape") {
       editor.textContent = getContent(el);
@@ -198,8 +179,7 @@ function contentEditor(el: Element, selector: string): HTMLElement {
     }
   });
   reset.addEventListener("click", () => {
-    saveContent(selector, null);
-    restoreContent(el);
+    edit(selector, CONTENT, null, el);
     rerender();
   });
   return section;

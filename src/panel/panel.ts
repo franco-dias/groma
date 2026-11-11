@@ -4,13 +4,14 @@
  * panel") and a resize handle.
  *
  * It slides in when an element is pinned and out when it closes. Alt + Shift + G opens it with nothing
- * pinned, to reach the menu and the reference, and closes it again.
+ * pinned, to reach the menu, the reference and the Edits tab, and closes it again.
  *
  * It either pushes the page aside by its own width (the default) or floats
  * over the page; the user switches in the » menu and the choice is remembered.
  */
 import { isCanvasOn, setCanvas } from "../canvas/canvas";
 import { h } from "../dom";
+import { replayOverrides } from "../edits/overrides";
 import { elementName } from "../element-name";
 import { options } from "../options";
 import { onPage, onPageView } from "../page";
@@ -20,6 +21,7 @@ import { mount, setRootVariable } from "../root";
 import { onSelection, type SelectionChange, unpin } from "../selection";
 import { changesTab } from "./changes-tab";
 import { cssTab } from "./css-tab";
+import { editsTab } from "./edits-tab";
 import { layersTab } from "./layers-tab";
 import { loadLayout, saveLayout, setTab } from "./layout";
 import template from "./panel.html?raw";
@@ -27,7 +29,7 @@ import { referenceTab } from "./reference-tab";
 import { specsTab } from "./specs-tab";
 import { part, type Tab } from "./tab";
 
-const TABS: Tab[] = [specsTab, cssTab, layersTab, changesTab, referenceTab];
+const TABS: Tab[] = [specsTab, cssTab, layersTab, editsTab, changesTab, referenceTab];
 const MIN_WIDTH = 320;
 const MAX_WIDTH = 560;
 
@@ -172,8 +174,13 @@ function showPanel(el: Element | null, change: SelectionChange): void {
   panel.classList.remove(CLOSED);
   panel.classList.toggle("is-empty", el === null);
   part(panel, ".rail .name").textContent = el ? `Inspect · ${elementName(el)}` : "Inspect";
-  if (change === "pinned") setCollapsed(panel, false);
-  if (el) TABS.forEach((tab) => tab.render(el, change));
+  if (change === "pinned") {
+    setCollapsed(panel, false);
+    // A page that renders late, or again, may not carry the saved edits any
+    // more; what the tabs list as edited must be what the page shows.
+    replayOverrides();
+  }
+  TABS.forEach((tab) => (el ? tab.render(el, change) : tab.renderUnpinned?.()));
   reportDock();
 }
 

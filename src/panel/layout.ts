@@ -4,7 +4,7 @@ import { options } from "../options";
 
 const LAYOUT_KEY = "__groma_panel";
 /** The tabs worth reopening on. The Reference tab is a detour, not a place to start. */
-const TAB_IDS = ["specs", "css", "layers", "changes"];
+const TAB_IDS = ["specs", "css", "layers", "edits", "changes"];
 
 interface Layout {
   width: string;

@@ -78,7 +78,7 @@ Start at [src/main.ts](../src/main.ts): it only starts the features.
 | `src/config.ts` | The settings a page can give the inspector |
 | `src/specs/` | What the Specs tab knows: sections, tokens, colours, units, sizing, motion |
 | `src/specs/components/` | One reader per way a page can name its components |
-| `src/edits/` | Saved edits: selectors, storage, apply and replay |
+| `src/edits/` | The user's edits: selectors, storage, apply and replay, the list with undo (`changes.ts`), the text "Copy edits" writes (`handoff.ts`) |
 | `src/export-diff.ts` | Comparing two Claude Design exports |
 | `src/icons.ts` | The icons, as SVG drawings |
 | `src/styles/` | The stylesheets, one per area; `tokens.css` holds every colour and size |
