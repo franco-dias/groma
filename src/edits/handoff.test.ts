@@ -104,3 +104,52 @@ describe("the text Copy edits writes", () => {
     expect(text).toContain("- The page did not have this element when the edits were copied.");
   });
 });
+
+describe("the 1.0 contract: the whole text, line by line", () => {
+  it("keeps its headings and the shape of its lines", () => {
+    const text = formatHandoff(page, [
+      element({
+        name: "Button",
+        component: { name: "Button", sourcePath: "ui/Button.tsx", inside: false },
+        text: "Get started",
+        values: [
+          { prop: "padding-top", before: "12px", after: "16px", tokens: ["--space-4"] },
+          { prop: "", before: undefined, after: "Go", tokens: [] },
+        ],
+        note: "Make this sticky",
+      }),
+      element({ name: "p", selector: "main > p", onPage: false, values: [], note: "" }),
+    ]);
+    expect(text).toBe(
+      [
+        "# Edits to apply",
+        "",
+        "These edits were made on the live page with Groma. Each line shows the value the page had and the value it should have. " +
+          "The selectors describe the rendered page, not the source files. " +
+          "Where one of the page's CSS variables holds a new value, it is named after the value: " +
+          "use it when it is the right token for that property.",
+        "",
+        "- Page: http://localhost:4777/page.html",
+        "- Viewport: 1280 × 800",
+        "",
+        "## 1. Button",
+        "",
+        "- Selector: `#hero > button.cta`",
+        "- Component: `Button` (`ui/Button.tsx`)",
+        '- Text: "Get started"',
+        "",
+        "Edits:",
+        "- `padding-top`: `12px` → `16px` (matches `--space-4`)",
+        '- Content: "Go" (the value before is not known)',
+        "",
+        "Note: Make this sticky",
+        "",
+        "## 2. p",
+        "",
+        "- Selector: `main > p`",
+        "- The page did not have this element when the edits were copied.",
+        "",
+      ].join("\n"),
+    );
+  });
+});

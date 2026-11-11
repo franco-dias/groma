@@ -95,6 +95,13 @@ The format is in [docs/usage.md](docs/usage.md#hand-your-edits-to-a-coding-agent
 
 Edits are saved in your browser and never change the file.
 
+To skip the paste, the `gromajs` command can also hand the edits to your
+coding agent as you make them: add `npx gromajs mcp` to the agent as an MCP
+server, open the page with `npx gromajs page.html` (or add the bridge tag to
+your app's dev build), and ask the agent to apply the edits from Groma. It
+runs only on your machine; see
+[the bridge](docs/usage.md#let-an-agent-read-the-edits-live-the-bridge).
+
 ## Try it
 
 Open any HTML file with Groma attached. You need
@@ -145,6 +152,7 @@ other Chromium browsers. Groma is on npm, so you can also load it from a CDN wit
 | ------------------------------------------ | ----------------------------------------------------------------------------------------- |
 | [docs/usage.md](docs/usage.md)             | Command options, settings, how components are found, the API for host pages, known limits |
 | [docs/features.md](docs/features.md)       | Every feature and the rules it follows                                                    |
+| [docs/contract.md](docs/contract.md)       | What is frozen from 1.0: the API, the command, the bridge and the edits text              |
 | [docs/development.md](docs/development.md) | Scripts, tests, how the code is organised, releasing                                      |
 | [AGENTS.md](AGENTS.md)                     | The rules for changing the code, for AI agents and people                                 |
 | [CHANGELOG.md](CHANGELOG.md)               | What changed in each version                                                              |

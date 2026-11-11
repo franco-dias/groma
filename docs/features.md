@@ -519,9 +519,23 @@ each a "reader" in `src/specs/components/`, tried in this order:
    attributes in the markup. Explicit, so it wins.
 2. `react.ts`: React's internals, plus the `@ds-bundle` header a Claude
    Design export embeds for names and source paths.
-3. `custom-element.ts`: a tag with a hyphen is a component; its attributes
+3. `vue.ts`: Vue 3 (`__vueParentComponent`, the component whose template
+   renders the element: name from `__name` or `name`, else the file's name;
+   props; `__file` as the source) and Vue 2 (`__vue__` on a component's root,
+   searched upward). Development builds.
+4. `svelte.ts`: Svelte development builds (`__svelte_meta`): the component is
+   named after the file the element was written in, and that file is its
+   source. No props, and no line is shown.
+5. `angular.ts`: Angular development mode, through the `ng` debug API on the
+   page's window: `getComponent` for a host element, else `getOwningComponent`
+   ("Inside component"), named by its class. Props are the inputs
+   `getDirectiveMetadata` lists, with a signal input called for its value;
+   without that call there are none. No source file.
+6. `custom-element.ts`: a tag with a hyphen is a component; its attributes
    are its props. It looks at most five levels up, so an app shell far
-   above an element is not reported as its component.
+   above an element is not reported as its component. It is last, so an
+   Angular host such as `app-user-card` is named by the Angular reader on an
+   Angular page and by this one anywhere else.
 
 A reader returns null when it has nothing to say and must never throw. To
 support another framework, add a reader and list it in
@@ -891,6 +905,12 @@ hand it to whoever changes the source: a coding agent, or a person.
   again. While it is on, `Groma.replayOverrides()` does nothing, so a page
   that re-renders does not bring the edits back. Making an edit switches it
   off first.
+- **`Groma.edits()` and `Groma.onEdits(listener)`** give a script on the page
+  that same text, and tell it each time the text changes (an edit, undo or
+  redo, a discard, a note; showing the original is not a change). The
+  `gromajs` command's bridge client uses them to hand the edits to a coding
+  agent (see [usage.md](usage.md#let-an-agent-read-the-edits-live-the-bridge)).
+  Code: `src/edits/agent-api.ts`, `changed.ts`. Tests: `tests/agent-api.test.ts`.
 - **Copy edits** copies one Markdown text: the page's address, the viewport
   size, then per element its selector, its component and source path when
   the page gives them, the start of its text, each edit as before → after,

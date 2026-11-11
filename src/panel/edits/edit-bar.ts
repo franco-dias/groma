@@ -9,7 +9,7 @@ import { isOriginalShown, showEdits, showOriginal } from "../../edits/replay";
 import { copyOnClick } from "../copy";
 import { part } from "../tab";
 import { mountApplyBar, updateApplyBar } from "./apply-bar";
-import { handoffText } from "./edit-handoff";
+import { handoffText } from "../../edits/handoff-text";
 
 const action = (panel: HTMLElement, name: string): HTMLButtonElement =>
   part<HTMLButtonElement>(panel, `[data-action="${name}"]`);

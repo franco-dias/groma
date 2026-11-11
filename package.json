@@ -28,8 +28,18 @@
   "files": [
     "dist",
     "scripts/inspect.mjs",
+    "scripts/serve-page.mjs",
     "scripts/inject.mjs",
-    "scripts/content-types.mjs"
+    "scripts/content-types.mjs",
+    "scripts/bridge.mjs",
+    "scripts/bridge-http.mjs",
+    "scripts/bridge-origin.mjs",
+    "scripts/bridge-store.mjs",
+    "scripts/bridge-text.mjs",
+    "scripts/bridge-client.js",
+    "scripts/mcp.mjs",
+    "scripts/mcp-protocol.mjs",
+    "scripts/mcp-tools.mjs"
   ],
   "type": "module",
   "main": "./dist/groma.js",
