@@ -78,9 +78,12 @@ The side panel answers five questions:
 ## Edit the page, then hand the edits to an agent
 
 Change the page where you see it: double-click a size, a gap, a colour or a
-side of the box in the Specs tab; click the buttons that set a flex or grid
-container's direction and alignment; choose fixed, hug or fill for a width
-or a height. Write a note on an element for what a value cannot say.
+side of the box in the Specs tab, or drag a number sideways to change it;
+click the buttons that set a flex or grid container's direction and
+alignment; choose fixed, hug or fill for a width or a height. While you type
+a value, the page's design tokens that fit it are offered. Tick "Edit text
+inline" at the foot of the panel and double-click any text on the page to
+rewrite it in place. Write a note on an element for what a value cannot say.
 
 "Copy edits" in the Edits tab puts it all on the clipboard as one text for a
 coding agent: the page, and per element its selector, its component and
@@ -131,7 +134,7 @@ It works on a file opened from disk and on a served page, in Chrome and
 other Chromium browsers. Groma is on npm, so you can also load it from a CDN with no copy step:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@0.7.1/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@0.8.0/dist/groma.js"></script>
 ```
 
 ## Learn more

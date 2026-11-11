@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.8.0 (2026-11-11)
 
 - Fixed: the Specs tab no longer reads a declaration from an `@media` or
   `@supports` block that does not apply now. A mobile-only width, grid
@@ -43,6 +43,7 @@ All notable changes to this package are recorded here. Versions follow
 - New: while you type a value in the Specs tab, the page's tokens that fit
   (colours for a colour, lengths for a size) are listed under the field,
   filtered by what you typed. Choosing one writes `var(--token)`.
+- Size: the gzipped script goes from 43.8 to 48.3 KB.
 
 ## 0.7.1 (2026-11-11)
 
