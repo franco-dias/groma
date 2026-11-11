@@ -3,6 +3,12 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## Unreleased
+
+- Changed: the tagline is now "Survey any HTML design before you build it." in
+  the README, the package description and the landing page. Groma works on any
+  HTML page, not only on designs made with AI.
+
 ## 0.6.2 (2026-11-11)
 
 No code changes: the script is identical to 0.6.1. This release updates what
