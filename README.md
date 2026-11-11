@@ -89,17 +89,8 @@ or newer):
 
 ```bash
 git clone https://github.com/franco-dias/groma.git
-```
-
-```bash
 cd groma
-```
-
-```bash
 npm install
-```
-
-```bash
 npm run serve
 ```
 
