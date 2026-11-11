@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.9.0 (2026-11-11)
 
 - New: colour format. A HEX | RGB | HSL switch in the Colors block of the
   Specs tab shows every colour, and copies it, as `#2F6BFF`,
@@ -58,6 +58,7 @@ All notable changes to this package are recorded here. Versions follow
   double-click on the label edits it. A colour that equals a token reads
   "matches token". Changed: the Layout block no longer shows Shadow and
   Gradient as raw text.
+- Size: the gzipped script goes from 48.3 to 57.3 KB.
 
 ## 0.8.0 (2026-11-11)
 

@@ -65,9 +65,11 @@ by its edges, to check the layout at any width.
 The side panel answers five questions:
 
 - **Specs**: what do I need to build this? Size and sizing intent, a box
-  diagram, colours with their design tokens, typography, motion, and the
-  component the element belongs to. A click copies any value; a double-click
-  edits it.
+  diagram, colours with their design tokens and contrast, typography,
+  shadows and gradients, motion, what each state (`:hover`, `:focus`…)
+  changes, an image's or SVG's details, and the component the element
+  belongs to. A click copies any value, "Copy CSS" copies the declared
+  styles, and a double-click edits a value.
 - **All CSS**: what is every computed property? Values are editable, to try
   a change on the spot.
 - **Layers**: where does this sit in the tree?
@@ -134,7 +136,7 @@ It works on a file opened from disk and on a served page, in Chrome and
 other Chromium browsers. Groma is on npm, so you can also load it from a CDN with no copy step:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@0.8.0/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@0.9.0/dist/groma.js"></script>
 ```
 
 ## Learn more
