@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { diffExports, type ExportData, parseExport } from "./export-diff";
+import { diffExports, type ExportData, findExportInHtml } from "./export-diff";
 
 const current: ExportData = {
   exported: "Nov 9, 2026",
@@ -28,9 +28,7 @@ const older: ExportData = {
 describe("diffExports", () => {
   it("lists changed, added and removed boards", () => {
     expect(diffExports(older, current)).toEqual({
-      changed: [
-        { title: "01 · Card", id: "card", added: ["<p>new line</p>"], removed: ["<p>old line</p>"] },
-      ],
+      changed: [{ title: "01 · Card", id: "card", added: ["<p>new line</p>"], removed: ["<p>old line</p>"] }],
       added: ["02 · Chip"],
       removed: ["99 · Gone"],
     });
@@ -41,14 +39,16 @@ describe("diffExports", () => {
   });
 });
 
-describe("parseExport", () => {
+describe("findExportInHtml", () => {
   it("reads the data an export embeds", () => {
     const html = `<html><script type="application/json" id="dc-data">${JSON.stringify(current)}</script></html>`;
-    expect(parseExport(html)).toEqual(current);
+    expect(findExportInHtml(html)).toEqual(current);
   });
 
   it("rejects files that are not exports", () => {
-    expect(parseExport("<html>hello</html>")).toBeNull();
-    expect(parseExport('<script type="application/json" id="dc-data">{"boards": 1}</script>')).toBeNull();
+    expect(findExportInHtml("<html>hello</html>")).toBeUndefined();
+    expect(
+      findExportInHtml('<script type="application/json" id="dc-data">{"boards": 1}</script>'),
+    ).toBeUndefined();
   });
 });

@@ -3,6 +3,15 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 0.7.1 (2026-11-11)
+
+- Internal: the code now follows one written style, checked by a formatter
+  (oxfmt) and a linter (oxlint): small functions, small files, no flags that
+  switch behaviour. The Specs tab, the canvas and the edits code are split
+  into one module per job. Nothing changes in what the inspector does. It
+  adds 4.2 KB to the gzipped script (39.6 → 43.8 KB): many small functions
+  and named parameters do not shrink as far as a few long ones.
+
 ## 0.7.0 (2026-11-11)
 
 - Changed: saved edits are no longer put back on the page by themselves, on

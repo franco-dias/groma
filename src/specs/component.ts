@@ -15,23 +15,28 @@ export type { ComponentInfo };
 /** Most explicit first: what the page declares, then what a framework knows, then the markup itself. */
 const READERS: ComponentReader[] = [declaredComponent, reactComponent, customElement];
 
-/** The component around an element, or null when the page does not say. */
-export function componentOf(el: Element): ComponentInfo | null {
-  for (const read of READERS) {
-    try {
-      const component = read(el);
-      if (component) return component;
-    } catch {
-      // A reader that trips over a page's internals must not break the panel.
-    }
+/** The reader's answer, or nothing when it trips over a page's internals: that must not break the panel. */
+function readSafely(read: ComponentReader, element: Element): ComponentInfo | undefined {
+  try {
+    return read(element);
+  } catch {
+    return undefined;
   }
-  return null;
 }
 
-export interface ComponentProp {
-  name: string;
-  value: string;
+function firstComponent([read, ...others]: ComponentReader[], element: Element): ComponentInfo | undefined {
+  if (!read) return undefined;
+  return readSafely(read, element) ?? firstComponent(others, element);
 }
+
+/** The component around an element, or undefined when the page does not say. */
+export const findComponent = (element: Element): ComponentInfo | undefined =>
+  firstComponent(READERS, element);
+
+export type ComponentProp = { name: string; value: string };
+
+const HIDDEN_PROPS = ["children", "className", "style"];
+const SHOWN_TYPES = ["string", "number", "boolean"];
 
 /**
  * The props the design passes to a component, as text. Only text, numbers
@@ -43,7 +48,7 @@ export interface ComponentProp {
  */
 export function componentProps({ props }: ComponentInfo): ComponentProp[] {
   return Object.entries(props)
-    .filter(([name]) => !["children", "className", "style"].includes(name))
-    .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
+    .filter(([name]) => !HIDDEN_PROPS.includes(name))
+    .filter(([, value]) => SHOWN_TYPES.includes(typeof value))
     .map(([name, value]) => ({ name, value: String(value) }));
 }

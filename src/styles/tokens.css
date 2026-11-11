@@ -134,9 +134,7 @@ kbd {
   width: 12px;
   height: 12px;
   border-radius: var(--ins-radius-xs);
-  background:
-    linear-gradient(var(--swatch), var(--swatch)),
-    var(--ins-checker);
+  background: linear-gradient(var(--swatch), var(--swatch)), var(--ins-checker);
   box-shadow: inset 0 0 0 1px var(--ins-swatch-ring);
 }
 

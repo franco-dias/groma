@@ -18,7 +18,7 @@ It has no runtime dependencies and ships as a single file.
   <img src="docs/images/groma-inspect.png" width="800" alt="Groma on a product page. The side panel shows the pinned button's component and props, its box model and the design token behind each color, and a red line marks the 12 pixel distance to the next button.">
 </p>
 
-> A *groma* was the Roman surveyor's instrument: a staff with a cross and
+> A _groma_ was the Roman surveyor's instrument: a staff with a cross and
 > plumb lines, used to lay out straight lines and right angles before roads
 > and cities were built. This one does the same job on a web page.
 
@@ -46,13 +46,13 @@ import, the distance to the next element.
 
 ## What it does
 
-| Keys | What happens |
-| --- | --- |
-| Alt + hover | The hovered element's box model and a chip with its name, size and position |
-| Alt + click | Pins the element and opens the side panel |
-| Alt + hover, with an element pinned | Distances from the pinned element, in red |
-| Alt + right-click | A menu of every layer under the pointer |
-| Alt + Shift + G | Opens the side panel with nothing pinned, and closes it |
+| Keys                                | What happens                                                                |
+| ----------------------------------- | --------------------------------------------------------------------------- |
+| Alt + hover                         | The hovered element's box model and a chip with its name, size and position |
+| Alt + click                         | Pins the element and opens the side panel                                   |
+| Alt + hover, with an element pinned | Distances from the pinned element, in red                                   |
+| Alt + right-click                   | A menu of every layer under the pointer                                     |
+| Alt + Shift + G                     | Opens the side panel with nothing pinned, and closes it                     |
 
 A pill at the bottom right locks inspect mode on, so none of this needs Alt.
 The panel's » menu can also show the page on a canvas: in a frame you resize
@@ -131,18 +131,18 @@ It works on a file opened from disk and on a served page, in Chrome and
 other Chromium browsers. Groma is on npm, so you can also load it from a CDN with no copy step:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@0.7.0/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@0.7.1/dist/groma.js"></script>
 ```
 
 ## Learn more
 
-| Read | For |
-| --- | --- |
-| [docs/usage.md](docs/usage.md) | Command options, settings, how components are found, the API for host pages, known limits |
-| [docs/features.md](docs/features.md) | Every feature and the rules it follows |
-| [docs/development.md](docs/development.md) | Scripts, tests, how the code is organised, releasing |
-| [AGENTS.md](AGENTS.md) | The rules for changing the code, for AI agents and people |
-| [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
+| Read                                       | For                                                                                       |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| [docs/usage.md](docs/usage.md)             | Command options, settings, how components are found, the API for host pages, known limits |
+| [docs/features.md](docs/features.md)       | Every feature and the rules it follows                                                    |
+| [docs/development.md](docs/development.md) | Scripts, tests, how the code is organised, releasing                                      |
+| [AGENTS.md](AGENTS.md)                     | The rules for changing the code, for AI agents and people                                 |
+| [CHANGELOG.md](CHANGELOG.md)               | What changed in each version                                                              |
 
 ## Licence
 

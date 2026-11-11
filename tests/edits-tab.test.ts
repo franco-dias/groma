@@ -2,11 +2,12 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   all,
   clipboard,
-  el,
+  getElement,
   inspector,
   openTab,
   page,
   pressKey,
+  pressShortcut,
   reset,
   texts,
   typeOver,
@@ -21,8 +22,8 @@ const rows = (): string[] => texts(".edit-row");
 const shown = (selector: string): boolean => getComputedStyle(ui(selector)!).display !== "none";
 
 /** Pins an element and changes one of its properties in the All CSS tab. */
-function editStyle(selector: string, property: string, value: string): HTMLElement {
-  const target = el(selector);
+function editStyle(selector: string, { property, value }: { property: string; value: string }): HTMLElement {
+  const target = getElement(selector);
   inspector().pin(target);
   openTab("css");
   typeOver(field(property), value);
@@ -57,8 +58,8 @@ beforeEach(() => {
 
 describe("the list of edits", () => {
   it("lists every edit on the page as before → after, whichever element is pinned", () => {
-    editStyle(".title", "padding-top", "16px");
-    editStyle(".text", "color", "red");
+    editStyle(".title", { property: "padding-top", value: "16px" });
+    editStyle(".text", { property: "color", value: "red" });
     openTab("edits");
 
     expect(texts(".edited-name")).toEqual(["h2", "Lead"]);
@@ -67,7 +68,7 @@ describe("the list of edits", () => {
   });
 
   it("removes one edit with its ↩ and puts back the page's own value", () => {
-    const title = editStyle(".title", "padding-top", "16px");
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
     openTab("edits");
     ui(".edit-row .reset")!.click();
 
@@ -77,24 +78,24 @@ describe("the list of edits", () => {
   });
 
   it("pins an element from the list", () => {
-    const title = editStyle(".title", "padding-top", "16px");
-    inspector().pin(el(".text"));
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
+    inspector().pin(getElement(".text"));
     openTab("edits");
     ui(".edited-head")!.click();
     expect(inspector().pinnedElement()).toBe(title);
   });
 
   it("lists edited content with the text the page had", () => {
-    inspector().pin(el(".title"));
+    inspector().pin(getElement(".title"));
     openTab("css");
     ui(".editor")!.textContent = "New title";
-    pressKey(ui(".editor")!, "Enter", { ctrlKey: true });
+    pressShortcut(ui(".editor")!, { key: "Enter", ctrlKey: true });
     openTab("edits");
     expect(rows()).toEqual(["contentTitle → New title↩"]);
   });
 
   it("shows while the panel is open with nothing pinned", () => {
-    editStyle(".title", "padding-top", "16px");
+    editStyle(".title", { property: "padding-top", value: "16px" });
     openTab("edits");
     ui(".close")!.click();
     document.dispatchEvent(
@@ -110,7 +111,7 @@ describe("the list of edits", () => {
 
 describe("the original page", () => {
   it("shows the page without the edits and brings them back, keeping them saved", () => {
-    const title = editStyle(".title", "padding-top", "16px");
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
     openTab("edits");
 
     action("original").click();
@@ -127,7 +128,7 @@ describe("the original page", () => {
   });
 
   it("goes back to the edited page when another edit is made", () => {
-    const title = editStyle(".title", "padding-top", "16px");
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
     openTab("edits");
     action("original").click();
     openTab("css");
@@ -140,7 +141,7 @@ describe("the original page", () => {
 
 describe("undo and redo", () => {
   it("undoes edits last first, and redoes them", () => {
-    const title = editStyle(".title", "padding-top", "16px");
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
     typeOver(field("color"), "red");
     openTab("edits");
 
@@ -160,7 +161,7 @@ describe("undo and redo", () => {
   });
 
   it("brings back an edit that was reset", () => {
-    const title = editStyle(".title", "padding-top", "16px");
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
     openTab("edits");
     ui(".edit-row .reset")!.click();
     action("undo").click();
@@ -169,7 +170,7 @@ describe("undo and redo", () => {
   });
 
   it("undoes a run of arrow-key nudges in one step", () => {
-    const title = el(".title");
+    const title = getElement(".title");
     inspector().pin(title);
     openTab("css");
     pressKey(field("padding-top"), "ArrowUp");
@@ -184,36 +185,36 @@ describe("undo and redo", () => {
   });
 
   it("answers Ctrl/⌘ + Z in the panel, but not in a field that is being typed in", () => {
-    const title = editStyle(".title", "padding-top", "16px");
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
     openTab("edits");
 
-    pressKey(ui(".note-field")!, "z", { code: "KeyZ", ctrlKey: true });
+    pressShortcut(ui(".note-field")!, { key: "z", code: "KeyZ", ctrlKey: true });
     expect(getComputedStyle(title).paddingTop).toBe("16px");
 
-    pressKey(ui(".tab-bar")!, "z", { code: "KeyZ", ctrlKey: true });
+    pressShortcut(ui(".tab-bar")!, { key: "z", code: "KeyZ", ctrlKey: true });
     expect(getComputedStyle(title).paddingTop).toBe("12px");
-    pressKey(ui(".tab-bar")!, "z", { code: "KeyZ", ctrlKey: true, shiftKey: true });
+    pressShortcut(ui(".tab-bar")!, { key: "z", code: "KeyZ", ctrlKey: true, shiftKey: true });
     expect(getComputedStyle(title).paddingTop).toBe("16px");
   });
 });
 
 describe("notes", () => {
   it("keeps a note on the pinned element and lists it, with no edit to the page", () => {
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".text"));
     writeNote("Make this sticky");
 
     expect(texts(".edited-name")).toEqual(["Lead"]);
     expect(rows()).toEqual(["noteMake this sticky↩"]);
-    expect(el(".text").getAttribute("style")).toBeNull();
+    expect(getElement(".text").getAttribute("style")).toBeNull();
 
     // The note is still there when the element is pinned again.
-    inspector().pin(el(".title"));
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".title"));
+    inspector().pin(getElement(".text"));
     expect(ui(".note-field")!.textContent).toBe("Make this sticky");
   });
 
   it("is removed by its ↩, by clearing it, and by undo", () => {
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".text"));
     writeNote("Make this sticky");
     ui(".edit-row.is-note .reset")!.click();
     expect(rows()).toEqual([]);
@@ -227,15 +228,15 @@ describe("notes", () => {
 
 describe("Copy edits", () => {
   it("is off until there is something to copy", () => {
-    inspector().pin(el(".title"));
+    inspector().pin(getElement(".title"));
     openTab("edits");
     expect(action("copy-edits").disabled).toBe(true);
     expect(action("original").disabled).toBe(true);
   });
 
   it("copies every edit with its element, before → after, and the page", async () => {
-    editStyle(".title", "padding-top", "20px");
-    inspector().pin(el(".text"));
+    editStyle(".title", { property: "padding-top", value: "20px" });
+    inspector().pin(getElement(".text"));
     writeNote("Make this sticky");
 
     const text = await copied();
@@ -251,7 +252,7 @@ describe("Copy edits", () => {
   });
 
   it("names the token that holds a new value, for a length and for a colour in another spelling", async () => {
-    editStyle(".title", "padding-top", "16px");
+    editStyle(".title", { property: "padding-top", value: "16px" });
     typeOver(field("color"), "red");
     typeOver(field("margin-top"), "7px");
 
@@ -262,7 +263,7 @@ describe("Copy edits", () => {
   });
 
   it("marks the button for a moment", async () => {
-    editStyle(".title", "padding-top", "16px");
+    editStyle(".title", { property: "padding-top", value: "16px" });
     openTab("edits");
     await copied();
     expect(all(".ghost-button.is-copied")).toHaveLength(1);
@@ -271,7 +272,7 @@ describe("Copy edits", () => {
 
 describe("values the browser rejects", () => {
   it("does not keep a value the page would ignore", () => {
-    const title = editStyle(".title", "padding-top", "banana");
+    const title = editStyle(".title", { property: "padding-top", value: "banana" });
     typeOver(field("color"), "notacolor");
     openTab("edits");
 
@@ -281,7 +282,7 @@ describe("values the browser rejects", () => {
   });
 
   it("keeps the edit that was there when a bad value is typed over it", () => {
-    const title = editStyle(".title", "padding-top", "16px");
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
     typeOver(field("padding-top"), "garbage");
     openTab("edits");
 
@@ -290,7 +291,7 @@ describe("values the browser rejects", () => {
   });
 
   it("takes !important as part of the value", () => {
-    const title = editStyle(".title", "padding-top", "30px !important");
+    const title = editStyle(".title", { property: "padding-top", value: "30px !important" });
     openTab("edits");
 
     expect(title.style.getPropertyValue("padding-top")).toBe("30px");
@@ -301,45 +302,53 @@ describe("values the browser rejects", () => {
 
 describe("leaving the page as it was", () => {
   it("leaves no empty style attribute after the only edit is undone", () => {
-    const title = editStyle(".title", "padding-top", "16px");
+    const title = editStyle(".title", { property: "padding-top", value: "16px" });
     openTab("edits");
     action("undo").click();
     expect(title.hasAttribute("style")).toBe(false);
   });
 });
 
+const bar = (): HTMLElement => ui(".apply-bar")!;
+
+const barShown = (): boolean => getComputedStyle(bar()).visibility === "visible";
+
 // Saved edits used to be put back when an element was pinned (and when the
 // page loaded). They no longer are: the panel says which edits of an earlier
 // visit are not on the page and the user applies them, so the test for the
 // pin is replaced by these.
 describe("edits saved on an earlier visit", () => {
-  const bar = (): HTMLElement => ui(".apply-bar")!;
-  const barShown = (): boolean => getComputedStyle(bar()).visibility === "visible";
   const path = location.pathname;
 
   /** Saves edits as an earlier visit left them: in storage, not on the page. */
-  function savedBefore(styles: Record<string, Record<string, string>>, content?: Record<string, string>): void {
+  function savedBefore(
+    styles: Record<string, Record<string, string>>,
+    content?: Record<string, string>,
+  ): void {
     localStorage.setItem("__groma_overrides:" + path, JSON.stringify(styles));
     if (content) localStorage.setItem("__groma_html:" + path, JSON.stringify(content));
   }
 
   it("shows no bar for the edits of this visit, even when the page draws the element again", () => {
-    editStyle(".title", "padding-top", "16px");
+    editStyle(".title", { property: "padding-top", value: "16px" });
     expect(barShown()).toBe(false);
 
-    const title = el(".title");
+    const title = getElement(".title");
     title.outerHTML = title.outerHTML.replace(/ style="[^"]*"/, "");
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".text"));
     expect(barShown()).toBe(false);
     // And nothing puts the edit back by itself.
-    expect(getComputedStyle(el(".title")).paddingTop).toBe("12px");
+    expect(getComputedStyle(getElement(".title")).paddingTop).toBe("12px");
   });
 
   it("says how many are not on the page, on every tab, and lists them", () => {
-    savedBefore({ "#fixture .title": { "padding-top": "21px", color: "red" }, "#fixture .text": { color: "blue" } });
-    inspector().pin(el(".text"));
+    savedBefore({
+      "#fixture .title": { "padding-top": "21px", color: "red" },
+      "#fixture .text": { color: "blue" },
+    });
+    inspector().pin(getElement(".text"));
 
-    expect(getComputedStyle(el(".title")).paddingTop).toBe("12px");
+    expect(getComputedStyle(getElement(".title")).paddingTop).toBe("12px");
     expect(barShown()).toBe(true);
     expect(texts(".apply-text")).toEqual(["3 saved edits are not on the page"]);
     expect(texts(".apply-bar button")).toEqual(["Discard", "Apply"]);
@@ -352,34 +361,34 @@ describe("edits saved on an earlier visit", () => {
 
   it("puts them back with Apply, and the bar goes", () => {
     savedBefore({ "#fixture .title": { "padding-top": "22px" } });
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".text"));
     expect(texts(".apply-text")).toEqual(["1 saved edit is not on the page"]);
 
     action("apply-edits").click();
-    expect(getComputedStyle(el(".title")).paddingTop).toBe("22px");
+    expect(getComputedStyle(getElement(".title")).paddingTop).toBe("22px");
     expect(barShown()).toBe(false);
   });
 
   it("removes them with Discard, keeps the edits of this visit, and undoes it in one step", () => {
     savedBefore({ "#fixture .title": { "padding-top": "23px", "margin-top": "9px" } });
-    editStyle(".text", "color", "blue");
+    editStyle(".text", { property: "color", value: "blue" });
     expect(barShown()).toBe(true);
 
     action("discard-edits").click();
     expect(barShown()).toBe(false);
     openTab("edits");
     expect(rows()).toEqual(["colorrgb(0, 0, 0) → blue↩"]);
-    expect(getComputedStyle(el(".text")).color).toBe("rgb(0, 0, 255)");
+    expect(getComputedStyle(getElement(".text")).color).toBe("rgb(0, 0, 255)");
 
     // One step back brings both discarded edits back, on the page.
     action("undo").click();
     expect(rows()).toHaveLength(3);
-    expect(getComputedStyle(el(".title")).paddingTop).toBe("23px");
+    expect(getComputedStyle(getElement(".title")).paddingTop).toBe("23px");
   });
 
   it("stays away while the user looks at the original page", () => {
     savedBefore({ "#fixture .title": { "padding-top": "24px" } });
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".text"));
     openTab("edits");
     expect(barShown()).toBe(true);
 
@@ -388,44 +397,45 @@ describe("edits saved on an earlier visit", () => {
 
     // Leaving that view puts every saved edit on the page: nothing is left to say.
     action("original").click();
-    expect(getComputedStyle(el(".title")).paddingTop).toBe("24px");
+    expect(getComputedStyle(getElement(".title")).paddingTop).toBe("24px");
     expect(barShown()).toBe(false);
   });
 
   it("does not count an edit whose element is not on the page", () => {
     savedBefore({ "#fixture .gone": { "padding-top": "25px" } });
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".text"));
     expect(barShown()).toBe(false);
   });
 
   it("counts saved content too", () => {
     savedBefore({}, { "#fixture .title": "Title from before" });
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".text"));
     expect(barShown()).toBe(true);
 
     action("apply-edits").click();
-    expect(el(".title").textContent).toBe("Title from before");
+    expect(getElement(".title").textContent).toBe("Title from before");
   });
 
   it("slides open and shut, and is out of reach while shut", () => {
     // With the panel open and nothing to say, the bar takes no room at all.
-    inspector().pin(el(".title"));
+    inspector().pin(getElement(".title"));
     expect(shown(".panel")).toBe(true);
     expect(bar().classList.contains("is-off")).toBe(true);
     expect(bar().getBoundingClientRect().height).toBe(0);
 
     savedBefore({ "#fixture .title": { "padding-top": "26px" } });
-    inspector().pin(el(".text"));
+    inspector().pin(getElement(".text"));
     expect(bar().getBoundingClientRect().height).toBeGreaterThan(30);
     expect(getComputedStyle(bar()).transitionProperty).toContain("grid-template-rows");
   });
 });
 
+const refuse = () => {
+  throw new Error("blocked");
+};
+
 describe("when the browser refuses to store", () => {
   const { getItem, setItem } = Storage.prototype;
-  const refuse = () => {
-    throw new Error("blocked");
-  };
   beforeEach(() => {
     Storage.prototype.getItem = refuse;
     Storage.prototype.setItem = refuse;
@@ -438,7 +448,7 @@ describe("when the browser refuses to store", () => {
   });
 
   it("still lists the edits, copies them and undoes them one step at a time", async () => {
-    const title = editStyle(".title", "padding-top", "3px");
+    const title = editStyle(".title", { property: "padding-top", value: "3px" });
     typeOver(field("padding-top"), "5px");
     openTab("edits");
 
@@ -458,7 +468,7 @@ describe("token names in the copied text", () => {
       <style>#fixture { --shadow-0: none; --zero: 0px; }</style>
       <h2 class="title" style="display: block; margin-top: 4px">Title</h2>
     `);
-    editStyle(".title", "margin-top", "0px");
+    editStyle(".title", { property: "margin-top", value: "0px" });
     typeOver(field("display"), "none");
 
     const text = await copied();
@@ -472,13 +482,13 @@ describe("token names in the copied text", () => {
       <h2 class="title">Title</h2>
     `);
     inspector().configure({ tokenPrefixes: ["--ds-"] });
-    editStyle(".title", "padding-top", "16px");
+    editStyle(".title", { property: "padding-top", value: "16px" });
     expect(await copied()).toContain("→ `16px` (matches `--ds-space-4`)\n");
   });
 
   it("reads the element's text as shown, without the styles inside it", async () => {
     page(`<div class="title"><style>.x { color: red; }</style>Shown text</div>`);
-    editStyle(".title", "padding-top", "16px");
+    editStyle(".title", { property: "padding-top", value: "16px" });
     expect(await copied()).toContain('- Text: "Shown text"');
   });
 });

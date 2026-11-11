@@ -19,6 +19,7 @@ import { createServer } from "node:http";
 import { basename, dirname, extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
+import { CONTENT_TYPES } from "./content-types.mjs";
 import { withInspector } from "./inject.mjs";
 
 const USAGE = `Usage: npx gromajs <file.html> [options]
@@ -64,34 +65,16 @@ if (!existsSync(join(dist, "groma.js"))) fail("Build the inspector first: npm ru
 const root = dirname(page);
 /** The inspector is served under a path no design file is likely to use. */
 const INSPECTOR_PATH = "/__groma/";
-const TYPES = {
-  ".html": "text/html; charset=utf-8",
-  ".js": "text/javascript; charset=utf-8",
-  ".mjs": "text/javascript; charset=utf-8",
-  ".jsx": "text/javascript; charset=utf-8",
-  ".css": "text/css; charset=utf-8",
-  ".json": "application/json",
-  ".map": "application/json",
-  ".svg": "image/svg+xml",
-  ".png": "image/png",
-  ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".gif": "image/gif",
-  ".webp": "image/webp",
-  ".woff": "font/woff",
-  ".woff2": "font/woff2",
-  ".ttf": "font/ttf",
-};
 
 function fail(message) {
   console.error(message);
   process.exit(1);
 }
 
-/** A file under `folder`, or null when the path tries to leave it. */
+/** A file under `folder`, or undefined when the path tries to leave it. */
 function inside(folder, relativePath) {
   const target = resolve(folder, "." + relativePath);
-  return target === folder || target.startsWith(folder + sep) ? target : null;
+  return target === folder || target.startsWith(folder + sep) ? target : undefined;
 }
 
 async function respond(pathname) {
@@ -104,10 +87,10 @@ async function respond(pathname) {
   if (!target) return { status: 403 };
 
   const body = await readFile(target);
-  const type = TYPES[extname(target).toLowerCase()] ?? "application/octet-stream";
+  const type = CONTENT_TYPES[extname(target).toLowerCase()] ?? "application/octet-stream";
   if (target !== page) return { body, type };
   const settings = { copy: flags.copy, "token-prefix": flags["token-prefix"] };
-  const html = withInspector(body.toString("utf8"), INSPECTOR_PATH + "groma.js", settings);
+  const html = withInspector(body.toString("utf8"), { src: INSPECTOR_PATH + "groma.js", settings });
   return { body: html, type };
 }
 

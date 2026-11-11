@@ -1,39 +1,48 @@
 {
   "name": "gromajs",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Groma: inspect any web page like a design file. A Figma-style inspector for web pages, apps and design handoffs: box model, specs, design tokens, components and distances, with one script.",
   "keywords": [
-    "groma",
-    "inspector",
     "design-handoff",
-    "web-inspector",
     "design-tokens",
+    "dev-mode",
     "devtools",
     "figma",
-    "dev-mode"
+    "groma",
+    "inspector",
+    "web-inspector"
   ],
-  "author": "Gabriel Franco (https://github.com/franco-dias)",
+  "homepage": "https://gromajs.dev",
+  "bugs": {
+    "url": "https://github.com/franco-dias/groma/issues"
+  },
   "license": "MIT",
-  "type": "module",
-  "main": "./dist/groma.js",
-  "unpkg": "./dist/groma.js",
-  "jsdelivr": "./dist/groma.js",
+  "author": "Gabriel Franco (https://github.com/franco-dias)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franco-dias/groma.git"
+  },
   "bin": {
     "gromajs": "scripts/inspect.mjs"
   },
   "files": [
     "dist",
     "scripts/inspect.mjs",
-    "scripts/inject.mjs"
+    "scripts/inject.mjs",
+    "scripts/content-types.mjs"
   ],
-  "engines": {
-    "node": ">=18.3"
-  },
+  "type": "module",
+  "main": "./dist/groma.js",
+  "unpkg": "./dist/groma.js",
+  "jsdelivr": "./dist/groma.js",
   "scripts": {
     "serve": "vite",
     "inspect": "vite build --logLevel warn && node scripts/inspect.mjs",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "test": "vitest run",
     "prepublishOnly": "npm run test && npm run build",
     "test:unit": "vitest run --project unit",
@@ -42,17 +51,14 @@
   },
   "devDependencies": {
     "@vitest/browser-playwright": "^5.1.0",
+    "oxfmt": "^0.78.0",
+    "oxlint": "^1.93.0",
     "playwright": "^1.65.0",
     "typescript": "^5.9.3",
     "vite": "^8.3.7",
     "vitest": "^5.1.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/franco-dias/groma.git"
-  },
-  "homepage": "https://gromajs.dev",
-  "bugs": {
-    "url": "https://github.com/franco-dias/groma/issues"
+  "engines": {
+    "node": ">=18.3"
   }
 }

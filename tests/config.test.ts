@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { config, configureFromScriptTag } from "../src/config";
-import { clipboard, el, inspector, page, reset, ui, wait } from "./helpers";
+import { clipboard, getElement, inspector, page, reset, ui, wait } from "./helpers";
 
 let tag: HTMLScriptElement;
 
@@ -45,7 +45,7 @@ describe("configuration", () => {
   });
 
   it("applies to the open panel at once", async () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     inspector().configure({ copyFormat: "sx" });
     ui(".box-padding > .box-name")!.click();
     await wait(20);

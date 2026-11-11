@@ -45,32 +45,37 @@ const FLEX_GLYPHS = {
 
 export type FlexGlyph = keyof typeof FLEX_GLYPHS;
 
-export const flexGlyph = (name: FlexGlyph): SVGSVGElement => svg(FLEX_GLYPHS[name], 14, 16);
+export const flexGlyph = (name: FlexGlyph): SVGSVGElement => svg(FLEX_GLYPHS[name], { size: 14, grid: 16 });
 
 export type IconName = keyof typeof ICONS;
 export type Intent = keyof typeof INTENT_GLYPHS;
 
-function svg(drawing: string, size: number, grid: number): SVGSVGElement {
-  const el = document.createElementNS(SVG_NS, "svg");
-  el.setAttribute("class", "icon");
-  el.setAttribute("width", String(size));
-  el.setAttribute("height", String(size));
-  el.setAttribute("viewBox", `0 0 ${grid} ${grid}`);
-  el.innerHTML = drawing;
-  return el;
+/** The size an icon is shown at, and the grid it is drawn on. */
+type IconGrid = { size: number; grid: number };
+
+function svg(drawing: string, { size, grid }: IconGrid): SVGSVGElement {
+  const element = document.createElementNS(SVG_NS, "svg");
+  element.setAttribute("class", "icon");
+  element.setAttribute("width", String(size));
+  element.setAttribute("height", String(size));
+  element.setAttribute("viewBox", `0 0 ${grid} ${grid}`);
+  element.innerHTML = drawing;
+  return element;
 }
 
-export const icon = (name: IconName, size = 14): SVGSVGElement => svg(ICONS[name], size, 24);
+export const icon = (name: IconName, size = 14): SVGSVGElement => svg(ICONS[name], { size, grid: 24 });
 
-export const intentGlyph = (intent: Intent): SVGSVGElement => svg(INTENT_GLYPHS[intent], 12, 12);
+export const intentGlyph = (intent: Intent): SVGSVGElement =>
+  svg(INTENT_GLYPHS[intent], { size: 12, grid: 12 });
 
 /**
  * A 16px easing curve with its axes, for a CSS timing function given as its
  * four cubic-bezier numbers.
  */
 export function easingGlyph([x1, y1, x2, y2]: number[]): SVGSVGElement {
-  const x = (t: number) => 2 + 12 * t;
-  const y = (t: number) => 14 - 12 * t;
-  const curve = `M2 14C${x(x1)} ${y(y1)} ${x(x2)} ${y(y2)} 14 2`;
-  return svg(`<path d="M2 2v12h12" opacity="0.4"/><path d="${curve}"/>`, 16, 16);
+  const curve = `M2 14C${curveX(x1)} ${curveY(y1)} ${curveX(x2)} ${curveY(y2)} 14 2`;
+  return svg(`<path d="M2 2v12h12" opacity="0.4"/><path d="${curve}"/>`, { size: 16, grid: 16 });
 }
+
+const curveX = (progress: number): number => 2 + 12 * progress;
+const curveY = (progress: number): number => 14 - 12 * progress;

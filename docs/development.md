@@ -18,7 +18,7 @@ npm install
 npm run build
 ```
 
-The build writes `dist/groma.js` (about 129 KB, 39 KB gzipped) with
+The build writes `dist/groma.js` (about 146 KB, 44 KB gzipped) with
 the styles and the panel markup inlined, plus a source map. The markup
 (`*.html`) goes in without its comments and indentation (`leanMarkup` in
 `vite.config.ts`), so comment it as freely as the code; the tests run on the
@@ -34,15 +34,15 @@ npm run serve
 directly and reloads on every change. The demo has two cards, a light and a
 dark theme scope, tokens, and one colour with no token.
 
-| Script | What it does |
-| --- | --- |
-| `npm run serve` | Demo page with live reload |
+| Script                           | What it does                                                                                                                                    |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run serve`                  | Demo page with live reload                                                                                                                      |
 | `npm run inspect -- <file.html>` | Builds the inspector, then opens any HTML file with it attached. The same script is the package's `gromajs` command (`npx gromajs <file.html>`) |
-| `npm run build` | Typechecks, then writes `dist/groma.js` |
-| `npm run typecheck` | TypeScript only |
-| `npm test` | Every test: unit and browser |
-| `npm run test:unit` | Pure logic only, in Node; fast |
-| `npm run test:browser` | Behaviour on a real page, headless in Chrome |
+| `npm run build`                  | Typechecks, then writes `dist/groma.js`                                                                                                         |
+| `npm run typecheck`              | TypeScript only                                                                                                                                 |
+| `npm test`                       | Every test: unit and browser                                                                                                                    |
+| `npm run test:unit`              | Pure logic only, in Node; fast                                                                                                                  |
+| `npm run test:browser`           | Behaviour on a real page, headless in Chrome                                                                                                    |
 
 ## Tests
 
@@ -67,32 +67,37 @@ it.
 
 Start at [src/main.ts](../src/main.ts): it only starts the features.
 
-| Path | What lives there |
-| --- | --- |
-| `src/selection.ts` | The pinned element. Pickers call `pin`; views subscribe |
-| `src/options.ts` | What the user switched on in the panel |
-| `src/root.ts` | The shadow root that isolates the inspector from the page's CSS |
-| `src/page.ts` | The page being inspected: this document, or the canvas frame's. Its document, its listeners and where its elements are on screen |
-| `src/canvas/` | Canvas mode: the page in a frame to resize and zoom; `view.ts` holds the arithmetic |
-| `src/overlay/` | Inspect mode: hover boxes, distances, name chip, layer menu |
-| `src/outlines.ts` | Outline and name tag of the pinned element, hover outline, grid |
-| `src/launcher.ts` | The launcher pill and the inspect lock |
-| `src/panel/` | The side panel, its markup (`panel.html`) and one file per tab |
-| `src/config.ts` | The settings a page can give the inspector |
-| `src/specs/` | What the Specs tab knows: sections, tokens, colours, units, sizing, motion |
-| `src/specs/components/` | One reader per way a page can name its components |
-| `src/edits/` | The user's edits: selectors, storage, apply and replay, the list with undo (`changes.ts`), the text "Copy edits" writes (`handoff.ts`) |
-| `src/export-diff.ts` | Comparing two Claude Design exports |
-| `src/icons.ts` | The icons, as SVG drawings |
-| `src/styles/` | The stylesheets, one per area; `tokens.css` holds every colour and size |
-| `scripts/` | `inspect.mjs`, the command that opens a file with the inspector attached. It ships in the package as its `bin` |
-| `tests/` | Browser tests, one file per feature |
-| `docs/features.md` | Every feature and the rules it follows |
-| `landing/` | The landing page, as a static site. Not part of the package; see [landing/README.md](../landing/README.md) |
+| Path                    | What lives there                                                                                                                                     |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/selection.ts`      | The pinned element. Pickers call `pin`; views subscribe                                                                                              |
+| `src/options.ts`        | What the user switched on in the panel                                                                                                               |
+| `src/root.ts`           | The shadow root that isolates the inspector from the page's CSS                                                                                      |
+| `src/page.ts`           | The page being inspected: this document, or the canvas frame's. Its document, its listeners and where its elements are on screen                     |
+| `src/canvas/`           | Canvas mode: the page in a frame to resize and zoom; `view.ts` holds the arithmetic                                                                  |
+| `src/overlay/`          | Inspect mode: hover boxes, distances, name chip, layer menu                                                                                          |
+| `src/outlines.ts`       | Outline and name tag of the pinned element, hover outline, grid                                                                                      |
+| `src/launcher.ts`       | The launcher pill and the inspect lock                                                                                                               |
+| `src/panel/`            | The side panel, its markup (`panel.html`) and the tabs: `specs/`, `css/`, `edits/` and `changes/` hold the tabs that are several files               |
+| `src/config.ts`         | The settings a page can give the inspector                                                                                                           |
+| `src/specs/`            | What the Specs tab knows: sections and their rows, tokens, colours, units, sizing, tracks, motion; logic with no page in it                          |
+| `src/specs/components/` | One reader per way a page can name its components                                                                                                    |
+| `src/edits/`            | The user's edits: selectors, storage, apply and replay, `changes.ts` to make one, `history.ts` for undo, the text "Copy edits" writes (`handoff.ts`) |
+| `src/export-diff.ts`    | Comparing two Claude Design exports                                                                                                                  |
+| `src/icons.ts`          | The icons, as SVG drawings                                                                                                                           |
+| `src/styles/`           | The stylesheets, one per area; `tokens.css` holds every colour and size                                                                              |
+| `scripts/`              | `inspect.mjs`, the command that opens a file with the inspector attached. It ships in the package as its `bin`                                       |
+| `tests/`                | Browser tests, one file per feature                                                                                                                  |
+| `docs/features.md`      | Every feature and the rules it follows                                                                                                               |
+| `landing/`              | The landing page, as a static site. Not part of the package; see [landing/README.md](../landing/README.md)                                           |
 
-Each tab implements the small `Tab` interface in
-[src/panel/tab.ts](../src/panel/tab.ts); adding a tab means adding a file and
-one entry in [src/panel/panel.ts](../src/panel/panel.ts).
+Each tab implements the small `Tab` type in
+[src/panel/tab.ts](../src/panel/tab.ts); adding a tab means adding a file (or
+a folder with an entry file and its modules) and one entry in
+[src/panel/panel.ts](../src/panel/panel.ts). The Specs tab is the largest:
+`src/panel/specs/specs-tab.ts` assembles one module per block (`layout-block.ts`,
+`box-block.ts`, `color-block.ts`, `typography-block.ts`, `motion-block.ts`,
+`component-block.ts`, `compare-block.ts`), the element header, the action bar
+and the editable value (`editable-field.ts`).
 
 If you are going to change the code, read [AGENTS.md](../AGENTS.md) first. It
 holds the rules that keep the inspector safe to run on pages it does not

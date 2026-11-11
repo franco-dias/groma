@@ -223,15 +223,15 @@ it (see "Editing a value" below).
   - in a grid cell: `auto` and `justify-self` for the width, `align-self` for
     the height (`stretch` to fill; to hug, `start` under a grid that
     stretches its items and `auto` under one that does not).
-  Choosing the intent the element already has makes no edit, even where it
-  has it by default. A property that already has the value is left alone. The edits of one
-  choice are listed apart in the Edits tab and are one step to undo
-  (`together()` in `src/edits/changes.ts`). An item of a grid with no declared size reads
-  as `fill` on an axis the grid stretches it on, which is the default. An
-  element with `position: absolute` or `fixed` is not an item of its parent's
-  layout: with no declared size it reads `fill` on an axis where both sides
-  are declared (`top` and `bottom`), `hug` otherwise, and is sized like a
-  child of a block.
+    Choosing the intent the element already has makes no edit, even where it
+    has it by default. A property that already has the value is left alone. The edits of one
+    choice are listed apart in the Edits tab and are one step to undo
+    (`together()` in `src/edits/history.ts`). An item of a grid with no declared size reads
+    as `fill` on an axis the grid stretches it on, which is the default. An
+    element with `position: absolute` or `fixed` is not an item of its parent's
+    layout: with no declared size it reads `fill` on an axis where both sides
+    are declared (`top` and `bottom`), `hug` otherwise, and is sized like a
+    child of a block.
 - **Box**: margin around padding around the content size. Clicking
   "margin" or "padding" copies all four sides; a double-click on the name
   edits them at once, as the shorthand (`12px 16px`). The block's title carries the
@@ -281,7 +281,7 @@ click still copies.
 - While a value is a field, a click in it places the caret and does not copy.
   The double-click itself still copies the value once, as its first click.
 
-Code: `src/panel/specs-tab.ts` (`editable`), `src/specs/*`. Tests:
+Code: `src/panel/specs/` (`editable-field.ts`), `src/specs/*`. Tests:
 `tests/specs.test.ts`, `tests/specs-edit.test.ts`, unit tests in `src/specs/`.
 
 ## 6. Component
@@ -345,7 +345,7 @@ Tests: `tests/specs.test.ts`.
   counts the identical ones. Position and component are not compared.
 - Stop, or Esc, ends the comparison.
 
-Code: `src/specs/sections.ts` (`compareSpecs`), `src/panel/specs-tab.ts`.
+Code: `src/specs/compare-specs.ts`, `src/panel/specs/compare-block.ts`.
 Tests: `tests/specs.test.ts`.
 
 ## 9. Links
@@ -414,11 +414,12 @@ editable.
   other, and is only not there after a reload.
 - Undoing or resetting the only edit of an element that had no inline style
   leaves it with no `style` attribute.
-- Every edit goes through `edit()` in `src/edits/changes.ts`, which applies
-  it, saves it and records it for undo. Do not call the functions of
-  `overrides.ts` for a user's edit from anywhere else.
+- Every edit goes through `edit()`, `nudgeEdit()` or `removeEdit()` in
+  `src/edits/changes.ts`, which applies it, saves it and records it for undo.
+  Do not call the functions of `style-overrides.ts` or `content-overrides.ts`
+  for a user's edit from anywhere else.
 
-Code: `src/panel/css-tab.ts`, `src/edits/*`. Tests: `tests/edits.test.ts`.
+Code: `src/panel/css/`, `src/edits/*`. Tests: `tests/edits.test.ts`.
 
 ## 11. Layers
 
@@ -451,7 +452,7 @@ the page with an older export file the user picks.
 - Lines are compared without their order.
 - A file that is not an export gets an explanation, not a silent failure.
 
-Code: `src/export-diff.ts`, `src/panel/changes-tab.ts`.
+Code: `src/export-diff.ts`, `src/panel/changes/`.
 Tests: `tests/changes.test.ts`, `src/export-diff.test.ts`.
 
 ## 14. API for the host page
@@ -560,7 +561,7 @@ Every module reads the page through `src/page.ts`: which document it is
 (`pageDocument`, `pageWindow`), where its elements are on screen (`rectOf`)
 and how to listen to it (`onPage`).
 
-Code: `src/canvas/canvas.ts`, `view.ts`, `canvas.html`, `src/page.ts`,
+Code: `src/canvas/` (`canvas.ts`, `view.ts`, `canvas.html`), `src/page.ts`,
 `src/root.ts` (`mountOnPage`, the clip), `src/styles/canvas.css`.
 Tests: `tests/canvas.test.ts`, `src/canvas/view.test.ts`.
 
@@ -624,7 +625,7 @@ hand it to whoever changes the source: a coding agent, or a person.
   its lines changes what people's prompts and tools see; say so in the
   changelog.
 
-Code: `src/panel/edits-tab.ts`, `src/edits/changes.ts` (the list, the
-history), `src/edits/handoff.ts` (the text), `src/edits/overrides.ts`
-(`showOriginal`), `src/styles/edits.css`.
+Code: `src/panel/edits/`, `src/edits/changes.ts` and `edit-list.ts` (the
+list), `history.ts` (undo), `src/edits/handoff.ts` (the text),
+`src/edits/replay.ts` (`showOriginal`), `src/styles/edits.css`.
 Tests: `tests/edits-tab.test.ts`, `src/edits/handoff.test.ts`.

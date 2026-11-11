@@ -1,36 +1,58 @@
 /** Colour helpers for the Specs tab. */
 
-let probe: CanvasRenderingContext2D | null = null;
-const normalized = new Map<string, string | null>();
+let probe: CanvasRenderingContext2D | undefined;
+const normalized = new Map<string, string | undefined>();
+
+function getColorProbe(): CanvasRenderingContext2D {
+  if (probe) return probe;
+  const context = document.createElement("canvas").getContext("2d");
+  if (!context) throw new Error("This browser cannot make a canvas to read colours with.");
+  probe = context;
+  return probe;
+}
+
+/** The colour as the canvas spells it, or undefined when `value` is not a colour. */
+function readColor(value: string): string | undefined {
+  const colorProbe = getColorProbe();
+  // An invalid colour leaves fillStyle untouched, so two different
+  // starting points give two different answers.
+  colorProbe.fillStyle = "#000";
+  colorProbe.fillStyle = value;
+  const first = colorProbe.fillStyle;
+  colorProbe.fillStyle = "#fff";
+  colorProbe.fillStyle = value;
+  return first === colorProbe.fillStyle ? first : undefined;
+}
 
 /**
  * One spelling per colour, so "#fff", "white" and "rgb(255, 255, 255)"
- * compare equal. Returns null for text that is not a colour.
+ * compare equal. Undefined for text that is not a colour.
  */
-function normalizeColor(value: string): string | null {
-  let result = normalized.get(value);
-  if (result === undefined) {
-    probe ??= document.createElement("canvas").getContext("2d")!;
-    // An invalid colour leaves fillStyle untouched, so two different
-    // starting points give two different answers.
-    probe.fillStyle = "#000";
-    probe.fillStyle = value;
-    const first = probe.fillStyle;
-    probe.fillStyle = "#fff";
-    probe.fillStyle = value;
-    result = first === probe.fillStyle ? first : null;
-    normalized.set(value, result);
-  }
+function normalizeColor(value: string): string | undefined {
+  if (normalized.has(value)) return normalized.get(value);
+  const result = readColor(value);
+  normalized.set(value, result);
   return result;
 }
 
-/** The CSS variables on an element whose value is `color`, shortest names first. */
-export function tokensWithColor(cs: CSSStyleDeclaration, color: string): string[] {
-  const wanted = normalizeColor(color);
-  return Array.from(cs)
+type CustomProperty = { name: string; value: string };
+
+/** The CSS variables an element can see, with their values: the page's design tokens. */
+function customProperties(computedStyle: CSSStyleDeclaration): CustomProperty[] {
+  return Array.from(computedStyle)
     .filter((prop) => prop.startsWith("--"))
-    .filter((prop) => normalizeColor(cs.getPropertyValue(prop).trim()) === wanted)
-    .sort((a, b) => a.length - b.length);
+    .map((name) => ({ name, value: computedStyle.getPropertyValue(name).trim() }));
+}
+
+const byNameLength = (first: string, second: string): number => first.length - second.length;
+
+/** The CSS variables on an element whose value is `color`, shortest names first. */
+export function tokensWithColor(computedStyle: CSSStyleDeclaration, color: string): string[] {
+  const wanted = normalizeColor(color);
+  return customProperties(computedStyle)
+    .filter(({ value }) => normalizeColor(value) === wanted)
+    .map(({ name }) => name)
+    .toSorted(byNameLength);
 }
 
 /**
@@ -41,13 +63,14 @@ export function tokensWithColor(cs: CSSStyleDeclaration, color: string): string[
  * shortcut: any token with the value matches, whatever it is for (a radius
  * token for a gap); match by the property's kind if the names mislead.
  */
-export function tokensWithValue(cs: CSSStyleDeclaration, value: string): string[] {
-  if (normalizeColor(value)) return tokensWithColor(cs, value);
+export function tokensWithValue(computedStyle: CSSStyleDeclaration, value: string): string[] {
+  if (normalizeColor(value)) return tokensWithColor(computedStyle, value);
   // "none", "auto" and zero are held by tokens that have nothing to do with the property.
   if (!/[1-9]/.test(value)) return [];
-  return Array.from(cs)
-    .filter((prop) => prop.startsWith("--") && cs.getPropertyValue(prop).trim() === value.trim())
-    .sort((a, b) => a.length - b.length);
+  return customProperties(computedStyle)
+    .filter((token) => token.value === value.trim())
+    .map(({ name }) => name)
+    .toSorted(byNameLength);
 }
 
 /** "rgb(27, 26, 23)" -> "#1B1A17". A translucent colour keeps its alpha as a percentage. */

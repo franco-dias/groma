@@ -6,13 +6,32 @@ import { pin } from "./selection";
 
 const PARAM = "inspect";
 
-/** A link to this page with `el` pinned, scrolled to the element's board. */
-export function elementLink(el: Element): string {
+/** Boards render late: how often to look for the linked element, and how many times. */
+const LOOK_INTERVAL_MS = 250;
+const LOOK_LIMIT = 60;
+
+/** A link to this page with `element` pinned, scrolled to the element's board. */
+export function elementLink(element: Element): string {
   const url = pageAddress();
-  url.searchParams.set(PARAM, getSelector(el));
-  const board = el.closest("section[id]");
+  url.searchParams.set(PARAM, getSelector(element));
+  const board = element.closest("section[id]");
   if (board) url.hash = board.id;
   return url.href;
+}
+
+function findBySelector(selector: string): Element | undefined {
+  try {
+    return pageDocument().querySelector(selector) ?? undefined;
+  } catch {
+    // Not a valid selector.
+    return undefined;
+  }
+}
+
+function pinLinked(element: Element): void {
+  if (isOwn(element)) return;
+  element.scrollIntoView({ block: "center" });
+  pin(element);
 }
 
 /**
@@ -24,16 +43,8 @@ export function pinFromLink(): void {
   if (!selector) return;
   let tries = 0;
   const timer = setInterval(() => {
-    let el: Element | null = null;
-    try {
-      el = pageDocument().querySelector(selector);
-    } catch {
-      // Not a valid selector.
-    }
-    if (el && !isOwn(el)) {
-      el.scrollIntoView({ block: "center" });
-      pin(el);
-    }
-    if (el || ++tries > 60) clearInterval(timer);
-  }, 250);
+    const element = findBySelector(selector);
+    if (element) pinLinked(element);
+    if (element || ++tries > LOOK_LIMIT) clearInterval(timer);
+  }, LOOK_INTERVAL_MS);
 }

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { el, frames, holdAlt, hover, inspector, page, reset, ui } from "./helpers";
+import { getElement, frames, holdAlt, hover, inspector, page, reset, ui } from "./helpers";
 
 /** Whatever is on top at a point, as the page's document sees it. */
 const topAt = (x: number, y: number): Element | null => document.elementFromPoint(x, y);
@@ -16,28 +16,26 @@ beforeEach(() => {
 
 describe("layering above the page", () => {
   it("keeps the panel above a page element at the highest z-index", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     const panel = ui(".panel")!.getBoundingClientRect();
     expect(topAt(panel.left + 50, panel.top + 50)?.localName).toBe("groma-inspector");
   });
 
   it("keeps the launcher above it too", () => {
     const pill = ui(".launcher")!.getBoundingClientRect();
-    expect(topAt(pill.left + pill.width / 2, pill.top + pill.height / 2)?.localName).toBe(
-      "groma-inspector",
-    );
+    expect(topAt(pill.left + pill.width / 2, pill.top + pill.height / 2)?.localName).toBe("groma-inspector");
   });
 
   it("puts everything it draws in the browser's top layer, outlines included", () => {
     holdAlt();
-    hover(el(".card"));
+    hover(getElement(".card"));
     expect(ui(".overlay > div")!.getBoundingClientRect().width).toBeGreaterThan(0);
     // Outlines ignore the pointer, so the check is on the layer they all share.
     expect(document.querySelector("groma-inspector")!.matches(":popover-open")).toBe(true);
   });
 
   it("comes back, in the top layer, when the page throws it away with its old content", async () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     const host = document.querySelector("groma-inspector")!;
     // What a page does when it replaces its body or its whole document.
     host.remove();
