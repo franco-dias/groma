@@ -55,6 +55,31 @@ Code: `src/overlay/hover.ts`, `box-model.ts`, `tooltip.ts`, `layer.ts`,
 `text-edit.ts`, `lend-attributes.ts`.
 Tests: `tests/hover.test.ts`, `tests/text-edit.test.ts`.
 
+### Keyboard navigation
+
+With an element pinned, the arrow keys move the pin: ↑ to the parent, ↓ to
+the first child, ← and → to the previous and next sibling.
+
+- They are the inspector's only when (a) the focus is in the panel and not in
+  a field (an input, or a Specs value open as a field) and no menu of the
+  panel is open, or (b) inspect mode is locked on and the focus is not in a
+  field of the page. Otherwise they are the page's (scrolling) and the page
+  behaves as without the script. With text being edited on the page, or a
+  modifier held, they keep their meaning too.
+- When they act the key is kept from the page (no scroll), also when the move
+  has nowhere to go.
+- Skipped: the inspector's own host, `script`, `style`, `link`, `meta`,
+  `head`, and elements with no box (`display: none`, `display: contents`).
+  ↑ stops at `body`; a move with nowhere to go does nothing.
+- The pinned element is scrolled into view when it is off screen
+  (`scrollIntoView({ block: "nearest", inline: "nearest" })`): a change of
+  scroll position caused by the user's own key, and the only change to the
+  page.
+- The panel is focusable (`tabindex="-1"`), so a click on it puts the focus
+  there; after a move the focus goes back to it if the redraw dropped it.
+
+Code: `src/navigate.ts`, `src/navigate-keys.ts`. Tests: `tests/navigate.test.ts`.
+
 ## 2. Measuring
 
 With an element pinned, hovering another element in inspect mode shows the
@@ -192,6 +217,30 @@ it (see "Editing a value" below).
   and says "across each cell", Align sets `align-items` and says "down each
   cell". The default (`normal`) checks stretch. The drawings are not turned
   with anything: a grid has no direction.
+  - Two more rows, both labelled "Distribute", say where the tracks sit in
+    the grid: `justify-content` ("the columns across the grid") and
+    `align-content` ("the rows down the grid"). Each is shown only when it can
+    do something: the tracks leave at least 1px free on that axis (the
+    tracks and the gaps against the content box), or the property is not
+    `normal`. Buttons: start (also `normal`), center, end, stretch, and a menu
+    of `space-between`, `space-around` and `space-evenly`, as on a flex
+    container's Justify. The drawings are the flex ones, the second turned
+    to the block axis. Two rows with one label are told apart by their hint.
+    Code: `src/panel/specs/grid-content.ts`, `src/grid-axes.ts`.
+    Tests: `tests/specs-grid-content.test.ts`.
+- **Track lines on the page**: while a grid container is pinned, a thin
+  dashed line is drawn at each edge of its columns and rows (one more line
+  than there are tracks; with a gap the line is in the middle of the gap),
+  and each gap is lightly filled. They are placed on animation frames, like
+  the pinned outline, so they follow scroll, resize and edits, from the grid's
+  rectangle scaled by its zoom, its border and padding, the computed track
+  sizes and the gaps, and they follow `justify-content` and `align-content`
+  (`src/specs/track-lines.ts`). They take no pointer events, are mounted with
+  `mountOnPage()` (cut at the frame in canvas mode), and go when another
+  element is pinned, on unpin, when the element stops being a grid and when
+  it leaves the page. A grid that is only hovered gets none. Shortcut: left
+  to right and horizontal text only. Code: `src/overlay/grid-lines.ts`,
+  `src/specs/grid-spots.ts`, `track-lines.ts`. Tests: `tests/grid-lines.test.ts`.
 - **Columns and rows of a grid**: one row each, under the buttons
   (`src/specs/tracks.ts`).
   - The number of tracks, between − and +. − removes the last track and is
@@ -259,10 +308,83 @@ it (see "Editing a value" below).
   edits them at once, as the shorthand (`12px 16px`). The block's title carries the
   element's `box-sizing`, which says which box `width` and `height` set; it
   copies and edits like any other value.
+- **Effects**: after the Box, only when the element has one. Each group is a
+  label and its rows:
+  - **Shadow** and **Text shadow** (`box-shadow`, `text-shadow`): one row per
+    shadow, in order: a swatch of its colour, `inset` when it is one,
+    `x y blur spread` in the tab's unit (a text shadow has no spread), and
+    the colour in the chosen format.
+  - **Filter** and **Backdrop filter**: one row per function, name and
+    argument (`blur 4px`, `brightness 1.1`).
+  - **Gradient** (`background-image`): one row per layer that is a gradient,
+    a strip painted with the gradient itself, its kind and direction or shape
+    (`linear 135deg`, `radial circle`, `conic`), and its stops as swatch,
+    colour and position (a stop with two positions keeps both). A layer that
+    is `url(...)` is not an effect.
+  - A click on a row copies that one shadow, function or gradient as a CSS
+    value; a click on the label copies the whole property's value; a
+    double-click on the label edits the whole property as text.
+  - A shadow colour or gradient stop that equals one of the page's colour
+    tokens reads "matches token --name". A shadow that equals a shadow token
+    reads the same under the group; when the element declares the property
+    with a token (`box-shadow: var(--shadow-md)`) the token's name is shown,
+    as in the Layout block.
+  - Shadow and gradient still take part in Compare (`shape-rows.ts`).
+    Code: `src/panel/specs/effects-block.ts`, `effect-rows.ts`,
+    `gradient-rows.ts`, `effect-tokens.ts`, `src/specs/effects.ts`,
+    `gradients.ts`, `declarations.ts`. Tests: `tests/specs-effects.test.ts`.
 - **Colors** (feature 7).
 - **Typography**: family, weight, size, line height, tracking. Only for
   elements with text of their own.
-- **Motion**: one row per transition or animation, with its easing curve.
+- **Asset**: the first block, only for what shows a file; nothing is fetched.
+  - An `<img>` (also in a `<picture>`): a small preview drawn from the pixels
+    the page already decoded, the natural size beside the size it is shown at
+    in board pixels (`1200 × 800 shown at 300 × 200`), a `2×` note when the
+    file is a whole number (2 or more) of times bigger than shown on both
+    axes, the file's name from its current source (`embedded` for a data
+    URL), "Copy address" (the absolute URL) and "Download" (an `<a download>`
+    made inside the inspector and clicked; a data URL is saved as
+    `image.png`). A cross-origin file may open in the browser instead of
+    saving, as the browser decides (`docs/usage.md`).
+  - An inline `<svg>` (the element itself, not its shapes): its `viewBox` and
+    size, and "Copy SVG", which copies its markup as it is on the page.
+  - An element whose `background-image` has `url(...)` layers: one row per
+    layer, the name and "Copy address". Gradient layers are in Effects.
+    Code: `src/panel/specs/asset-block.ts`, `asset-image.ts`, `asset-rows.ts`,
+    `src/specs/assets.ts`. Tests: `tests/specs-assets.test.ts`.
+- **States**: after Typography, only when something is found. What each
+  interaction state of the element changes (`:hover`, `:focus`,
+  `:focus-visible`, `:focus-within`, `:active`, `:disabled`, `:checked`), read
+  from the stylesheets without triggering the state. A rule belongs to a state
+  for this element when one of its selectors contains the state and, with the
+  state pseudo-classes taken out of that selector, the element matches what is
+  left: `.button:hover` and `.card:hover .button` both count for a `.button`
+  inside a `.card`. A selector with two states (`:hover:focus`) is listed
+  under each. Only rules that apply now (`@media` and `@supports` as in the
+  Specs tab). Per state: its name, then `property  value` rows, a swatch for a
+  colour; a click copies `property: value`. Later rules win per property
+  inside a state. A declaration that gives the value the element already has
+  (a `var()` is read first) is left out. Read only. Shortcuts: a state inside
+  `:is()`, `:where()` or `:not()` is found as text and leaves the function
+  empty, so such a rule is not listed; selector specificity is ignored; a
+  shorthand is compared with the computed shorthand as text. Code:
+  `src/panel/specs/states-block.ts`, `state-rules.ts`, `state-changes.ts`,
+  `src/specs/states.ts`. Tests: `tests/specs-states.test.ts`.
+- **Motion**: one row per transition or animation, with its easing curve. A
+  click on a row copies it. On a transition, a double-click on its duration
+  or its easing edits that entry: the page's list has one entry per
+  transition (a list the page gave short is repeated out to that many, as CSS
+  does), the other entries keep what the page declared (a `var()` survives),
+  and the whole `transition-duration` or `transition-timing-function` is
+  written as ONE edit, the way a grid track writes the whole
+  `grid-template-columns`. A double-click on the "Transition" label in the
+  block's head (a muted note, beside the title) edits the whole `transition`
+  as text. The fields list time, timing-function and transition tokens (see
+  token suggestions). A token the element declares its duration, easing or
+  transition with is named under the rows, as the Layout block names tokens.
+  Animations (`animation-*`) stay read-only. Code:
+  `src/panel/specs/motion-block.ts`, `motion-fields.ts`, `motion-notes.ts`,
+  `src/specs/motion-entries.ts`. Tests: `tests/specs-motion-tokens.test.ts`.
 - Lengths show as bare numbers in px, or in rem. The unit switch is in the
   action bar.
 - **What a click copies** depends on the page's copy format (feature 15).
@@ -273,8 +395,8 @@ it (see "Editing a value" below).
 click still copies.
 
 - Editable: width and height (each half of the size), box-sizing, display,
-  gap, radius, opacity, stroke width, columns, shadow,
-  gradient, each side of margin and padding and the four at once, each colour (background, border,
+  gap, radius, opacity, stroke width, columns, the whole of a shadow, filter
+  or gradient property (the label in the Effects block), each side of margin and padding and the four at once, each colour (background, border,
   text, fill, stroke), and family, weight, size, line height, tracking,
   transform, align and decoration of the text.
 - Not editable, because they are made of several properties or are derived:
@@ -337,10 +459,18 @@ click still copies.
   `background-color`, `border-color`, `fill`, `stroke`) lists tokens whose
   value is a colour; a length (sizes, gap, radius, the sides of the box, font
   size, line height, letter spacing, stroke width) lists tokens whose value is
-  a length (`px`, `rem`, `calc()`…). Other properties, a grid track, and a page
-  with no such token get no list. Tokens that hold the field's value come
+  a length (`px`, `rem`, `calc()`…). A shadow (`box-shadow`, `text-shadow`, and
+  the Effects block's labels) lists tokens whose value is one or more shadows
+  with a colour, each drawn on a small square; a duration or a delay
+  (`transition-duration`, `transition-delay`) lists tokens that are a single
+  time (`150ms`, `0.2s`); `transition-timing-function` lists timing functions
+  (`ease`, `cubic-bezier()`, `steps()`, `linear()`), each with its curve; the
+  whole `transition` lists tokens that contain a time and more than a time
+  (`all 150ms ease`). Other properties, a grid track, and a page with no such
+  token get no list. Tokens that hold the field's value come
   first (a colour in any spelling; a length compared in pixels, a bare number
-  being pixels), then those whose name contains the typed text, ignoring case
+  being pixels; a shadow, a time, a timing function or a transition compared
+  by what it does: `150ms` is `0.15s`, `ease` is its `cubic-bezier()`), then those whose name contains the typed text, ignoring case
   (`--sp` and `space` both find `--space-4`); each group by length of name.
   At most 8, none while the field only holds what it opened with and no token
   holds it. A click (which does not blur the field) or Enter on the
@@ -399,10 +529,52 @@ Code: `src/specs/component.ts`, `src/specs/components/*`,
 `src/element-name.ts`.
 Tests: `tests/component.test.ts`.
 
+### Copy CSS
+
+A button in the Specs tab's element header, beside the element's name and
+size ("Copy CSS"; the icon alone under 360px), copies the styles the element
+declares as CSS declarations, one per line, under a comment with its name
+(`/* div.card */`):
+
+- Declared means what the page's style rules that apply now say, plus the
+  element's inline style: not inherited values, not the browser's defaults,
+  not the computed list. Rules in an `@media` or `@supports` block that does
+  not apply are left out.
+- Shorthands stay shorthands and `var()` stays as written. The declarations
+  are merged by a scratch element that is never on a page: a later
+  declaration replaces an earlier one (and moves to the end), `!important`
+  holds.
+- The user's own edits are inline styles, so they are included.
+- Selector specificity is ignored: the last matching declaration wins (the
+  same shortcut as the token lookup). An element with no declared styles
+  copies only the comment.
+
+Code: `src/panel/specs/copy-css.ts`, `src/specs/declarations.ts`.
+Tests: `tests/specs-copy-css.test.ts`, `src/specs/declarations.test.ts`.
+
 ## 7. Colours and tokens
 
-Each colour is a row: swatch, hex, alpha, its role (Background, Border,
-Text, Fill, Stroke, Picked).
+Each colour is a row: swatch, value, its role (Background, Border, Text,
+Fill, Stroke, Picked).
+
+- **Format**: a HEX | RGB | HSL switch in the block's head sets how every
+  colour of the Specs tab is shown (the rows, a comparison) and what a click
+  copies: `#2F6BFF` (with the alpha beside it, not copied), `rgb(47 107 255)`
+  or `hsl(223 100% 59%)`, and `rgb(47 107 255 / 50%)` when translucent. HSL is
+  rounded to whole numbers. The choice is remembered per site with the
+  panel's other settings (`colorFormat` in `__groma_panel`). The field a
+  double-click opens, the token names and the token modes keep the page's own
+  spelling.
+- **Contrast**: the Text row has a line with the ratio of the text colour
+  against the background behind it (`4.52 : 1`) and the WCAG level it meets
+  (`AAA`, `AA`, `Fails AA`). Normal text needs 4.5 for AA and 7 for AAA;
+  large text (24px, or 18.66px at weight 700) needs 3 and 4.5. The
+  background is the nearest ancestor-or-self colour that is not transparent;
+  translucent layers are composited down to an opaque one, the page's canvas
+  counts as white, and so does the text colour's own alpha. Over a background
+  image or gradient the line reads "over an image" with no number.
+  `opacity`, blend modes and elements painted behind the text without being
+  its ancestors are ignored (`shortcut:` in `src/specs/contrast.ts`).
 
 - **Declared token**: the row lists a theme path (`color.text.primary`)
   when the variable starts with a prefix the page configured (feature 15),
@@ -422,7 +594,10 @@ Text, Fill, Stroke, Picked).
   page. Token themes and modes still read every rule, since a dark theme sits
   in a block that does not apply now. `@container` is not evaluated.
 
-Code: `src/specs/tokens.ts`, `colors.ts`, `src/page-styles.ts`.
+Code: `src/specs/tokens.ts`, `colors.ts`, `color-format.ts`, `contrast.ts`,
+`src/page-styles.ts`, `src/panel/specs/color-block.ts`, `color-line.ts`,
+`color-format-switch.ts`, `contrast-line.ts`.
+Tests: `tests/specs-color.test.ts`.
 Tests: `tests/specs.test.ts`.
 
 ## 8. Compare

@@ -215,6 +215,33 @@
   --grid-strength: 0.22;
 }
 
+/* The track lines of the pinned grid: dashed lines at the track edges, the gaps lightly filled. */
+.grid-lines,
+.grid-line,
+.grid-gap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.grid-line,
+.grid-gap {
+  z-index: 2;
+}
+
+.grid-line.is-column {
+  border-left: 1px dashed var(--ins-hover-line);
+}
+
+.grid-line.is-row {
+  border-top: 1px dashed var(--ins-hover-line);
+}
+
+.grid-gap {
+  background: var(--ins-track-gap-bg);
+}
+
 /* Launcher pill, bottom right */
 .launcher {
   position: fixed;

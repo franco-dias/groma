@@ -28,6 +28,42 @@ export const GRID_CONTROLS: FlexControl[] = [
   { label: "Align", prop: "align-items", axis: "down each cell", choices: PLACES },
 ];
 
+/** Ways to share out the space between a flex container's items or a grid's tracks: one button, three values. */
+const SPACING: FlexChoice[] = [
+  ["between", "space-between"],
+  ["around", "space-around"],
+  ["evenly", "space-evenly"],
+];
+
+/** Where a grid puts its tracks when they leave room in it. */
+const CONTENT_PLACES: FlexChoice[] = [
+  ["start", "start", "normal", "flex-start", "left"],
+  ["center", "center"],
+  ["end", "end", "flex-end", "right"],
+  ["stretch", "stretch"],
+];
+
+/**
+ * The tracks of a grid, shown only when they leave room or the property is
+ * set (grid-content.ts). Both are "Distribute"; the hint says which axis.
+ */
+export const GRID_CONTENT_CONTROLS: FlexControl[] = [
+  {
+    label: "Distribute",
+    prop: "justify-content",
+    axis: "the columns across the grid",
+    choices: CONTENT_PLACES,
+    more: SPACING,
+  },
+  {
+    label: "Distribute",
+    prop: "align-content",
+    axis: "the rows down the grid",
+    choices: CONTENT_PLACES,
+    more: SPACING,
+  },
+];
+
 export const FLEX_CONTROLS: FlexControl[] = [
   {
     label: "Direction",
@@ -47,12 +83,7 @@ export const FLEX_CONTROLS: FlexControl[] = [
       ["center", "center"],
       ["end", "flex-end", "end", "right"],
     ],
-    // Ways to share out the space between the items: one button, three values.
-    more: [
-      ["between", "space-between"],
-      ["around", "space-around"],
-      ["evenly", "space-evenly"],
-    ],
+    more: SPACING,
   },
   {
     label: "Align",

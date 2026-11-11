@@ -1,6 +1,10 @@
 /** Transitions and animations of an element, one item per property. */
 
 export type MotionItem = {
+  /** A transition can be edited; an animation is only read. */
+  kind: "transition" | "animation";
+  /** Where it is in the page's list of transitions or animations, before the ones that do not move are left out. */
+  index: number;
   /** The transitioned property, or the animation's name. */
   property: string;
   duration: string;
@@ -10,7 +14,7 @@ export type MotionItem = {
   curve: number[];
 };
 
-const KEYWORD_CURVES: Record<string, number[]> = {
+export const KEYWORD_CURVES: Record<string, number[]> = {
   linear: [0, 0, 1, 1],
   ease: [0.25, 0.1, 0.25, 1],
   "ease-in": [0.42, 0, 1, 1],
@@ -31,13 +35,15 @@ const listItems = (value: string): string[] => value.split(/,\s*(?![^(]*\))/);
 type MotionLists = { properties: string; durations: string; easings: string };
 
 /** Pairs up the parallel lists; a shorter list repeats. */
-function pairUp({ properties, durations, easings }: MotionLists): MotionItem[] {
+function pairUp(kind: MotionItem["kind"], { properties, durations, easings }: MotionLists): MotionItem[] {
   const durationList = listItems(durations);
   const easingList = listItems(easings);
   return listItems(properties)
     .map((property, index) => {
       const easing = easingList[index % easingList.length];
       return {
+        kind,
+        index,
         property,
         duration: durationList[index % durationList.length],
         easing,
@@ -48,13 +54,13 @@ function pairUp({ properties, durations, easings }: MotionLists): MotionItem[] {
 }
 
 export function motionItems(computedStyle: CSSStyleDeclaration): MotionItem[] {
-  const transitions = pairUp({
+  const transitions = pairUp("transition", {
     properties: computedStyle.transitionProperty,
     durations: computedStyle.transitionDuration,
     easings: computedStyle.transitionTimingFunction,
   });
   if (computedStyle.animationName === "none") return transitions;
-  const animations = pairUp({
+  const animations = pairUp("animation", {
     properties: computedStyle.animationName,
     durations: computedStyle.animationDuration,
     easings: computedStyle.animationTimingFunction,

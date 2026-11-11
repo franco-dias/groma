@@ -6,13 +6,15 @@
  * with the property it sets. A value no button stands for (`baseline`) is
  * shown after them, to edit as text.
  *
- * A grid has the same buttons for where each item sits in its cell.
+ * A grid has the same buttons for where each item sits in its cell, and for
+ * where its tracks sit in it when they leave room.
  */
 import { h } from "../../dom";
 import { copyOnClick } from "../copy";
 import { editable } from "./editable-field";
 import { createChoiceButton, type ControlState, createMoreButton, isChecked } from "./flex-buttons";
 import { FLEX_CONTROLS, type FlexControl, GRID_CONTROLS } from "./flex-choices";
+import { findContentControls } from "./grid-content";
 import type { SpecsContext } from "./specs-context";
 
 function createControlRow(control: FlexControl, context: SpecsContext): HTMLElement {
@@ -60,7 +62,11 @@ export function createFlexControls(context: SpecsContext): HTMLElement {
   return container;
 }
 
-/** A grid's drawings are never turned: across is always the inline axis. */
+/**
+ * A grid's drawings are never turned: across is always the inline axis. After
+ * where each item sits in its cell, where the tracks sit in the grid, when
+ * they leave room.
+ */
 export function createGridControls(context: SpecsContext): HTMLElement {
-  return createControls(GRID_CONTROLS, context);
+  return createControls([...GRID_CONTROLS, ...findContentControls(context)], context);
 }
