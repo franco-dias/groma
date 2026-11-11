@@ -60,8 +60,6 @@ function createPanel(): HTMLElement {
   const element = mount(h("div", "panel"));
   element.innerHTML = template;
   loadLayout(element);
-  // Focusable, so a click on the panel puts the focus there and the arrow keys move the pin (navigate-keys.ts).
-  element.tabIndex = -1;
 
   // Keys typed in the panel must not trigger the page's own shortcuts.
   element.addEventListener("keydown", (event) => {

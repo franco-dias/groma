@@ -57,26 +57,40 @@ Tests: `tests/hover.test.ts`, `tests/text-edit.test.ts`.
 
 ### Keyboard navigation
 
-With an element pinned, the arrow keys move the pin: ↑ to the parent, ↓ to
-the first child, ← and → to the previous and next sibling.
+With an element pinned, Alt and an arrow key move the pin: ↑ to the parent, ↓
+to the first child, ← and → to the element before and after it.
 
-- They are the inspector's only when (a) the focus is in the panel and not in
-  a field (an input, or a Specs value open as a field) and no menu of the
-  panel is open, or (b) inspect mode is locked on and the focus is not in a
-  field of the page. Otherwise they are the page's (scrolling) and the page
-  behaves as without the script. With text being edited on the page, or a
-  modifier held, they keep their meaning too.
-- When they act the key is kept from the page (no scroll), also when the move
-  has nowhere to go.
+- ← and → are the siblings first. Past the first or last sibling the move
+  goes on: to the parent's sibling on that side and down to its nearest child
+  (the first going →, the last going ←), so the pin stays at the depth it
+  was and ← undoes →. A parent's sibling with no children is the end of the
+  move itself; when the parent has no sibling either, the walk climbs
+  further. At the page's first and last element the keys do nothing.
+- ↓ after ↑ goes back to the child the pin came from, not to the first one.
+  Any other move in between forgets it.
+- A wrapper with no box of its own (`display: contents`) is looked through:
+  its children count as its parent's, for ↓, ← and →, and ↑ skips it.
+
+- Alt is the inspect key, so the keys work wherever the focus is: on the
+  page or in the panel, with no click needed first and with or without the
+  inspect lock. A plain arrow key is always the page's (scrolling).
+- They keep their own meaning in a field (an input of the page or the panel,
+  a Specs value open as a field, where Alt and an arrow steps by 0.1), while
+  a menu of the panel is open, while text is being edited on the page, and
+  with another modifier held.
+- When they act the key is kept from the page, also when the move has nowhere
+  to go. On Windows and Linux that takes Alt + ← and → from the browser's
+  back and forward while an element is pinned.
 - Skipped: the inspector's own host, `script`, `style`, `link`, `meta`,
-  `head`, and elements with no box (`display: none`, `display: contents`).
-  ↑ stops at `body`; a move with nowhere to go does nothing.
+  `head`, and elements with no box (`display: none`). ↑ stops at `body`; a
+  move with nowhere to go does nothing.
 - The pinned element is scrolled into view when it is off screen
   (`scrollIntoView({ block: "nearest", inline: "nearest" })`): a change of
   scroll position caused by the user's own key, and the only change to the
   page.
-- The panel is focusable (`tabindex="-1"`), so a click on it puts the focus
-  there; after a move the focus goes back to it if the redraw dropped it.
+- The panel does not take the focus: a click on it leaves the focus where it
+  was, and Alt is heard in the capture phase, so inspecting works right after
+  a click in the panel.
 
 Code: `src/navigate.ts`, `src/navigate-keys.ts`. Tests: `tests/navigate.test.ts`.
 
