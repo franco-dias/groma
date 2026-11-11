@@ -211,15 +211,69 @@ button.crumb:hover {
   font: 400 11px/16px var(--ins-font-sans);
 }
 
+/* A button: a click opens the menu that changes the intent. */
+/* A button, and drawn as one: a border, and a chevron for the menu it opens. */
 .intent {
   display: flex;
   align-items: center;
   gap: var(--ins-s-1);
+  height: 20px;
+  padding: 0 var(--ins-s-2) 0 var(--ins-s-3);
   color: var(--ins-fg);
+  background: var(--ins-bg-raised);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius-md);
+}
+
+.intent .chevron {
+  color: var(--ins-fg-muted);
+}
+
+.intent:hover,
+.intent:focus-visible {
+  background: var(--ins-bg-hover);
+}
+
+.size-row {
+  position: relative;
+}
+
+/* Width and height are two values: the × between them stands back. */
+.size-row .times {
+  margin: 0 var(--ins-s-2);
+  color: var(--ins-fg-subtle);
+}
+
+.row-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: var(--ins-s-2);
+  background: var(--ins-bg);
+  border: 1px solid var(--ins-border-strong);
+  border-radius: var(--ins-radius);
+  box-shadow: var(--ins-shadow);
+}
+
+.row-menu .hint {
+  margin-left: var(--ins-s-3);
+}
+
+.row-menu .icon:not(.check) {
+  color: var(--ins-fg-muted);
+}
+
+/* The drawings in a menu are turned like the ones on the button that opens it. */
+.row-menu[data-menu="height"] .icon:not(.check),
+.is-column .row-menu[data-menu="justify-content"] .icon:not(.check) {
+  transform: rotate(90deg);
 }
 
 /* The height glyph is the width glyph turned 90°. */
-.intent.is-height .icon {
+.intent.is-height .icon:not(.chevron) {
   transform: rotate(90deg);
 }
 
@@ -655,4 +709,150 @@ button.crumb:hover {
 .compare-row .side.is-before,
 .compare-row .icon {
   color: var(--ins-fg-muted);
+}
+
+/* ── values that can be edited (double-click) ── */
+/* The pointer finds them: a tint that adds no size. */
+.is-editable:hover:not(.is-editing) {
+  background: var(--ins-bg-hover);
+  box-shadow: 0 0 0 2px var(--ins-bg-hover);
+  border-radius: var(--ins-radius-xs);
+}
+
+/* Beside them, a value that only copies is dimmed. */
+.value.is-readonly {
+  color: var(--ins-fg-muted);
+}
+
+.is-edited {
+  color: var(--ins-warn);
+}
+
+.is-editing,
+.is-editing.is-copied {
+  cursor: text;
+  outline: none;
+  background: var(--ins-bg-active);
+  box-shadow: 0 0 0 1px var(--ins-pin);
+  border-radius: var(--ins-radius-xs);
+}
+
+/* The field's own text is the feedback: no "Copied" mark beside it. */
+.is-editing.is-copied::after,
+.value:has(.is-editing)::after {
+  content: none;
+}
+
+/* A value in a block's title (the box-sizing of the Box block) reads as a value. */
+.block-head .note.copy {
+  font-family: var(--ins-font-mono);
+}
+
+/* ── flex container: direction, justify, align as buttons ── */
+.flex-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ins-s-2);
+  padding: var(--ins-s-1) 0;
+}
+
+.flex-control {
+  position: relative;
+  gap: var(--ins-s-4);
+}
+
+.flex-control .label {
+  margin-right: calc(-1 * var(--ins-s-4));
+}
+
+.flex-control .segment {
+  display: grid;
+  place-items: center;
+  padding: 0 var(--ins-s-2);
+}
+
+.flex-control .segment:hover {
+  color: var(--ins-fg);
+}
+
+/*
+ * The drawings are made for a row: an edge on the left, items beside it.
+ * "Justify" works along the direction and "Align" across it, so each set is
+ * turned to the axis it moves the items on.
+ */
+.flex-control[data-prop="align-items"] .segment .icon,
+.is-column .flex-control[data-prop="justify-content"] .segment .icon,
+.flex-control[data-prop="flex-direction"] [data-value="column"] .icon {
+  transform: rotate(90deg);
+}
+
+.is-column .flex-control[data-prop="align-items"] .segment .icon {
+  transform: none;
+}
+
+/* ── grid tracks: a count, then one size per column or row ── */
+.tracks {
+  position: relative;
+}
+
+.tracks > .hint {
+  flex: none;
+  margin-left: var(--ins-s-4);
+}
+
+.track-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ins-s-2) var(--ins-s-4);
+  min-width: 0;
+}
+
+.stepper,
+.track {
+  display: flex;
+  align-items: center;
+  gap: var(--ins-s-1);
+}
+
+.stepper {
+  color: var(--ins-fg-muted);
+  font: 400 12px/16px var(--ins-font-mono);
+}
+
+.track-count {
+  min-width: var(--ins-s-6);
+  color: var(--ins-fg);
+  text-align: center;
+}
+
+.step {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--ins-radius-sm);
+  font: inherit;
+}
+
+.step:hover:not(:disabled) {
+  color: var(--ins-fg);
+  background: var(--ins-bg-hover);
+}
+
+.step:disabled {
+  color: var(--ins-fg-subtle);
+}
+
+/* Beside a track's size the drawing alone is the button. */
+.track .intent {
+  height: auto;
+  padding: 0 var(--ins-s-1);
+  color: var(--ins-fg-muted);
+  background: none;
+  border: 0;
+}
+
+/* A row's size is a height: its drawing is turned, as on the element's own height. */
+.tracks[data-prop$="rows"] .intent .icon,
+.row-menu[data-menu^="grid-template-rows"] .icon:not(.check) {
+  transform: rotate(90deg);
 }

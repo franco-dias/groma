@@ -6,6 +6,11 @@
  * redoes, shows the page without the edits, and copies the whole list as a
  * text a coding agent can apply in the source (edits/handoff.ts).
  *
+ * Saved edits are not put back on a page by themselves. When the page loads
+ * with edits saved on an earlier visit, a bar slides in under the tabs and
+ * says how many, on every tab, with a button that applies them and one that
+ * discards them. It stays away while the user looks at the original page.
+ *
  * The top of the tab holds a note for the pinned element: an instruction in
  * plain words, which travels with the copied edits. The list needs no pinned
  * element, so the tab also shows while the panel is open with nothing pinned.
@@ -22,10 +27,11 @@ import {
   NOTE,
   noteOn,
   redo,
+  together,
   undo,
 } from "../edits/changes";
 import { formatHandoff, type HandoffElement } from "../edits/handoff";
-import { isOriginalShown, showOriginal } from "../edits/overrides";
+import { isOriginalShown, missingEdits, replayOverrides, showOriginal } from "../edits/overrides";
 import { config } from "../config";
 import { getSelector } from "../edits/selector";
 import { elementName } from "../element-name";
@@ -187,6 +193,15 @@ function draw(el: Element | null): void {
   const original = part<HTMLButtonElement>(panel, '[data-action="original"]');
   original.disabled = !edits.some((item) => item.values.length);
   original.setAttribute("aria-pressed", String(isOriginalShown()));
+
+  // Not while the user chose to look at the page without the edits.
+  const missing = isOriginalShown() ? 0 : missingEdits().length;
+  part(panel, ".apply-bar").classList.toggle("is-off", !missing);
+  // The text stays while the bar slides out.
+  if (missing) {
+    part(panel, ".apply-text").textContent =
+      missing === 1 ? "1 saved edit is not on the page" : `${missing} saved edits are not on the page`;
+  }
 }
 
 const isTyping = (target: EventTarget | null): boolean =>
@@ -204,6 +219,23 @@ function mountControls(): void {
     step(() => showOriginal(!isOriginalShown())),
   );
   copyOnClick(part(panel, '[data-action="copy-edits"]'), handoffText);
+  part(panel, '[data-action="apply-edits"]').addEventListener(
+    "click",
+    step(() => {
+      showOriginal(false);
+      replayOverrides();
+    }),
+  );
+
+  // Discards the edits the bar counts, and leaves those that are on the page.
+  // They are removed like any edit: one step, which undo brings back.
+  part(panel, '[data-action="discard-edits"]').addEventListener(
+    "click",
+    step(() => {
+      const missing = missingEdits();
+      together(() => missing.forEach(([selector, prop]) => edit(selector, prop ?? CONTENT, null)));
+    }),
+  );
 
   // ⌘/Ctrl + Z in the panel, outside a field: a field undoes its own typing.
   panel.addEventListener("keydown", (e) => {

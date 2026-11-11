@@ -99,7 +99,12 @@ describe("layout", () => {
 
   it("shows lengths as bare numbers, and in rem on request", () => {
     inspector().pin(el(".row"));
-    expect(cells()).toMatchObject({ Display: "flex", Direction: "row", Align: "center", Gap: "16" });
+    expect(cells()).toMatchObject({ Display: "flex", Gap: "16" });
+    // Direction and alignment are buttons, not text: the checked one says the value.
+    const checked = (prop: string) =>
+      ui(`.flex-control[data-prop="${prop}"] [aria-checked="true"]`)!.dataset.value;
+    expect(checked("flex-direction")).toBe("row");
+    expect(checked("align-items")).toBe("center");
 
     ui('[data-option="unit"] [data-value="rem"]')!.click();
     expect(cells().Gap).toBe("1rem");

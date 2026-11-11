@@ -290,9 +290,13 @@
   display: inline;
 }
 
-/* Below 360px the "Comparing" label drops and the pressed icon remains. */
+/*
+ * Below 360px the labels drop and the icons remain: "Comparing", and the
+ * names of the Edits tab's actions.
+ */
 @container (max-width: 359px) {
-  .action[aria-pressed="true"] .when-on {
+  .action[aria-pressed="true"] .when-on,
+  .action-label {
     display: none;
   }
 }

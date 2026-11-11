@@ -59,8 +59,8 @@ Notes:
   colour picker only exists in Chromium.
 - On a Claude Design export, boards render when they scroll into view;
   scroll to a board before inspecting it.
-- Edits you make in the All CSS tab are stored in that browser only. They
-  do not change the file.
+- Edits you make are stored in that browser only. They do not change the
+  file. After a reload, click "Apply" in the panel to put them back.
 
 The script is also on npm, so it can be loaded from a CDN with no copy step.
 Pin the version, so a later release cannot change a page that already
@@ -145,10 +145,11 @@ A page can talk to the inspector through `window.Groma`:
 | `highlight(el)` | Moves the pinned-element outline to `el` |
 | `configure(settings)` | Changes the [settings](#settings); with no argument, restores the defaults |
 
-## The side panel: push or float
 ## Hand your edits to a coding agent
 
-Change values in the All CSS tab, on as many elements as you like. For
+Double-click a value in the Specs tab to change it (a size, a gap, a side of
+the box, a colour, a font size), or type over any property in the All CSS
+tab, on as many elements as you like. For
 something a value cannot say ("make this sticky"), pin the element, open the
 Edits tab and write a note. The Edits tab lists it all as before → after;
 the eye shows the page without your edits, and the arrows undo and redo.
@@ -193,6 +194,7 @@ Note: keep it in view while the page scrolls
 - A value the browser does not accept is not kept. `!important` after a
   value works.
 
+## The side panel: push or float
 
 The panel pushes the page aside by default, so it never covers what you are
 inspecting. Groma does this by adding the panel's width to the page's right
@@ -234,13 +236,15 @@ for the file again each time the canvas opens. Opening the file with
 
 ## Known limits
 
-- On the canvas, Space does not scroll the page: it is the key that moves the
-- On a page that renders after it loads, or again later, saved edits are put
-  back when you pin an element, not by themselves. A page can call
-  `Groma.replayOverrides()` after it renders to get them back at once.
+- Saved edits do not come back by themselves after a reload. The panel shows
+  a bar with the number missing, with "Apply" and "Discard" buttons.
+- When the page draws an edited element again, the edit is gone from it and
+  nothing says so. Switch "Show original" on and off to put every edit back,
+  or have the page call `Groma.replayOverrides()` after it renders.
 - A saved edit is found again by a selector that keeps the element's classes.
   If a class comes and goes (`.is-active`), the edit shows as "Not on the page
   now" while it is gone.
+- On the canvas, Space does not scroll the page: it is the key that moves the
   canvas. The wheel still scrolls, Space still types in a field, and a tap of
   Space still presses a focused button or checkbox.
 - The canvas loads the page a second time. For a file opened from disk and a
@@ -253,8 +257,15 @@ for the file again each time the canvas opens. Opening the file with
   [the side panel](#the-side-panel-push-or-float).
 - Token lookup takes the last matching declaration in source order and
   ignores selector specificity.
-- Sizing intent (fixed, hug, fill) is inferred from styles; children of CSS
-  grid are treated as plain blocks.
+- Sizing intent (fixed, hug, fill) is inferred from styles, and set with the
+  properties that fit a block, a flex or a grid parent. In a grid, an image
+  or an element with an aspect ratio reads as "fill" although it does not
+  stretch by default.
+- A grid's columns and rows are read from the last declaration in the
+  stylesheets, even one inside a media query that does not apply now. When
+  that list is not what the browser laid out, the track sizes are shown as
+  one text value. Two lists with the same number of tracks and no pixel
+  sizes cannot be told apart.
 - Of the UI frameworks, only React pages are read for components; other
   pages can declare components in the markup (see [Components](#components)).
   A minified production build shows no React component names; see

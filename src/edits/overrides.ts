@@ -1,10 +1,16 @@
 /**
  * Edits made in the All CSS tab: style overrides and content changes.
  *
- * They are saved in localStorage per page, keyed by element selector, and
- * replayed when the page loads. What the page had before the first edit is
- * remembered, so a reset can put it back, and so the user can look at the
- * page without the edits and bring them back (`showOriginal`).
+ * They are saved in localStorage per page, keyed by element selector. A page
+ * that loads again does not carry them, and nothing puts them back by
+ * itself, because a page that renders late would get some and not others.
+ * The panel says how many saved edits this visit has not seen on the page
+ * (`missingEdits`), and the user puts them back, or discards them, with one
+ * click.
+ *
+ * What the page had before the first edit is remembered, so a reset can put
+ * it back, and so the user can look at the page without the edits and bring
+ * them back (`showOriginal`).
  *
  * This file applies and stores. The user's edits go through edits/changes.ts,
  * which also keeps the history for undo.
@@ -22,6 +28,17 @@ type ContentOverrides = Record<string, string>;
 /** Inline value and priority of a property before its first edit. */
 const originalStyles = new WeakMap<Element, Record<string, [string, string]>>();
 const originalContent = new WeakMap<Element, string>();
+
+/**
+ * The saved edits that were made, or put back, during this visit to the
+ * page. The others were saved on an earlier visit and are not on the page.
+ */
+const seen = new Set<string>();
+const seenKey = (selector: string, prop: string | null, value: string): string =>
+  JSON.stringify([selector, prop, value]);
+
+/** True once an edit was put on the page in this visit, by an edit or by "Apply". */
+let editsOn = false;
 
 const inlineStyle = (el: Element): CSSStyleDeclaration => (el as HTMLElement).style;
 
@@ -42,6 +59,7 @@ export function saveStyle(selector: string, prop: string, value: string | null):
   else props[prop] = value;
   if (!Object.keys(props).length) delete all[selector];
   writeStore(styleKey(), all);
+  if (value !== null) seen.add(seenKey(selector, prop, value));
 }
 
 /** "10px !important" is typed as one value; the browser takes the priority apart from it. */
@@ -62,6 +80,7 @@ export function applyStyle(el: Element, prop: string, value: string): void {
   originalStyles.set(el, originals);
   originals[prop] ??= [style.getPropertyValue(prop), style.getPropertyPriority(prop)];
   style.setProperty(prop, value.replace(IMPORTANT, ""), IMPORTANT.test(value) ? "important" : "");
+  editsOn = true;
 }
 
 /** Puts back the inline value the page had before the first edit. */
@@ -103,11 +122,13 @@ export function saveContent(selector: string, content: string | null): void {
   if (content === null) delete all[selector];
   else all[selector] = content;
   writeStore(contentKey(), all);
+  if (content !== null) seen.add(seenKey(selector, null, content));
 }
 
 export function applyContent(el: Element, content: string): void {
   if (!originalContent.has(el)) originalContent.set(el, getContent(el));
   setContent(el, content);
+  editsOn = true;
 }
 
 /** Puts back the content the page had before the first edit. */
@@ -151,11 +172,44 @@ export function replayOverrides(root: ParentNode = pageDocument()): void {
   // A page that re-renders asks for a replay; the user asked for the original.
   if (originalShown) return;
   Object.entries(readStore<StyleOverrides>(styleKey())).forEach(([selector, props = {}]) => {
+    Object.entries(props).forEach(([prop, value]) => seen.add(seenKey(selector, prop, value)));
     forEachMatch(root, selector, (el) => {
       Object.entries(props).forEach(([prop, value]) => applyStyle(el, prop, value));
     });
   });
   Object.entries(readStore<ContentOverrides>(contentKey())).forEach(([selector, content = ""]) => {
+    seen.add(seenKey(selector, null, content));
     forEachMatch(root, selector, (el) => applyContent(el, content));
   });
+}
+
+/**
+ * The edits saved on an earlier visit that this one has not put on the page,
+ * as selector and property (null for the content). An edit whose element is
+ * not on the page is left out, since there is nothing to put it on. An edit
+ * made during this visit is never one of them, even after the page draws its
+ * element again.
+ */
+export function missingEdits(): [selector: string, prop: string | null][] {
+  const root = pageDocument();
+  const missing: [string, string | null][] = [];
+  const check = (selector: string, prop: string | null, value: string): void => {
+    if (seen.has(seenKey(selector, prop, value))) return;
+    let onPage = false;
+    forEachMatch(root, selector, () => (onPage = true));
+    if (onPage) missing.push([selector, prop]);
+  };
+  Object.entries(allSavedStyles()).forEach(([selector, props = {}]) => {
+    Object.entries(props).forEach(([prop, value]) => check(selector, prop, value));
+  });
+  Object.entries(allSavedContent()).forEach(([selector, content = ""]) => check(selector, null, content));
+  return missing;
+}
+
+/**
+ * For a page that is shown anew within one visit (the canvas loads it in a
+ * frame, then leaves it): puts the edits back if they were on the page.
+ */
+export function carryEdits(): void {
+  if (editsOn) replayOverrides();
 }

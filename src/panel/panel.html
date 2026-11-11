@@ -31,6 +31,21 @@
   <button class="more-item collapse" role="menuitem"><span class="slot"></span>Collapse panel</button>
 </div>
 
+<!--
+  Edits saved on an earlier visit, which are not on the page after it loads.
+  Shown on every tab, since the values in them are the page's until the edits
+  are put back (panel/edits-tab.ts). It slides in and out; `is-off` is the
+  closed state.
+-->
+<div class="apply-bar is-off" role="status">
+  <div class="apply-clip"><div class="apply-inner">
+    <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M12 9v4" /><path d="M12 17h.01" /><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" /></svg>
+    <span class="apply-text"></span>
+    <button class="ghost-button" data-action="discard-edits" title="Remove these saved edits. Undo brings them back.">Discard</button>
+    <button class="apply-button" data-action="apply-edits" title="Put your saved edits back on the page">Apply</button>
+  </div></div>
+</div>
+
 <!-- ───────────── Specs: what a developer needs to build the element ───────────── -->
 <div class="action-bar" data-for="specs">
   <div class="segmented" role="radiogroup" aria-label="Units" data-option="unit">
@@ -81,13 +96,15 @@
 <div class="action-bar" data-for="edits">
   <button class="action" data-action="undo" aria-label="Undo" title="Undo the last edit">
     <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5" /><path d="M4 9h10a6 6 0 0 1 0 12h-3" /></svg>
+    <span class="action-label">Undo</span>
   </button>
   <button class="action" data-action="redo" aria-label="Redo" title="Redo the edit you undid">
     <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="m15 14 5-5-5-5" /><path d="M20 9H10a6 6 0 0 0 0 12h3" /></svg>
+    <span class="action-label">Redo</span>
   </button>
   <button class="action" data-action="original" aria-pressed="false" aria-label="Show the original page" title="Show the page without your edits. They stay saved.">
     <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg>
-    <span class="when-on">Original</span>
+    <span class="action-label">Show original</span>
   </button>
   <span class="spacer"></span>
   <button class="ghost-button" data-action="copy-edits" title="Copy every edit as a text a coding agent can apply">

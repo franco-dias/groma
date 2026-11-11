@@ -107,6 +107,8 @@ interface Step {
   to: string | null;
   /** When a nudge made it, so the next nudge can join it; 0 for any other step. */
   nudgedAt: number;
+  /** Steps made together share a number and are undone together; 0 for a step on its own. */
+  group: number;
 }
 
 /** Nudges of one value this close together are one step: a run of arrow-key presses. */
@@ -116,6 +118,22 @@ const MERGE_MS = 1000;
 // users ask to undo after a reload.
 const done: Step[] = [];
 const undone: Step[] = [];
+
+let group = 0;
+let groups = 0;
+
+/**
+ * Makes the edits of `make` one step to undo: one choice of the user that
+ * sets several properties (a width that fills its parent).
+ */
+export function together(make: () => void): void {
+  group = ++groups;
+  try {
+    make();
+  } finally {
+    group = 0;
+  }
+}
 
 /**
  * Makes an edit: a CSS property, `CONTENT` or `NOTE` of the element `selector`
@@ -132,6 +150,12 @@ export function edit(
 ): boolean {
   const isStyle = prop !== NOTE && prop !== CONTENT;
   if (isStyle && value !== null && !isValidStyle(prop, value)) return false;
+  if (el && !el.isConnected) {
+    // The page removed the element a tab still shows, or drew it again: the
+    // edit goes to the element that is there now, and to none if none is.
+    el = findEdited(selector);
+    if (!el && value !== null) return false;
+  }
   const from = current(selector, prop);
   if (from === value) return true;
   write(selector, prop, value, el);
@@ -144,7 +168,7 @@ export function edit(
     last.nudgedAt = nudgedAt;
     if (last.from === last.to) done.pop();
   } else {
-    done.push({ selector, prop, from, to: value, nudgedAt });
+    done.push({ selector, prop, from, to: value, nudgedAt, group });
   }
   return true;
 }
@@ -152,20 +176,20 @@ export function edit(
 export const canUndo = (): boolean => done.length > 0;
 export const canRedo = (): boolean => undone.length > 0;
 
-export function undo(): void {
-  const step = done.pop();
-  if (!step) return;
-  write(step.selector, step.prop, step.from, findEdited(step.selector));
-  undone.push(step);
+/** Moves the last step of `from` to `to`, with the steps made together with it. */
+function move(from: Step[], to: Step[], value: (step: Step) => string | null): void {
+  let step = from.pop();
+  while (step) {
+    write(step.selector, step.prop, value(step), findEdited(step.selector));
+    // A step that is moved never takes in the next nudge.
+    to.push({ ...step, nudgedAt: 0 });
+    const joined = step.group !== 0 && from.at(-1)?.group === step.group;
+    step = joined ? from.pop() : undefined;
+  }
 }
 
-export function redo(): void {
-  const step = undone.pop();
-  if (!step) return;
-  write(step.selector, step.prop, step.to, findEdited(step.selector));
-  // A step that is redone never takes in the next nudge.
-  done.push({ ...step, nudgedAt: 0 });
-}
+export const undo = (): void => move(done, undone, (step) => step.from);
+export const redo = (): void => move(undone, done, (step) => step.to);
 
 // ── the list ───────────────────────────────────────────────────
 

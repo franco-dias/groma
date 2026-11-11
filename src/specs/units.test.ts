@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compactSides, copiedLength, copiedSpacing, shownLength, sxSpacing } from "./units";
+import { compactSides, copiedLength, copiedSpacing, nudged, shownLength, sxSpacing } from "./units";
 
 describe("compactSides", () => {
   it("uses the shortest CSS shorthand", () => {
@@ -62,5 +62,24 @@ describe("copiedSpacing", () => {
     expect(copiedSpacing("padding", [12, 16, 12, 16], "rem", 16, "sx")).toBe(
       "padding: 0.75rem 1rem",
     );
+  });
+});
+
+describe("nudged", () => {
+  it("moves the leading number by one step and keeps what follows it", () => {
+    expect(nudged("12px", 1, 1)).toBe("13px");
+    expect(nudged("12px", -1, 10)).toBe("2px");
+    expect(nudged("-4px 8px", 1, 1)).toBe("-3px 8px");
+    expect(nudged("400", 1, 100)).toBe("500");
+  });
+
+  it("keeps one decimal for a step of 0.1 and for a number that has decimals", () => {
+    expect(nudged("23px", -1, 0.1)).toBe("22.9px");
+    expect(nudged("1.5", 1, 1)).toBe("2.5");
+  });
+
+  it("answers null for text that does not start with a number", () => {
+    expect(nudged("auto", 1, 1)).toBeNull();
+    expect(nudged("", 1, 1)).toBeNull();
   });
 });
