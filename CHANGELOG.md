@@ -5,6 +5,30 @@ All notable changes to this package are recorded here. Versions follow
 
 ## Unreleased
 
+- New: the Edits tab lists everything you changed on the page, on any
+  element, as before → after, with a ↩ per line. It also shows while the
+  panel is open with nothing pinned.
+- New: "Copy edits" copies the list as one Markdown text for a coding agent:
+  the page, the viewport, and per element its selector, component, source
+  path, text and each edit as before → after. A new value that one of the
+  page's tokens holds is marked with the token's name.
+- New: notes. Write an instruction on the pinned element in the Edits tab; it
+  is saved and copied with the edits.
+- New: undo and redo for edits, notes and resets, with the buttons in the
+  Edits tab or Ctrl/⌘ + Z in the panel. A reload keeps the edits and forgets
+  the steps.
+- New: the eye in the Edits tab shows the page without your edits, and brings
+  them back.
+- Changed: a value the browser would ignore is no longer saved as an edit, and
+  `!important` typed after a value is applied. Saved edits are put back each
+  time an element is pinned, for pages that render late or again. An edit the
+  browser refuses to store is kept in memory until the page goes away.
+  Resetting the only edit of an element leaves no empty `style` attribute.
+- New storage keys: `__groma_before:<path>` (what the page had before an
+  edit) and `__groma_notes:<path>`. Edits saved by earlier versions still
+  work; they are listed without a "before".
+- New: [docs/roadmap.md](docs/roadmap.md), what is planned and in what order.
+
 - Changed, landing page: on a device with only touch (no mouse or trackpad)
   the page no longer loads Groma, and shows the npm button where "Try it
   here" was.

@@ -62,6 +62,7 @@ describe("Reference tab", () => {
       "Copy",
       "Specs",
       "All CSS",
+      "Edits",
       "Layers and panel",
       "Canvas",
       "Good to know",

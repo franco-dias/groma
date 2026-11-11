@@ -33,6 +33,23 @@ export function tokensWithColor(cs: CSSStyleDeclaration, color: string): string[
     .sort((a, b) => a.length - b.length);
 }
 
+/**
+ * The CSS variables on an element that hold `value`: the same colour in any
+ * spelling, or the same text for any other value. Shortest names first.
+ * shortcut: lengths are compared as text, so "1rem" does not match a token
+ * that says "16px"; convert units if users miss those matches.
+ * shortcut: any token with the value matches, whatever it is for (a radius
+ * token for a gap); match by the property's kind if the names mislead.
+ */
+export function tokensWithValue(cs: CSSStyleDeclaration, value: string): string[] {
+  if (normalizeColor(value)) return tokensWithColor(cs, value);
+  // "none", "auto" and zero are held by tokens that have nothing to do with the property.
+  if (!/[1-9]/.test(value)) return [];
+  return Array.from(cs)
+    .filter((prop) => prop.startsWith("--") && cs.getPropertyValue(prop).trim() === value.trim())
+    .sort((a, b) => a.length - b.length);
+}
+
 /** "rgb(27, 26, 23)" -> "#1B1A17". A translucent colour keeps its alpha as a percentage. */
 export function formatColor(value: string): string {
   const parts = /^rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)$/.exec(value);

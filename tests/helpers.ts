@@ -131,6 +131,10 @@ export function reset(): void {
   pressEscape();
   ui(".rail")?.click();
   if (ui(".panel")) {
+    // The history of edits lives in memory, and so does an edit the browser
+    // refused to store: undo them all, as a reload would forget them.
+    const undo = ui<HTMLButtonElement>('[data-action="undo"]')!;
+    while (!undo.disabled) undo.click();
     ui('[data-option="unit"] [data-value="px"]')!.click();
     ui('[data-option="grid"] [data-value="0"]')!.click();
     openTab("specs");

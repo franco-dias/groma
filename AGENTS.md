@@ -132,6 +132,8 @@ frame, not `document`. `src/page.ts` knows which one it is.
   `onSelection()`. After an edit or an option change, call `rerender()`.
 - A panel tab is one file that implements `Tab` (`src/panel/tab.ts`) and is
   listed in `src/panel/panel.ts`. Tabs do not import each other.
+- A user's edit to the page goes through `edit()` in `src/edits/changes.ts`,
+  so it is saved, listed in the Edits tab and can be undone.
 - Logic that needs no page (formatting, parsing, comparing) goes in
   `src/specs/` or a plain module, with a unit test beside it.
 - Markup goes in `src/panel/panel.html`; styles in `src/styles/`. Do not
@@ -187,8 +189,12 @@ frame, not `document`. `src/page.ts` knows which one it is.
   in the wild carry these attributes. Changing a default or a value's
   meaning is a major version.
 - **Storage keys**: `__groma_overrides:<path>`,
-  `__groma_html:<path>`, `__groma_panel` and `__groma_canvas`. Renaming
+  `__groma_html:<path>`, `__groma_before:<path>`, `__groma_notes:<path>`,
+  `__groma_panel` and `__groma_canvas`. Renaming
   one loses users' saved edits; migrate, or do not rename.
+- **The text "Copy edits" writes** (`src/edits/handoff.ts`): agents and
+  people's prompts read it. Keep its headings and the shape of its lines, or
+  say what changed in the changelog.
 - **Saved selectors** (`src/edits/selector.ts`): changing their shape
   orphans saved edits.
 - **Claude Design export format**: `BOARD_SELECTOR`, `#dc-data` and the

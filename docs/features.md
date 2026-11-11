@@ -56,9 +56,9 @@ the page aside or floats over it (see below).
 
 - **Alt + Shift + G** opens the panel with nothing pinned, from anywhere on
   the page, and closes it again (unpinning the element, if there is one).
-  The empty panel shows a hint in place of the tabs' content; the » menu and
-  the reference work, so the canvas and the shortcuts are reachable before
-  anything is pinned. Pinning an element fills it. The shortcut is matched
+  The empty panel shows a hint in place of the tabs' content; the » menu,
+  the reference and the Edits tab (feature 18) work, so the canvas, the
+  shortcuts and the list of edits are reachable before anything is pinned. Pinning an element fills it. The shortcut is matched
   by the key's place on the keyboard (`KeyG`), because Alt changes the
   letter a key types.
 
@@ -71,8 +71,8 @@ the page aside or floats over it (see below).
   motion" set in the system, and in a browser without `@starting-style` and
   `transition-behavior: allow-discrete`, it shows and hides at once.
   Collapsing to the rail is not animated.
-- Four tabs: Specs, All CSS, Layers, Changes. The Changes tab is hidden on
-  pages that are not Claude Design exports.
+- Five tabs: Specs, All CSS, Layers, Edits, Changes. The Changes tab is
+  hidden on pages that are not Claude Design exports.
 - The » button opens a small menu: "Shortcuts and tips" (feature 16),
   "Push the page aside", "Show on a canvas" (feature 17) and "Collapse
   panel". A click elsewhere in the
@@ -236,7 +236,8 @@ Every computed property of the pinned element, grouped. Values are
 editable.
 
 - An edit is applied to the element's inline style at once, saved, and
-  listed under "Your edits".
+  listed under "Your edits". The Edits tab (feature 18) lists the edits of
+  every element.
 - A value that is focused and left unchanged keeps its edit. Escape cancels
   typing.
 - Reset, or clearing the value, puts back the inline value the page had
@@ -249,9 +250,20 @@ editable.
   on Ctrl/⌘+Enter; Reset restores the original.
 - Edits are saved in `localStorage`, per page path, keyed by a selector
   that leads back to the same element (ids and classes escaped).
-- Saved edits are replayed on load. Pages that render late call
-  `Groma.replayOverrides(root?)`.
-- If storage is blocked or full, the edit still applies.
+- Saved edits are replayed on load, and again each time an element is
+  pinned, so what the tabs list as edited is on the page. Pages that render
+  late call `Groma.replayOverrides(root?)` to get them back without a pin.
+- A value the browser would ignore (`banana` for a padding) is not kept: the
+  row goes back to what it showed, and an edit that was there stays.
+  `!important` typed after a value is applied as its priority.
+- If storage is blocked or full, the edit still applies, and is kept in
+  memory until the page goes away: it is listed, copied and undone like any
+  other, and is only not there after a reload.
+- Undoing or resetting the only edit of an element that had no inline style
+  leaves it with no `style` attribute.
+- Every edit goes through `edit()` in `src/edits/changes.ts`, which applies
+  it, saves it and records it for undo. Do not call the functions of
+  `overrides.ts` for a user's edit from anywhere else.
 
 Code: `src/panel/css-tab.ts`, `src/edits/*`. Tests: `tests/edits.test.ts`.
 
@@ -318,7 +330,7 @@ Code: `src/config.ts`. Tests: `tests/config.test.ts`,
 A tab that lists every shortcut and trick, opened from the » menu.
 
 - Content lives in `src/panel/reference.html`, grouped by subject: Inspect,
-  Copy, Specs, All CSS, Layers and panel, Canvas, Good to know.
+  Copy, Specs, All CSS, Edits, Layers and panel, Canvas, Good to know.
 - Modifier keys are named as the user's keyboard does (⌥ and ⌘ on a Mac,
   Alt and Ctrl elsewhere).
 - It has no tab in the tab bar, and it is not the tab the panel reopens on.
@@ -398,3 +410,65 @@ and how to listen to it (`onPage`).
 Code: `src/canvas/canvas.ts`, `view.ts`, `canvas.html`, `src/page.ts`,
 `src/root.ts` (`mountOnPage`, the clip), `src/styles/canvas.css`.
 Tests: `tests/canvas.test.ts`, `src/canvas/view.test.ts`.
+
+## 18. Edits tab and Copy edits
+
+Everything the user changed on this page, on any element, and the way to
+hand it to whoever changes the source: a coding agent, or a person.
+
+- **The list.** One group per edited element: its name, its selector, then
+  one line per edit as before → after. "Before" is the computed value the
+  page had when the property was first edited (the content, for a content
+  edit); it is saved with the edit (`localStorage["__groma_before:<path>"]`),
+  so it is still there after a reload. An edit saved by a version before 0.7
+  has no "before", and shows only its value. It is the value at the moment
+  of the first edit, so it includes earlier edits it depends on: a text
+  colour inherited from a parent that was edited first reads as the parent's
+  new colour.
+- A click on a group's name pins that element. A group whose element the
+  page no longer has says so, and cannot be pinned.
+- **↩ on a line** removes that edit and puts back the page's own value.
+- The list needs no pinned element: the tab also shows while the panel is
+  open with nothing pinned.
+- **Notes.** With an element pinned, the top of the tab has a note field for
+  it: an instruction in plain words ("make this sticky"). It is saved when
+  the field is left (`localStorage["__groma_notes:<path>"]`), changes nothing
+  on the page, is listed with the element's edits and is copied with them.
+  Clearing the field removes the note; Esc cancels typing.
+- **Undo and redo**: the two buttons in the bar, and Ctrl/⌘ + Z and
+  Shift + Ctrl/⌘ + Z while the focus is in the panel and not in a field (a
+  field undoes its own typing). They cover style edits, content edits, notes
+  and resets. A run of arrow-key nudges on one value is one step. The
+  history is kept in memory: a reload keeps the edits and forgets the steps.
+- **Show the original page** (the eye): puts back what the page had, for
+  every edit, without removing the edits; pressed again, it applies them
+  again. While it is on, `Groma.replayOverrides()` does nothing, so a page
+  that re-renders does not bring the edits back. Making an edit switches it
+  off first.
+- **Copy edits** copies one Markdown text: the page's address, the viewport
+  size, then per element its selector, its component and source path when
+  the page gives them, the start of its text, each edit as before → after,
+  and its note. It is off while there is nothing to copy.
+- **Token names.** When the new value of a style is held by one of the
+  page's tokens (a CSS variable the element can see), the line names it:
+  `16px (matches --space-4)`. Colours match in any spelling; other values
+  match as text. At most three tokens are named, shortest names first. A
+  value that already says `var(…)` is left as it is. A value with no digit
+  but zero (`none`, `auto`, `0px`) is never matched: tokens that hold those
+  have nothing to do with the property. On a page that sets token prefixes
+  (feature 15), only tokens with one of them are named.
+- A value is written as inline code on one line; one that holds backticks
+  gets a longer fence. A note of several lines is written as a quote, so no
+  line of it reads as a heading of the text. The element's text is its text
+  as shown (`innerText`).
+- The text describes the change and where the element is on the rendered
+  page. It does not say which file or line to edit, and it writes no code:
+  that is the reader's job, with the project in front of them.
+- **The format is read by agents.** Changing its headings or the shape of
+  its lines changes what people's prompts and tools see; say so in the
+  changelog.
+
+Code: `src/panel/edits-tab.ts`, `src/edits/changes.ts` (the list, the
+history), `src/edits/handoff.ts` (the text), `src/edits/overrides.ts`
+(`showOriginal`), `src/styles/edits.css`.
+Tests: `tests/edits-tab.test.ts`, `src/edits/handoff.test.ts`.
