@@ -3,6 +3,13 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## Unreleased
+
+- Fixed: on a page that replaces its `<body>` or its whole document after it
+  loads, as a self-unpacking design export does, the inspector's launcher and
+  panel were thrown away with the old content and never came back. Groma now
+  puts itself back.
+
 ## 0.6.0 (2026-11-10)
 
 - New: `npx gromajs <file.html>` opens any HTML design file with Groma

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { el, holdAlt, hover, inspector, page, reset, ui } from "./helpers";
+import { el, frames, holdAlt, hover, inspector, page, reset, ui } from "./helpers";
 
 /** Whatever is on top at a point, as the page's document sees it. */
 const topAt = (x: number, y: number): Element | null => document.elementFromPoint(x, y);
@@ -34,5 +34,17 @@ describe("layering above the page", () => {
     expect(ui(".overlay > div")!.getBoundingClientRect().width).toBeGreaterThan(0);
     // Outlines ignore the pointer, so the check is on the layer they all share.
     expect(document.querySelector("groma-inspector")!.matches(":popover-open")).toBe(true);
+  });
+
+  it("comes back, in the top layer, when the page throws it away with its old content", async () => {
+    inspector().pin(el(".card"));
+    const host = document.querySelector("groma-inspector")!;
+    // What a page does when it replaces its body or its whole document.
+    host.remove();
+    await frames();
+    expect(host.isConnected).toBe(true);
+    expect(host.matches(":popover-open")).toBe(true);
+    expect(ui(".panel")!.getBoundingClientRect().width).toBeGreaterThan(0);
+    expect(ui(".launcher")!.getBoundingClientRect().width).toBeGreaterThan(0);
   });
 });

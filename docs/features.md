@@ -101,6 +101,9 @@ the page aside or floats over it (see below).
   launcher or the outlines. Browsers without the Popover API fall back to the
   host's own z-index. A modal `<dialog>` that the page opens later sits above
   the inspector, and blocks it while it is open.
+- The inspector survives a page that replaces its `<body>` or its whole
+  document after it loads, as a self-unpacking design export does: the host
+  is put back, with everything it holds, and back in the top layer.
 
 Code: `src/panel/panel.ts`, `layout.ts`, `panel.html`, `src/page-shift.ts`,
 `src/root.ts` (the top layer), `src/styles/panel.css`.

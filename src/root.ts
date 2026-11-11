@@ -22,8 +22,19 @@ function inspectorHost(): HTMLElement {
     host = document.body.appendChild(document.createElement(HOST_TAG));
     host.attachShadow({ mode: "open" }).appendChild(h("style", "", styles));
     promoteToTopLayer(host);
+    // A page may replace its <body>, or its whole <html>, after it loads (a
+    // design export that unpacks itself does). The host goes with the old
+    // one; put it back, with everything it holds.
+    new MutationObserver(comeBack).observe(document, { childList: true, subtree: true });
   }
   return host;
+}
+
+function comeBack(): void {
+  if (!host || host.isConnected || !document.body) return;
+  document.body.appendChild(host);
+  // Leaving the document also took it out of the top layer.
+  promoteToTopLayer(host);
 }
 
 /**
