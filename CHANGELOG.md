@@ -8,6 +8,8 @@ All notable changes to this package are recorded here. Versions follow
 - Changed, landing page: on a device with only touch (no mouse or trackpad)
   the page no longer loads Groma, and shows the npm button where "Try it
   here" was.
+  The shortcuts section's subtitle there says a keyboard and a mouse or
+  trackpad are needed, instead of pointing to a pill that is not on the page.
 
 ## 0.6.3 (2026-11-10)
 
