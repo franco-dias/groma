@@ -27,6 +27,26 @@ const INTENT_GLYPHS = {
   fill: '<path d="M1.5 6h9M4 3.5 1.5 6 4 8.5M8 3.5 10.5 6 8 8.5"/>',
 } as const;
 
+/**
+ * Where a flex container puts its items, drawn on a 16px grid for items laid
+ * out in a row: an edge and two items. The stylesheet turns them for the
+ * other axis, so one set serves both.
+ */
+const FLEX_GLYPHS = {
+  row: '<path d="M2 8h12M10 4l4 4-4 4"/>',
+  start: '<path d="M2 2v12M5 6h8M5 10h5"/>',
+  center: '<path d="M8 2v12M4 6h8M5.5 10h5"/>',
+  end: '<path d="M14 2v12M3 6h8M6 10h5"/>',
+  between: '<path d="M2 2v12M14 2v12M4.5 5v6M11.5 5v6"/>',
+  around: '<path d="M2 2v12M14 2v12M5.5 5v6M10.5 5v6"/>',
+  evenly: '<path d="M2 2v12M14 2v12M6.5 5v6M9.5 5v6"/>',
+  stretch: '<path d="M2 2v12M14 2v12M5 6h6M5 10h6"/>',
+} as const;
+
+export type FlexGlyph = keyof typeof FLEX_GLYPHS;
+
+export const flexGlyph = (name: FlexGlyph): SVGSVGElement => svg(FLEX_GLYPHS[name], 14, 16);
+
 export type IconName = keyof typeof ICONS;
 export type Intent = keyof typeof INTENT_GLYPHS;
 

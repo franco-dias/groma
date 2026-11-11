@@ -52,6 +52,7 @@
 .panel:not([data-tab="specs"]) [data-for="specs"],
 .panel:not([data-tab="css"]) [data-for="css"],
 .panel:not([data-tab="layers"]) [data-for="layers"],
+.panel:not([data-tab="edits"]) [data-for="edits"],
 .panel:not([data-tab="changes"]) [data-for="changes"],
 .panel:not([data-tab="reference"]) [data-for="reference"] {
   display: none;
@@ -101,6 +102,7 @@
 .panel[data-tab="specs"] .tab[data-tab="specs"],
 .panel[data-tab="css"] .tab[data-tab="css"],
 .panel[data-tab="layers"] .tab[data-tab="layers"],
+.panel[data-tab="edits"] .tab[data-tab="edits"],
 .panel[data-tab="changes"] .tab[data-tab="changes"] {
   color: var(--ins-fg);
   background: var(--ins-bg-active);
@@ -288,9 +290,13 @@
   display: inline;
 }
 
-/* Below 360px the "Comparing" label drops and the pressed icon remains. */
+/*
+ * Below 360px the labels drop and the icons remain: "Comparing", and the
+ * names of the Edits tab's actions.
+ */
 @container (max-width: 359px) {
-  .action[aria-pressed="true"] .when-on {
+  .action[aria-pressed="true"] .when-on,
+  .action-label {
     display: none;
   }
 }
@@ -346,12 +352,12 @@
   margin: 0;
 }
 
-.panel.is-empty:not(.is-collapsed):not([data-tab="reference"]) > .empty {
+.panel.is-empty:not(.is-collapsed):not([data-tab="reference"]):not([data-tab="edits"]) > .empty {
   display: flex;
 }
 
-/* The reference needs no element; everything else does. */
-.panel.is-empty [data-for]:not([data-for="reference"]) {
+/* The reference and the list of edits need no element; everything else does. */
+.panel.is-empty [data-for]:not([data-for="reference"]):not([data-for="edits"]) {
   display: none;
 }
 

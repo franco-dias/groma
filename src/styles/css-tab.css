@@ -142,7 +142,8 @@
   padding: 0 0 var(--ins-s-2);
 }
 
-.editor {
+.editor,
+.note-field {
   max-height: 180px;
   padding: var(--ins-s-3) var(--ins-s-4);
   overflow-y: auto;
@@ -157,7 +158,8 @@
   font: 400 12px/18px var(--ins-font-mono);
 }
 
-.editor:focus {
+.editor:focus,
+.note-field:focus {
   border-color: var(--ins-pin);
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "gromajs",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "Groma: inspect any web page like a design file. A Figma-style inspector for web pages, apps and design handoffs: box model, specs, design tokens, components and distances, with one script.",
   "keywords": [
     "groma",

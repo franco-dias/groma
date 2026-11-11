@@ -33,7 +33,9 @@ async function chooseFile(name: string, content: string): Promise<void> {
   files.items.add(new File([content], name, { type: "text/html" }));
   input.files = files.files;
   input.dispatchEvent(new Event("change"));
-  await wait(100);
+  // The tab reads the file before it shows anything. That takes as long as
+  // the machine lets it: wait for the file's name, not for a fixed time.
+  for (let waited = 0; waited < 5000 && !texts(".file-name").includes(name); waited += 10) await wait(10);
 }
 
 beforeEach(() => {
