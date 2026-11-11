@@ -121,7 +121,7 @@
 @keyframes try-press { 0%, 100% { transform:none } 45% { transform:translateY(1px); box-shadow:inset 0 0 0 var(--color-black-25) } }
 @media (prefers-reduced-motion: reduce) { .try-hint, .try-hint kbd { transition:none; animation:none !important } }
 .npm-touch { display:none !important; }
-@media (pointer: coarse) { .try-it { display:none !important; } .npm-touch { display:inline-flex !important; } }
+@media not all and (any-pointer: fine) { .try-it { display:none !important; } .npm-touch { display:inline-flex !important; } }
 </style></head>
 <body>
 <x-dc>

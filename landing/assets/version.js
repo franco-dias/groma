@@ -29,7 +29,11 @@
     }
   }
 
+  /** A device with only touch (no mouse or trackpad) cannot hold a key and hover: Groma is not run there. */
+  const touchOnly = !matchMedia("(any-pointer: fine)").matches;
+
   function runGroma(version) {
+    if (touchOnly) return;
     const script = document.createElement("script");
     script.src = `https://cdn.jsdelivr.net/npm/gromajs@${version}/dist/groma.js`;
     script.setAttribute("data-groma", "");

@@ -1,9 +1,9 @@
 /**
  * "Try it here": the landing page runs Groma itself. A click on the button
  * shows how to start; holding the key then says what to do next, and letting
- * it go before that hint is gone asks for the key again. Touch
- * screens have no key to hold: there the page shows the npm button instead
- * (see the styles in build.py).
+ * it go before that hint is gone asks for the key again. Devices
+ * with only touch have no key to hold: Groma does not run there, and the page
+ * shows the npm button instead.
  */
 (function () {
   // The page marks <html> on Apple keyboards (see STYLES in content.py).

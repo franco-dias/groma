@@ -3,6 +3,12 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## Unreleased
+
+- Changed, landing page: on a device with only touch (no mouse or trackpad)
+  the page no longer loads Groma, and shows the npm button where "Try it
+  here" was.
+
 ## 0.6.3 (2026-11-10)
 
 No code changes: the script is identical to 0.6.2. This release updates what
