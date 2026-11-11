@@ -3,6 +3,16 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 0.6.2 (2026-11-11)
+
+No code changes: the script is identical to 0.6.1. This release updates what
+the npm page shows.
+
+- Changed: the tagline, in the README and the package description: "Survey the
+  AI design piece before you build it."
+- New, in the repository only: `landing/`, the landing page, a static site in
+  English and Brazilian Portuguese. It is not part of the package.
+
 ## 0.6.1 (2026-11-10)
 
 - Changed: a new logo, the one the landing page uses: a groma seen from the
