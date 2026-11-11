@@ -1,4 +1,5 @@
 /** An editable value of the Specs tab, and what is going on with it. */
+import type { TokenList } from "../token-list/token-list";
 import type { SpecsContext } from "./specs-context";
 
 /**
@@ -22,4 +23,5 @@ export type FieldSession = {
   /** The text the node showed, which Escape puts back. */
   text: string | null;
   isEditing: boolean;
+  tokens?: TokenList;
 };

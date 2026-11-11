@@ -1,15 +1,55 @@
 /** Reads the page's stylesheets: which declarations apply to an element. */
-import { pageDocument } from "./page";
+import { pageDocument, pageWindow } from "./page";
 
 /** A style rule of any document; `instanceof CSSStyleRule` is false for a frame's rules. */
 const isStyleRule = (rule: CSSRule): rule is CSSStyleRule => "selectorText" in rule && "style" in rule;
 
-/** Calls `visit` for each style rule inside `rules`, in source order, nested ones first. */
-function walkRules(rules: CSSRuleList, visit: (rule: CSSStyleRule) => void): void {
+/** A rule's media list, when it is a media rule. Cast: a frame's rules are not `instanceof` ours. */
+function mediaListOf(rule: CSSRule): MediaList | undefined {
+  if (!("media" in rule) || !rule.media || !("mediaText" in (rule.media as object))) return undefined;
+  return rule.media as MediaList;
+}
+
+function mediaApplies(media: MediaList): boolean {
+  return !media.mediaText || pageWindow().matchMedia(media.mediaText).matches;
+}
+
+const isConditionRule = (rule: CSSRule): rule is CSSConditionRule =>
+  "conditionText" in rule && !("containerQuery" in rule) && !("containerName" in rule);
+
+function readsAsApplying(rule: CSSRule): boolean {
+  const media = mediaListOf(rule);
+  if (media) return mediaApplies(media);
+  return isConditionRule(rule) ? CSS.supports(String(rule.conditionText)) : true;
+}
+
+/**
+ * Whether the browser applies the rules inside a conditional group now:
+ * `@media` against the page's viewport, `@supports` against the browser.
+ * Detected by property, since a frame's rules are not `instanceof` ours.
+ * shortcut: `@container` is treated as applying, since its condition depends
+ * on the size of an element, not of the page; evaluate it with the container
+ * if a page shows the wrong value from a container query.
+ */
+function groupApplies(rule: CSSRule): boolean {
+  try {
+    return readsAsApplying(rule);
+  } catch {
+    // A condition this browser cannot read: keep the rules, as before.
+    return true;
+  }
+}
+
+/** What to do with each style rule, and which `@media`-like groups to look inside. */
+type RuleWalk = { visit: (rule: CSSStyleRule) => void; entersGroup: (rule: CSSRule) => boolean };
+
+/** Calls `visit` for each style rule inside `rules`, entering the groups `entersGroup` allows. */
+function walkRules(rules: CSSRuleList, walk: RuleWalk): void {
   const visitRule = (rule: CSSRule): void => {
+    if (!walk.entersGroup(rule)) return;
     // Cast: a rule with `cssRules` is a group of rules.
-    if ("cssRules" in rule) walkRules(rule.cssRules as CSSRuleList, visit);
-    if (isStyleRule(rule)) visit(rule);
+    if ("cssRules" in rule) walkRules(rule.cssRules as CSSRuleList, walk);
+    if (isStyleRule(rule)) walk.visit(rule);
   };
   Array.from(rules).forEach(visitRule);
 }
@@ -23,13 +63,29 @@ function readRules(sheet: CSSStyleSheet): CSSRuleList | undefined {
   }
 }
 
-/** Visits every style rule of the page, in source order. */
-export function forEachPageRule(visit: (rule: CSSStyleRule) => void): void {
+/** Calls `visit` for each style rule of the page in source order, entering the groups `entersGroup` allows. */
+function walkPageRules(walk: RuleWalk): void {
   Array.from(pageDocument().styleSheets).forEach((sheet) => {
     const rules = readRules(sheet);
-    if (rules) walkRules(rules, visit);
+    if (rules) walkRules(rules, walk);
   });
 }
+
+/**
+ * Visits every style rule of the page, in source order, whether or not the
+ * browser applies it now. Token themes and modes read this way, because a
+ * dark theme sits in a media query that does not apply now on purpose.
+ */
+export const forEachPageRule = (visit: (rule: CSSStyleRule) => void): void =>
+  walkPageRules({ visit, entersGroup: () => true });
+
+/**
+ * Visits the style rules of the page that apply now, in source order: rules
+ * inside an `@media` or `@supports` group that does not apply are skipped.
+ * The question is then which declarations the element has now.
+ */
+export const forEachApplyingPageRule = (visit: (rule: CSSStyleRule) => void): void =>
+  walkPageRules({ visit, entersGroup: groupApplies });
 
 function matchesSelector(element: Element, selector: string): boolean {
   try {
@@ -42,11 +98,12 @@ function matchesSelector(element: Element, selector: string): boolean {
 
 /**
  * The declarations that apply to an element, weakest first: matching rules
- * in source order, then its inline style.
+ * in source order, then its inline style. Rules in a media query or
+ * `@supports` block that does not apply now are not among them.
  */
 function appliedStyles(element: Element): CSSStyleDeclaration[] {
   const styles: CSSStyleDeclaration[] = [];
-  forEachPageRule((rule) => {
+  forEachApplyingPageRule((rule) => {
     if (matchesSelector(element, rule.selectorText)) styles.push(rule.style);
   });
   // Cast: every element of the page has a `style` (SVG too); the type only says so for HTML.

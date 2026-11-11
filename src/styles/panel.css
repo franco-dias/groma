@@ -363,6 +363,29 @@
   display: none;
 }
 
+/* ── the foot: one switch, on every tab ── */
+.panel-foot {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ins-s-1) var(--ins-s-4);
+  padding: var(--ins-s-4) var(--ins-s-5);
+  border-top: 1px solid var(--ins-border);
+  cursor: pointer;
+}
+
+.panel-foot input {
+  flex: none;
+  margin: 0;
+  accent-color: var(--ins-pin);
+}
+
+.foot-label {
+  color: var(--ins-fg);
+  font: 500 12px/16px var(--ins-font-sans);
+}
+
 /* ── collapsed: a 28px rail ── */
 .rail {
   display: none;

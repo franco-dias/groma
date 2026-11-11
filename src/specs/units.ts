@@ -57,32 +57,3 @@ export function sxSpacing(name: SpacingName, sides: number[]): string {
   if (top === bottom && right === left) return `${key}y: ${top}, ${key}x: ${right}`;
   return `${key}t: ${top}, ${key}r: ${right}, ${key}b: ${bottom}, ${key}l: ${left}`;
 }
-
-/** The modifier keys held while stepping a value. */
-type StepModifiers = { shiftKey: boolean; altKey: boolean };
-
-/**
- * How much one arrow-key press changes a value: 1, or 10 with Shift, or 0.1
- * with Alt.
- */
-export function stepFor({ shiftKey, altKey }: StepModifiers): number {
-  if (shiftKey) return 10;
-  return altKey ? 0.1 : 1;
-}
-
-const LEADING_NUMBER = /^(-?\d*\.?\d+)(.*)/;
-
-/**
- * A value whose leading number went one step up or down: "12px" -> "13px".
- * Undefined when the text does not start with a number. A step of 0.1, or a
- * number that already has decimals, keeps one decimal.
- */
-export function nudgeValue(
-  text: string,
-  { direction, step }: { direction: 1 | -1; step: number },
-): string | undefined {
-  const number = LEADING_NUMBER.exec(text);
-  if (!number) return undefined;
-  const decimals = step === 0.1 || number[1].includes(".") ? 1 : 0;
-  return (parseFloat(number[1]) + direction * step).toFixed(decimals) + number[2];
-}

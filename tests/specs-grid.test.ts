@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { all, getElement, inspector, openTab, page, reset, texts, ui } from "./helpers";
 
 const SPECS = '.body[data-for="specs"]';
@@ -192,11 +192,41 @@ describe("the columns and rows of a grid", () => {
     expect(count("columns")).toBe("2");
   });
 
-  it("does not offer the sizes of a declaration the browser did not lay out", () => {
+  it("reads the columns of the media query that applies, not the last one in the file", () => {
+    // Before 0.8 the lookup took the last declaration even from a media query that does not
+    // apply, so this grid showed one text value ("3 laid out"); it now shows its three tracks.
     page(`
       <style>
         .grid { display: grid; width: 300px; grid-template-columns: repeat(3, 1fr); }
         @media (max-width: 1px) { .grid { grid-template-columns: 1fr; } }
+        @media print { .grid { grid-template-columns: 1fr 1fr; } }
+      </style>
+      <div class="grid"><div>A</div><div>B</div><div>C</div></div>
+    `);
+    inspector().pin(getElement(".grid"));
+    expect(sizes("columns")).toEqual(["1fr", "1fr", "1fr"]);
+    expect(count("columns")).toBe("3");
+  });
+
+  it("follows a media query that matches", () => {
+    page(`
+      <style>
+        .grid { display: grid; width: 300px; grid-template-columns: 1fr; }
+        @media (min-width: 1px) { .grid { grid-template-columns: 1fr 2fr 3fr; } }
+      </style>
+      <div class="grid"><div>A</div><div>B</div><div>C</div></div>
+    `);
+    inspector().pin(getElement(".grid"));
+    expect(sizes("columns")).toEqual(["1fr", "2fr", "3fr"]);
+  });
+
+  it("does not offer the sizes of a declaration the browser did not lay out", () => {
+    // A container query is not evaluated: its list is read as if it applied, and the
+    // guard that compares it with the laid out tracks still turns it down.
+    page(`
+      <style>
+        .grid { display: grid; width: 300px; grid-template-columns: repeat(3, 1fr); }
+        @container (min-width: 1px) { .grid { grid-template-columns: 1fr; } }
       </style>
       <div class="grid"><div>A</div><div>B</div><div>C</div></div>
     `);
@@ -213,6 +243,36 @@ describe("the columns and rows of a grid", () => {
 
     expect(grid.style.gridTemplateColumns).toMatch(/^33\.\d+px 1fr 1fr$/);
     expect(count("columns")).toBe("3");
+  });
+
+  it("drags a track size, which is one edit of the whole list", async () => {
+    pinGrid("grid-template-columns: 100px 1fr 100px");
+    const size = tracks("columns")!.querySelector<HTMLElement>('[data-track="0"]')!;
+    const at = (type: string, x: number) =>
+      size.dispatchEvent(
+        new PointerEvent(type, {
+          pointerId: 1,
+          isPrimary: true,
+          button: 0,
+          clientX: x,
+          bubbles: true,
+          composed: true,
+        }),
+      );
+    at("pointerdown", 50);
+    at("pointermove", 80);
+    expect(grid.style.gridTemplateColumns).toBe("130px 1fr 100px");
+    at("pointerup", 80);
+    await vi.waitFor(() => expect(size.isConnected).toBe(false));
+    expect(sizes("columns")).toEqual(["130", "1fr", "100"]);
+    expect(editRows()).toEqual(["grid-template-columns100px 100px 100px → 130px 1fr 100px↩"]);
+    undo();
+    expect(grid.style.gridTemplateColumns).toBe("100px 1fr 100px");
+
+    // An "auto" track holds no number to drag.
+    pinGrid("grid-template-columns: auto 1fr 100px");
+    const auto = tracks("columns")!.querySelector<HTMLElement>('[data-track="0"]')!;
+    expect(auto.title).not.toContain("drag");
   });
 
   it("shows a size inside a function with its unit", () => {

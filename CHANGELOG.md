@@ -3,6 +3,48 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 0.8.0 (2026-11-11)
+
+- Fixed: the Specs tab no longer reads a declaration from an `@media` or
+  `@supports` block that does not apply now. A mobile-only width, grid
+  columns or colour token used to win over the desktop one. A grid whose
+  columns differ per breakpoint now shows the columns it has. `@container`
+  rules are still read as if they applied.
+
+- New: double-click text on the page to edit it in place. With inspect mode
+  locked on, a double-click on an element that holds only text lets you type
+  in it. A switch at the foot of the panel, "Edit text inline (lock
+  inspecting)", is there on every tab and locks inspect mode for you; it and
+  the launcher pill are the same lock. Enter or a click elsewhere applies, Esc puts the
+  text back. It is a content edit: saved, listed in the Edits tab, undoable
+  and copied with "Copy edits".
+- Changed: an edit that sets a property back to the value it had before your
+  first edit is no longer listed as `row → row`; it removes the edit, as ↩
+  does. Undo and redo still step through it.
+- Changed: in rem mode the Specs fields hold rem. Double-click a length and it
+  opens as `0.5rem`; a bare number you type is rem, and the saved value is
+  rem (`1.5rem`), not a converted px. Arrow keys and dragging step by 0.25
+  rem (1 with Shift, 0.0625 with Alt). px mode and values that are not
+  lengths (opacity, weight, grid placement) are as before.
+- Changed: after "Discard", the bar under the tabs stays and reads "N edits
+  discarded" with an "Undo" that brings them back. It goes at your next edit,
+  at an undo made elsewhere, or when you pin another element.
+- Fixed: opacity is no longer dragged 1 per pixel, which jumped straight to 0
+  or 1. It, and any property whose plain number CSS keeps between 0 and 1,
+  steps by 0.01 per pixel and per arrow key (0.1 with Shift, 0.001 with Alt)
+  and stays within 0 to 1.
+- New: Esc during a drag in the Specs tab cancels it: the value goes back, and
+  no edit or step to undo is left.
+- New: drag a number in the Specs tab to change it. Press on a size, a gap, a
+  radius, a side of the box, a font size or a grid track and drag sideways: 1
+  per pixel, 10 with Shift, 0.1 with Alt. The page changes live, and the whole
+  drag is one step to undo. A click still copies and a double-click still
+  edits.
+- New: while you type a value in the Specs tab, the page's tokens that fit
+  (colours for a colour, lengths for a size) are listed under the field,
+  filtered by what you typed. Choosing one writes `var(--token)`.
+- Size: the gzipped script goes from 43.8 to 48.3 KB.
+
 ## 0.7.1 (2026-11-11)
 
 - Internal: the code now follows one written style, checked by a formatter

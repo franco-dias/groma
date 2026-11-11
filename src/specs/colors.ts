@@ -35,10 +35,19 @@ function normalizeColor(value: string): string | undefined {
   return result;
 }
 
-type CustomProperty = { name: string; value: string };
+/** True when `value` is a colour in any spelling. */
+export const isColor = (value: string): boolean => normalizeColor(value) !== undefined;
+
+/** True when two texts are the same colour, whatever their spelling. */
+export const sameColor = (first: string, second: string): boolean => {
+  const normalizedFirst = normalizeColor(first);
+  return normalizedFirst !== undefined && normalizedFirst === normalizeColor(second);
+};
+
+export type CustomProperty = { name: string; value: string };
 
 /** The CSS variables an element can see, with their values: the page's design tokens. */
-function customProperties(computedStyle: CSSStyleDeclaration): CustomProperty[] {
+export function customProperties(computedStyle: CSSStyleDeclaration): CustomProperty[] {
   return Array.from(computedStyle)
     .filter((prop) => prop.startsWith("--"))
     .map((name) => ({ name, value: computedStyle.getPropertyValue(name).trim() }));

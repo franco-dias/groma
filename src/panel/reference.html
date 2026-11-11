@@ -20,6 +20,8 @@
     <dd>List every layer under the pointer, to reach one that sits behind another.</dd>
     <dt><kbd data-key="alt"></kbd> <kbd data-key="shift"></kbd> <kbd>G</kbd></dt>
     <dd>Open the panel with nothing pinned, to reach its » menu and this reference. Again to close it.</dd>
+    <dt>Double-click text</dt>
+    <dd>With inspect locked on: type in an element that holds only text, right on the page. “Edit text inline” at the foot of the panel locks it for you. <kbd>Enter</kbd> or a click elsewhere applies, <kbd>Esc</kbd> puts the text back.</dd>
     <dt>Inspect pill</dt>
     <dd>Bottom right. Click it to lock inspect mode on, so none of this needs <kbd data-key="alt"></kbd>.</dd>
     <dt><kbd>Esc</kbd></dt>
@@ -47,7 +49,11 @@
   <div class="block-head"><h3>Specs</h3></div>
   <dl class="reference">
     <dt>Double-click a value</dt>
-    <dd>Edits it on the page: a size, a gap, a side of the box, a colour, a font size. <kbd>Enter</kbd> or clicking away applies; <kbd>Esc</kbd> cancels; <kbd>↑</kbd> <kbd>↓</kbd> change a number. A bare number means pixels. A single click still copies.</dd>
+    <dd>Edits it on the page: a size, a gap, a side of the box, a colour, a font size. <kbd>Enter</kbd> or clicking away applies; <kbd>Esc</kbd> cancels; <kbd>↑</kbd> <kbd>↓</kbd> change a number. A bare number means pixels, or rem in rem mode, where the field holds rem. A single click still copies.</dd>
+    <dt>Drag a number</dt>
+    <dd>Press on a value that is a number and drag sideways to change it live: 1 per pixel, <kbd>Shift</kbd> 10, <kbd>Alt</kbd> 0.1. A rem length moves 0.25 per pixel, opacity 0.01. <kbd>Esc</kbd> during the drag puts the value back. The whole drag is one step to undo. A press that does not move is still a click.</dd>
+    <dt>Tokens under a field</dt>
+    <dd>While you type a colour or a length, the page's tokens that fit are listed. Click one, or use <kbd>↓</kbd> <kbd>↑</kbd> and <kbd>Enter</kbd>, to write <code>var(--token)</code>. <kbd>Esc</kbd> closes the list first.</dd>
     <dt>px · rem</dt>
     <dd>Switch the unit lengths are shown and copied in.</dd>
     <dt>Grid</dt>
@@ -85,7 +91,7 @@
     <dt>Type over a value</dt>
     <dd>Changes it on the page. <kbd>Enter</kbd> or clicking away saves; <kbd>Esc</kbd> cancels. A value the browser does not accept is dropped; “!important” after a value works.</dd>
     <dt><kbd>↑</kbd> <kbd>↓</kbd></dt>
-    <dd>Change a number by 1. With <kbd>Shift</kbd> by 10, with <kbd data-key="alt"></kbd> by 0.1.</dd>
+    <dd>Change a number by 1. With <kbd>Shift</kbd> by 10, with <kbd data-key="alt"></kbd> by 0.1. A rem length steps by 0.25, 1 and 0.0625; opacity by 0.01, 0.1 and 0.001.</dd>
     <dt>↩ on a row</dt>
     <dd>Removes your edit and puts back the page's own value. Clearing the value does the same.</dd>
     <dt><kbd data-key="command"></kbd> <kbd>Enter</kbd></dt>
@@ -93,7 +99,7 @@
     <dt>Search</dt>
     <dd>Filters properties by name. “Hide defaults” off shows every property.</dd>
     <dt>Your edits</dt>
-    <dd>Are saved in this browser for this page. After a reload, a bar under the tabs says how many are not on the page: click “Apply” to put them back, or “Discard” to remove them. If the page draws an element again and loses an edit, switch “Show original” on and off. They never change the file.</dd>
+    <dd>Are saved in this browser for this page. After a reload, a bar under the tabs says how many are not on the page: click “Apply” to put them back, or “Discard” to remove them; after a discard the bar stays with an “Undo” that brings them back, until you edit or pin something. If the page draws an element again and loses an edit, switch “Show original” on and off. They never change the file.</dd>
   </dl>
 </section>
 

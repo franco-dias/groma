@@ -86,10 +86,11 @@ function sizesMatch(tracks: string[], used: string[]): boolean {
  * Whether a declared list is the one the browser laid out: the same number
  * of tracks, and the sizes in pixels where the list gives them.
  *
- * shortcut: the declared value is the last one in the stylesheets, even from
- * a media query that does not apply now; this turns down the common case (a
- * different number of columns per breakpoint), not every one. Upgrade when
- * the page's style lookup knows which media queries match.
+ * shortcut: the declared value is the last one that applies by media query
+ * and `@supports`, with selector specificity and `@container` ignored; this
+ * turns down what the lookup still gets wrong (a different number of columns
+ * per container size, a weaker rule that comes last), not every case. Upgrade
+ * when the style lookup evaluates the cascade.
  */
 export function tracksMatch(tracks: string[], used: string[]): boolean {
   return used.length === tracks.length && sizesMatch(tracks, used);
