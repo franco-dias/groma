@@ -47,5 +47,9 @@ when you edit it:
 
 ## Deploy
 
-Serve this folder from any static host (GitHub Pages, Netlify, Cloudflare
-Pages, Vercel). There is no build step.
+Serve this folder from any static host. There is no build step.
+
+On Vercel: Root Directory `landing`, Framework Preset "Other", no build
+command, output directory `.`. `vercel.json` makes `/pt-br` redirect to
+`/pt-br/`, so the page's relative links (`../assets/…`, the language switch)
+resolve from the folder.
