@@ -11,16 +11,16 @@ import { isElement, onPage, onPageCapture, onPageView, onPageWindow, pageDocumen
 import { isOwn } from "../root";
 import { pin } from "../selection";
 import { drawHovered } from "./draw-hovered";
+import { isInspectLocked, onInspectLock } from "./inspect-lock";
 import { clearBoxes } from "./layer";
 import { applyTextEdit, editTextInPlace, isInTextEdit, isTextEditing, watchTextEdit } from "./text-edit";
 import { hideTooltip, showTooltip } from "./tooltip";
 
 let isAltHeld = false;
-let isLocked = false;
 let hovered: Element | undefined;
 let hoveredRect = "";
 
-export const isInspecting = (): boolean => isAltHeld || isLocked;
+export const isInspecting = (): boolean => isAltHeld || isInspectLocked();
 
 const rectKey = (rect: DOMRect): string => `${rect.left},${rect.top},${rect.width},${rect.height}`;
 
@@ -38,15 +38,9 @@ function update(): void {
   if (!isInspecting()) clearHover();
 }
 
-/** Keeps inspect mode on without holding Alt. */
-export function lockInspect(): void {
-  isLocked = true;
-  update();
-}
-
-export function unlockInspect(): void {
-  isLocked = false;
-  applyTextEdit();
+/** The lock went on or off: an edit of text on the page ends with the lock. */
+function followLock(isLocked: boolean): void {
+  if (!isLocked) applyTextEdit();
   update();
 }
 
@@ -107,12 +101,6 @@ function watchPointer(): void {
 
 const PRESS_TYPES = ["pointerdown", "pointerup", "mousedown", "mouseup", "click", "dblclick"] as const;
 
-/** A double-click while locked edits the text of an element that holds only text. */
-function editText(target: Element): void {
-  clearHover();
-  editTextInPlace(target);
-}
-
 function press(type: (typeof PRESS_TYPES)[number], event: MouseEvent): void {
   // A press inside the text being edited belongs to the text: it places the caret.
   if (!isInspecting() || isOwn(event.target) || isInTextEdit(event.target)) return;
@@ -120,7 +108,10 @@ function press(type: (typeof PRESS_TYPES)[number], event: MouseEvent): void {
   event.stopPropagation();
   if (!isElement(event.target)) return;
   if (type === "click") pin(event.target);
-  if (type === "dblclick" && isLocked) editText(event.target);
+  if (type !== "dblclick" || !isInspectLocked()) return;
+  // Locked on, a double-click edits the text of an element that holds only text.
+  clearHover();
+  editTextInPlace(event.target);
 }
 
 /** A click pins. The whole press is kept from the page, not only the click. */
@@ -133,4 +124,5 @@ export function startHover(): void {
   watchPointer();
   watchPress();
   watchTextEdit();
+  onInspectLock(followLock);
 }

@@ -37,6 +37,14 @@ pointer is a crosshair.
   not reach the inspector's or the page's shortcuts, and no hover is drawn
   meanwhile. Not while Alt is only held, and not with the lock off. It works
   in canvas mode.
+- A switch at the foot of the panel, "Edit text inline (lock inspecting)",
+  is there on every tab with the gesture beside it ("Double-click text on
+  the page"), so the feature is found. Checking it locks inspect mode on,
+  exactly as the launcher pill does, and unchecking it unlocks. The switch
+  and the pill are one lock (`src/overlay/inspect-lock.ts`) and always show
+  the same state; Esc unlocks both. Holding Alt alone does not edit text.
+- Alt pressed and let go while text is being edited is still seen, so
+  inspect mode does not stay on after the lock ends.
 - Releasing Alt clears the overlay. So does the window losing focus,
   because the Alt keyup never arrives in that case.
 - The inspector never inspects its own UI.

@@ -129,6 +129,16 @@
   <p>Hold <kbd data-key="alt"></kbd> and click an element to see its specs here.</p>
 </div>
 
+<!--
+  The foot of the panel, on every tab: the switch that locks inspect mode on
+  so that text on the page can be edited (panel/text-edit-switch.ts).
+-->
+<label class="panel-foot" title="Locks inspect mode on, like the Inspect pill. Then double-click any text on the page to edit it.">
+  <input type="checkbox" data-option="text-edit" />
+  <span class="foot-label">Edit text inline (lock inspecting)</span>
+  <span class="hint">Double-click text on the page</span>
+</label>
+
 <!-- Shown instead of everything above while the panel is collapsed. -->
 <button class="rail" aria-label="Expand panel" title="Expand panel">
   <svg class="icon" width="14" height="14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /><path d="M12 2v4M12 18v4M2 12h4M18 12h4" /></svg>

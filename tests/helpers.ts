@@ -158,6 +158,8 @@ export function reset(): void {
   ui('.canvas-bar [data-action="exit"]')?.click();
   releaseAlt();
   document.dispatchEvent(new KeyboardEvent("keyup", { code: "Space" }));
+  // Twice: the first Escape only ends an edit of text on the page, if one is open.
+  pressEscape();
   pressEscape();
   ui(".rail")?.click();
   if (ui(".panel")) restorePanel();
