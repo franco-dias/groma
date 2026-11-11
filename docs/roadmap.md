@@ -35,7 +35,7 @@ the small and sure ones first:
    changes.
 6. **Assets.** For an image: its natural size beside the size shown, and its
    address to copy or download. For an inline SVG: copy its markup.
-7. **Keyboard navigation.** With an element pinned: arrow keys move the pin
+7. **Keyboard navigation.** With an element pinned: Alt and an arrow key move the pin
    to the parent, the first child and the siblings.
 8. **Grid, the rest.** The track lines drawn on the page while a grid
    container is pinned, and `justify-content` and `align-content` as buttons

@@ -21,11 +21,17 @@ All notable changes to this package are recorded here. Versions follow
   values), shown when the tracks leave room or the property is set. While a
   grid container is pinned, its track lines are drawn on the page: a dashed
   line at each column and row edge, the gaps lightly filled.
-- New: keyboard navigation. With an element pinned, the arrow keys move the
-  pin: up to the parent, down to the first child, left and right to the
-  siblings. They work with the focus in the panel (not in a field or a menu)
-  or with inspect mode locked on; otherwise the keys are the page's, as
-  before.
+- New: keyboard navigation. With an element pinned, Alt (Option) and an arrow
+  key move the pin: up to the parent, down to the first child, left and right
+  to the siblings. They work wherever the focus is, on the page or in the
+  panel, except in a field or an open menu. Plain arrow keys stay the page's.
+  Past the first or last sibling, left and right go on to the parent's
+  neighbour and down to its nearest child, so the pin keeps its depth. Down
+  after up returns to the child the pin came from. A `display: contents`
+  wrapper is looked through.
+- Fixed: Alt was not heard while the focus was in the panel (in a field, on a
+  tab or the "Edit text inline" switch), so hovering the page showed no box or
+  distances until you clicked the page.
 - New: an Asset block at the top of the Specs tab, for an image (a preview,
   its natural size beside the size shown, a `2×` note, its file name, "Copy
   address" and "Download"), an inline SVG (its viewBox and size, "Copy SVG")

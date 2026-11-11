@@ -22,12 +22,12 @@
     <dd>Open the panel with nothing pinned, to reach its » menu and this reference. Again to close it.</dd>
     <dt>Double-click text</dt>
     <dd>With inspect locked on: type in an element that holds only text, right on the page. “Edit text inline” at the foot of the panel locks it for you. <kbd>Enter</kbd> or a click elsewhere applies, <kbd>Esc</kbd> puts the text back.</dd>
-    <dt><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></dt>
-    <dd>With an element pinned: move the pin to its parent, its first child, and the previous and next sibling. They work with the focus in the panel (not in a field or a menu) or with inspect locked on; otherwise they are the page's.</dd>
+    <dt><kbd data-key="alt"></kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></dt>
+    <dd>With an element pinned: move the pin to its parent, its first child, and the element before and after it. Past the first or last sibling, <kbd>←</kbd> and <kbd>→</kbd> go on to the parent's neighbour and into it, at the same depth. <kbd>↓</kbd> after <kbd>↑</kbd> goes back to where you were. They work wherever the focus is, except in a field or an open menu. Plain arrow keys stay the page's.</dd>
     <dt>Inspect pill</dt>
     <dd>Bottom right. Click it to lock inspect mode on, so none of this needs <kbd data-key="alt"></kbd>.</dd>
     <dt><kbd>Esc</kbd></dt>
-    <dd>Turn the inspect lock off, and end a comparison.</dd>
+    <dd>Turn the inspect lock off, and end a comparison. While you type in text on the page, the first <kbd>Esc</kbd> only puts the text back.</dd>
   </dl>
 </section>
 
@@ -65,13 +65,13 @@
     <dt>Copy link</dt>
     <dd>A link that reopens this page with the element pinned. Paste it in a ticket.</dd>
     <dt>HEX · RGB · HSL</dt>
-    <dd>In the Colors block: switch how colours are shown and copied. The Text row also shows its contrast ratio and WCAG level against the background behind it.</dd>
+    <dd>In the Colors block: switch how colours are shown and copied. The Text row also shows its contrast ratio and WCAG level (AAA, AA or Fails AA) against the background behind it; over an image or a gradient it says so and shows no ratio.</dd>
     <dt>Copy CSS</dt>
     <dd>Beside the element's size: copies the styles it declares (its rules and inline style, with your edits) as CSS, one declaration per line.</dd>
     <dt>Asset</dt>
     <dd>For an image, an inline SVG or a background image: its size and name, with buttons to copy the address (or the SVG's markup) and to download an image.</dd>
     <dt>States</dt>
-    <dd>What the element's :hover, :focus, :active, :disabled and :checked rules change, read from the stylesheets. Click a row to copy <code>property: value</code>.</dd>
+    <dd>What the element's :hover, :focus, :focus-visible, :focus-within, :active, :disabled and :checked rules change, read from the stylesheets without triggering the state. Click a row to copy <code>property: value</code>.</dd>
     <dt>Motion</dt>
     <dd>Double-click a transition's duration or easing to edit that one entry; double-click “Transition” to edit the whole property. Animations are read only.</dd>
     <dt>Effects</dt>
@@ -87,7 +87,7 @@
     <dt>Justify · Align on a grid</dt>
     <dd>Where each item sits in its cell: Justify across it (justify-items), Align down it (align-items).</dd>
     <dt>Columns · Rows</dt>
-    <dd>On a grid: − and + remove or add a track. Double-click a size to edit it; click the drawing before it to make the track fixed, hug (auto) or fill (1fr).</dd>
+    <dd>On a grid: − and + remove or add a track. Double-click a size to edit it; click the drawing before it to make the track fixed, hug (auto) or fill (1fr). More than four equal tracks are shown as one size, “each”, which changes them all.</dd>
     <dt>Double-click “margin” or “padding”</dt>
     <dd>In the box diagram: edits all four sides at once, as in CSS: “12 16” is top and bottom, then left and right.</dd>
     <dt>content-box · border-box</dt>
@@ -115,7 +115,7 @@
     <dt>Search</dt>
     <dd>Filters properties by name. “Hide defaults” off shows every property.</dd>
     <dt>Your edits</dt>
-    <dd>Are saved in this browser for this page. After a reload, a bar under the tabs says how many are not on the page: click “Apply” to put them back, or “Discard” to remove them; after a discard the bar stays with an “Undo” that brings them back, until you edit or pin something. If the page draws an element again and loses an edit, switch “Show original” on and off. They never change the file.</dd>
+    <dd>Are listed first, and saved in this browser for this page. They never change the file. See “Saved edits” under Edits for what happens after a reload.</dd>
   </dl>
 </section>
 
@@ -132,8 +132,10 @@
     <dd>Removes that edit or note.</dd>
     <dt>Undo · redo</dt>
     <dd>“Undo” and “Redo” in the Edits tab. Also <kbd data-key="command"></kbd> <kbd>Z</kbd> and <kbd data-key="shift"></kbd> <kbd data-key="command"></kbd> <kbd>Z</kbd> after a click in the panel, outside a field. A reload keeps your edits but forgets the steps.</dd>
-    <dt>Eye</dt>
+    <dt>Show original</dt>
     <dd>Shows the page without your edits; again to bring them back. They stay saved.</dd>
+    <dt>Saved edits</dt>
+    <dd>Are not put back on the page by themselves. After a reload, a bar under the tabs says how many are not on the page: “Apply” puts them back, “Discard” removes them. After a discard the bar stays with an “Undo” that brings them back, until you edit or pin something. If the page draws an element again and loses an edit, switch “Show original” on and off.</dd>
   </dl>
 </section>
 
