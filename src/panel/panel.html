@@ -34,8 +34,9 @@
 <!--
   Edits saved on an earlier visit, which are not on the page after it loads.
   Shown on every tab, since the values in them are the page's until the edits
-  are put back (panel/edits-tab.ts). It slides in and out; `is-off` is the
-  closed state.
+  are put back (panel/edits/apply-bar.ts). It slides in and out; `is-off` is the
+  closed state. After "Discard" it reads "N edits discarded" with "Undo"
+  (`is-discarded`).
 -->
 <div class="apply-bar is-off" role="status">
   <div class="apply-clip"><div class="apply-inner">
@@ -43,6 +44,7 @@
     <span class="apply-text"></span>
     <button class="ghost-button" data-action="discard-edits" title="Remove these saved edits. Undo brings them back.">Discard</button>
     <button class="apply-button" data-action="apply-edits" title="Put your saved edits back on the page">Apply</button>
+    <button class="ghost-button" data-action="undo-discard" title="Bring the discarded edits back">Undo</button>
   </div></div>
 </div>
 
@@ -126,6 +128,16 @@
   <b>Nothing pinned</b>
   <p>Hold <kbd data-key="alt"></kbd> and click an element to see its specs here.</p>
 </div>
+
+<!--
+  The foot of the panel, on every tab: the switch that locks inspect mode on
+  so that text on the page can be edited (panel/text-edit-switch.ts).
+-->
+<label class="panel-foot" title="Locks inspect mode on, like the Inspect pill. Then double-click any text on the page to edit it.">
+  <input type="checkbox" data-option="text-edit" />
+  <span class="foot-label">Edit text inline (lock inspecting)</span>
+  <span class="hint">Double-click text on the page</span>
+</label>
 
 <!-- Shown instead of everything above while the panel is collapsed. -->
 <button class="rail" aria-label="Expand panel" title="Expand panel">

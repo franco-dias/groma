@@ -5,11 +5,13 @@
  * `removeEdit()` to take one off). Each applies the edit, saves it and
  * remembers it for undo. The value the page had before the first edit of a
  * property is saved too, so the Edits tab can show before → after and hand
- * both to whoever applies the change in the source.
+ * both to whoever applies the change in the source. An edit that sets a
+ * property back to that value is taken off instead of listed, as the ↩ does.
  *
  * A note is a plain-text instruction attached to an element. It changes
  * nothing on the page.
  */
+import { beforeOf } from "./edit-records";
 import { applyValue, currentValue, findEdited, isStyleProp } from "./edit-values";
 import { recordChange } from "./history";
 import { isValidStyle } from "./style-overrides";
@@ -49,7 +51,9 @@ function commitChange(request: Commit, nudgedAt: number): boolean {
   if (wasReplaced && !element && value !== undefined) return false;
   const from = currentValue(selector, prop);
   if (from === value) return true;
-  applyValue({ selector, prop, value, element });
-  recordChange({ selector, prop, from, to: value }, nudgedAt);
+  // Back to what the page had: nothing was changed, so nothing is listed.
+  const to = from !== undefined && beforeOf(request) === value ? undefined : value;
+  applyValue({ selector, prop, value: to, element });
+  recordChange({ selector, prop, from, to }, nudgedAt);
   return true;
 }

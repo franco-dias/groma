@@ -43,6 +43,10 @@ export function rememberBefore({ selector, prop }: PropTarget, value: string): v
   writeStore(beforeKey(), all);
 }
 
+/** What the page had for the property before its first edit, or undefined when none is remembered. */
+export const beforeOf = ({ selector, prop }: PropTarget): string | undefined =>
+  allBefores()[selector]?.[prop];
+
 export function forgetBefore(selector: string, prop: string): void {
   const all = allBefores();
   const props = (all[selector] ??= {});

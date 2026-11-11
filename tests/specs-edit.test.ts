@@ -496,3 +496,155 @@ describe("what the stress test on a real design found", () => {
     expect(intents()).toEqual(["hug", "hug"]);
   });
 });
+
+const undo = (): void => ui<HTMLButtonElement>('[data-action="undo"]')!.click();
+const redo = (): void => ui<HTMLButtonElement>('[data-action="redo"]')!.click();
+
+describe("an edit that ends where it started", () => {
+  it("is not listed: row → column → row leaves no edit", () => {
+    press("flex-direction", "column");
+    press("flex-direction", "row");
+
+    expect(editRows()).toEqual([]);
+    expect(card.style.flexDirection).toBe("");
+    expect(getComputedStyle(card).flexDirection).toBe("row");
+  });
+
+  it("walks back and forward through the removal one step at a time", () => {
+    press("flex-direction", "column");
+    press("flex-direction", "row");
+
+    undo();
+    expect(getComputedStyle(card).flexDirection).toBe("column");
+    expect(editRows()).toEqual(["flex-directionrow → column↩"]);
+
+    undo();
+    expect(getComputedStyle(card).flexDirection).toBe("row");
+    expect(editRows()).toEqual([]);
+
+    redo();
+    redo();
+    expect(getComputedStyle(card).flexDirection).toBe("row");
+    expect(editRows()).toEqual([]);
+  });
+
+  it("is not listed when a typed value is the one the page had", () => {
+    retype("gap", "20px");
+    retype("gap", "8px");
+
+    expect(editRows()).toEqual([]);
+    expect(card.style.gap).toBe("8px");
+  });
+
+  it("keeps an edit that ends somewhere else", () => {
+    press("flex-direction", "column");
+    press("justify-content", "center");
+
+    expect(editRows()).toEqual(["flex-directionrow → column↩", "justify-contentnormal → center↩"]);
+  });
+
+  it("leaves no edit for a run of arrow keys that returns to the start", () => {
+    const field = value("gap");
+    doubleClick(field);
+    pressKey(field, "ArrowUp");
+    pressKey(field, "ArrowDown");
+    field.dispatchEvent(new FocusEvent("blur"));
+
+    expect(editRows()).toEqual([]);
+    expect(ui<HTMLButtonElement>('[data-action="undo"]')!.disabled).toBe(true);
+  });
+});
+
+const showRem = (): void => ui('[data-option="unit"] [data-value="rem"]')!.click();
+
+describe("editing a value in rem mode", () => {
+  beforeEach(showRem);
+
+  it("holds the value in rem when the field opens", () => {
+    const gap = value("gap");
+    doubleClick(gap);
+
+    expect(gap.textContent).toBe("0.5rem");
+  });
+
+  it("takes a bare number as rem and saves rem, not the pixels", () => {
+    retype("gap", "1.5");
+
+    expect(card.style.gap).toBe("1.5rem");
+    expect(getComputedStyle(card).gap).toBe("24px");
+    expect(editRows()).toEqual(["gap8px → 1.5rem↩"]);
+  });
+
+  it("takes a bare number for each side of a shorthand as rem", () => {
+    retype("padding-left", "2");
+
+    expect(card.style.paddingLeft).toBe("2rem");
+  });
+
+  it("keeps a unit that was typed", () => {
+    retype("gap", "10px");
+
+    expect(card.style.gap).toBe("10px");
+  });
+
+  it("leaves a value that is not a length alone", () => {
+    retype("opacity", "0.5");
+
+    expect(card.style.opacity).toBe("0.5");
+  });
+
+  it("makes no edit when the field is left as it opened", () => {
+    const gap = value("gap");
+    doubleClick(gap);
+    gap.dispatchEvent(new FocusEvent("blur"));
+
+    expect(editRows()).toEqual([]);
+  });
+
+  it("steps by a quarter with the arrow keys, by 1 with Shift and by 0.0625 with Alt", () => {
+    const gap = value("gap");
+    doubleClick(gap);
+    pressKey(gap, "ArrowUp");
+    expect(getComputedStyle(card).gap).toBe("12px");
+    expect(gap.textContent).toBe("0.75rem");
+
+    pressShortcut(gap, { key: "ArrowUp", shiftKey: true });
+    expect(getComputedStyle(card).gap).toBe("28px");
+
+    pressShortcut(gap, { key: "ArrowDown", altKey: true });
+    expect(getComputedStyle(card).gap).toBe("27px");
+    expect(card.style.gap).toBe("1.6875rem");
+  });
+});
+
+describe("editing a value in px mode", () => {
+  it("steps by 1, 10 and 0.1, and a bare number is px", () => {
+    const gap = value("gap");
+    doubleClick(gap);
+    pressKey(gap, "ArrowUp");
+    pressShortcut(gap, { key: "ArrowUp", shiftKey: true });
+    pressShortcut(gap, { key: "ArrowDown", altKey: true });
+    expect(card.style.gap).toBe("18.9px");
+
+    retype("padding-left", "20");
+    expect(card.style.paddingLeft).toBe("20px");
+  });
+});
+
+describe("the arrow keys on opacity", () => {
+  it("step by 0.01, 0.1 with Shift and 0.001 with Alt, within 0 and 1", () => {
+    const opacity = value("opacity");
+    doubleClick(opacity);
+    pressKey(opacity, "ArrowUp");
+    expect(card.style.opacity).toBe("0.81");
+    pressShortcut(opacity, { key: "ArrowDown", shiftKey: true });
+    expect(card.style.opacity).toBe("0.71");
+    pressShortcut(opacity, { key: "ArrowUp", altKey: true });
+    expect(card.style.opacity).toBe("0.711");
+    pressShortcut(opacity, { key: "ArrowUp", shiftKey: true });
+    pressShortcut(opacity, { key: "ArrowUp", shiftKey: true });
+    pressShortcut(opacity, { key: "ArrowUp", shiftKey: true });
+
+    expect(card.style.opacity).toBe("1");
+  });
+});

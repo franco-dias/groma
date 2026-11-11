@@ -8,27 +8,9 @@ What each shipped feature does is in [features.md](features.md). This file
 lists what is planned, in order. Move an item to the changelog when it ships.
 
 0.7 shipped the first part: edit in the Specs tab, the Edits tab with undo,
-and "Copy edits" for a coding agent ([CHANGELOG.md](../CHANGELOG.md)).
-
-## 0.8: Edit like Figma
-
-In this order:
-
-1. **Read declared values correctly.** The style lookup takes the last
-   declaration in the stylesheets, even inside a media query that does not
-   apply now. It is the known limit behind wrong grid columns and wrong token
-   names, and token suggestions build on it.
-2. **Drag a number to scrub it**: sizes, gap, radius, the sides of the box,
-   font size, grid tracks. One drag is one step to undo.
-3. **Suggest the page's tokens while typing a value**: a short list under the
-   field, by the kind of value (colours for a colour, lengths for a spacing).
-   Choosing one writes `var(--token)`.
-4. **Double-click text on the page to edit it in place**, while inspect mode
-   is locked on.
-5. **Left over from 0.7:**
-   - in rem mode the fields still hold pixels;
-   - an edit that ends where it started stays listed (`row → row`);
-   - after "Discard", nothing on screen offers the way back.
+and "Copy edits" for a coding agent. 0.8 made editing closer to Figma's: drag
+a number to change it, token suggestions while typing, and text edited right
+on the page ([CHANGELOG.md](../CHANGELOG.md)).
 
 ## 0.9: Inspect parity
 
@@ -58,7 +40,7 @@ In this order:
   times its size because they bundle a UI library.
 - A ceiling for `dist/groma.js`: 60 KB gzipped at 1.0. Groma runs in
   development and staging builds, so the number is about staying an order of
-  magnitude lighter than such tools, not about every byte. 0.7.1 is 43.8 KB.
+  magnitude lighter than such tools, not about every byte. 0.8.0 is 48.3 KB.
 - The changelog says what each release added to the size, so a feature that
   costs several KB is a decision someone saw.
 

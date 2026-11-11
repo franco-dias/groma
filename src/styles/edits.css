@@ -136,6 +136,13 @@
   transition-delay: 0s, var(--ins-dur-slide);
 }
 
+/* After "Discard" the bar offers only the way back; before it, only the two choices. */
+.apply-bar.is-discarded [data-action="discard-edits"],
+.apply-bar.is-discarded [data-action="apply-edits"],
+.apply-bar:not(.is-discarded) [data-action="undo-discard"] {
+  display: none;
+}
+
 /* The row that shrinks to nothing: it has no padding of its own to keep it open. */
 .apply-clip {
   min-height: 0;

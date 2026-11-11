@@ -357,3 +357,54 @@ describe("grid", () => {
     expect(ui(".grid")!.style.getPropertyValue("mask-position")).toBe("-40px 0px");
   });
 });
+
+const sizeOf = (): string => ui('.body[data-for="specs"] .size-row .value')!.textContent ?? "";
+
+describe("declared values under media queries", () => {
+  it("reads the width and the colour token from the rules that apply now", () => {
+    page(`
+      <style>
+        :root { --on-desktop: rgb(0, 128, 0); --on-phone: rgb(200, 0, 0); }
+        .box { width: 120px; height: 20px; background: var(--on-desktop); }
+        @media (max-width: 1px) { .box { width: 40px; background: var(--on-phone); } }
+        @supports not (display: grid) { .box { width: 10px; } }
+      </style>
+      <div class="box"></div>
+    `);
+    inspector().pin(getElement(".box"));
+    expect(sizeOf()).toBe("120 × 20");
+    const background = colorRow("Background");
+    expect(rowTexts(background, ".css-var")).toEqual(["--on-desktop"]);
+  });
+
+  it("reads a rule of a media query that matches, and of a supported feature", () => {
+    page(`
+      <style>
+        :root { --a: rgb(0, 128, 0); --b: rgb(0, 0, 200); --c: rgb(9, 9, 9); }
+        .box { height: 20px; background: var(--a); }
+        @media (min-width: 1px) { .box { background: var(--b); } }
+        @supports (display: grid) { .box { background: var(--c); } }
+      </style>
+      <div class="box"></div>
+    `);
+    inspector().pin(getElement(".box"));
+    expect(rowTexts(colorRow("Background"), ".css-var")).toEqual(["--c"]);
+  });
+
+  it("still lists a token's value in a theme that sits in a media query that does not apply", () => {
+    // Token themes read every rule on purpose: a dark theme is in a block that is off now.
+    page(`
+      <style>
+        :root { --bg: rgb(255, 255, 255); }
+        @media (max-width: 1px) { .dark { --bg: rgb(0, 0, 0); } }
+        .box { height: 20px; background: var(--bg); }
+      </style>
+      <div class="box"></div>
+    `);
+    inspector().pin(getElement(".box"));
+    expect(rowTexts(colorRow("Background"), ".mode")).toEqual([
+      "rgb(255, 255, 255)default",
+      "rgb(0, 0, 0)dark",
+    ]);
+  });
+});
