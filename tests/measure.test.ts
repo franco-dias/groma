@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { all, el, holdAlt, hover, inspector, page, reset, texts, ui } from "./helpers";
+import { all, getElement, holdAlt, hover, inspector, page, reset, texts, ui } from "./helpers";
 
 beforeEach(() => {
   reset();
@@ -18,45 +18,45 @@ beforeEach(() => {
 
 describe("measuring (Alt + hover with an element pinned)", () => {
   it("shows the gap between two elements, undoing the board's zoom", () => {
-    inspector().pin(el(".a"));
+    inspector().pin(getElement(".a"));
     holdAlt();
-    hover(el(".b"));
+    hover(getElement(".b"));
 
     expect(texts(".measure-label")).toEqual(["40"]);
     expect(all(".overlay > .measure")).toHaveLength(1);
   });
 
   it("draws only the target's outline, not its box model", () => {
-    inspector().pin(el(".a"));
+    inspector().pin(getElement(".a"));
     holdAlt();
-    hover(el(".b"));
+    hover(getElement(".b"));
 
     expect(all(".overlay > .target")).toHaveLength(1);
     expect(all(".overlay > .margin, .overlay > .padding, .overlay > .content-box")).toHaveLength(0);
   });
 
   it("shows the four insets when one element contains the other", () => {
-    inspector().pin(el(".inner"));
+    inspector().pin(getElement(".inner"));
     holdAlt();
-    hover(el(".outer"));
+    hover(getElement(".outer"));
     // left, right, top, bottom
     expect(texts(".measure-label")).toEqual(["10", "60", "20", "50"]);
   });
 
   it("puts a label inside a long line and beside a short one", () => {
-    inspector().pin(el(".a"));
+    inspector().pin(getElement(".a"));
     holdAlt();
-    hover(el(".b")); // 20px on screen: too short for the label
+    hover(getElement(".b")); // 20px on screen: too short for the label
     expect(ui(".measure-label")!.style.transform).toBe("translate(-50%, -150%)");
 
-    hover(el(".far")); // 120px on screen
+    hover(getElement(".far")); // 120px on screen
     expect(ui(".measure-label")!.style.transform).toBe("translate(-50%, -50%)");
   });
 
   it("shows the pinned element's own box model when it is hovered", () => {
-    inspector().pin(el(".a"));
+    inspector().pin(getElement(".a"));
     holdAlt();
-    hover(el(".a"));
+    hover(getElement(".a"));
     expect(all(".overlay > .measure")).toHaveLength(0);
     expect(all(".overlay > .content-box")).toHaveLength(1);
   });

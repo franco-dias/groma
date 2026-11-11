@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { all, click, el, hover, inspector, page, pressEscape, reset, texts, ui } from "./helpers";
+import { all, click, getElement, hover, inspector, page, pressEscape, reset, texts, ui } from "./helpers";
 
 const dock = (): string =>
   getComputedStyle(document.querySelector("groma-inspector")!).getPropertyValue("--ins-dock");
@@ -19,17 +19,17 @@ describe("launcher pill", () => {
     ui(".launcher")!.click();
     expect(ui(".launcher")!.classList.contains("is-locked")).toBe(true);
 
-    hover(el(".card"));
+    hover(getElement(".card"));
     expect(all(".overlay > .padding").length).toBeGreaterThan(0);
-    click(el(".card"));
-    expect(inspector().pinnedElement()).toBe(el(".card"));
+    click(getElement(".card"));
+    expect(inspector().pinnedElement()).toBe(getElement(".card"));
   });
 
   it("unlocks on Esc and on its ✕", () => {
     ui(".launcher")!.click();
     pressEscape();
     expect(ui(".launcher")!.classList.contains("is-locked")).toBe(false);
-    hover(el(".card"));
+    hover(getElement(".card"));
     expect(all(".overlay > div")).toHaveLength(0);
 
     ui(".launcher")!.click();
@@ -38,7 +38,7 @@ describe("launcher pill", () => {
   });
 
   it("moves out of the panel's way", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(dock()).toBe(`${ui(".panel")!.offsetWidth}px`);
     ui(".close")!.click();
     expect(dock()).toBe("0px");

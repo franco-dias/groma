@@ -5,69 +5,69 @@
 import { h } from "../dom";
 import { sizeText, tagAndClasses } from "../element-name";
 import { hideHoverOutline, showHoverOutline } from "../outlines";
-import { onPage, toWindowPoint } from "../page";
+import { onPageCapture, type Point, toWindowPoint } from "../page";
 import { isOwn, mount } from "../root";
 import { pin } from "../selection";
 import { isInspecting } from "./hover";
 
 /** The menu opens this far below and right of the pointer. */
-const OFFSET = 8;
+const OFFSET_PX = 8;
 
-let menu: HTMLElement | null = null;
+let menu: HTMLElement | undefined;
 
 function closeMenu(): void {
   if (!menu) return;
   menu.remove();
-  menu = null;
+  menu = undefined;
   hideHoverOutline();
 }
 
-/** `x` and `y` are the pointer in `page`, the document the right-click happened in. */
-function openMenu(page: Document, x: number, y: number): void {
+function createItem(layer: Element): HTMLElement {
+  const item = h("div", "menu-item");
+  item.setAttribute("role", "menuitem");
+  item.append(tagAndClasses(layer, "layer-name"), h("span", "size", sizeText(layer)));
+  item.addEventListener("mouseenter", () => showHoverOutline(layer));
+  item.addEventListener("click", () => {
+    closeMenu();
+    pin(layer);
+  });
+  return item;
+}
+
+/** Below and right of the pointer, pulled back inside the window when needed. */
+function placeMenu(list: HTMLElement, pointer: Point): void {
+  const left = Math.min(pointer.x + OFFSET_PX, window.innerWidth - list.offsetWidth - OFFSET_PX);
+  const top = Math.min(pointer.y + OFFSET_PX, window.innerHeight - list.offsetHeight - OFFSET_PX);
+  list.style.left = `${left}px`;
+  list.style.top = `${top}px`;
+}
+
+/** `point` is the pointer in `page`, the document the right-click happened in. */
+function openMenu(page: Document, point: Point): void {
   closeMenu();
   const layers = page
-    .elementsFromPoint(x, y)
-    .filter((el) => !isOwn(el) && el !== page.body && el !== page.documentElement);
-  const { x: pointerX, y: pointerY } = toWindowPoint(x, y, page);
+    .elementsFromPoint(point.x, point.y)
+    .filter((layer) => !isOwn(layer) && layer !== page.body && layer !== page.documentElement);
 
   const list = (menu = mount(h("div", "menu")));
   list.setAttribute("role", "menu");
   const head = list.appendChild(h("div", "menu-head"));
   head.append(h("span", "", "Layers at pointer"), h("span", "count", String(layers.length)));
-  for (const layer of layers) {
-    const item = list.appendChild(h("div", "menu-item"));
-    item.setAttribute("role", "menuitem");
-    item.append(tagAndClasses(layer, "layer-name"), h("span", "size", sizeText(layer)));
-    item.addEventListener("mouseenter", () => showHoverOutline(layer));
-    item.addEventListener("click", () => {
-      closeMenu();
-      pin(layer);
-    });
-  }
-  // Below and right of the pointer, pulled back inside the window when needed.
-  const left = Math.min(pointerX + OFFSET, window.innerWidth - list.offsetWidth - OFFSET);
-  const top = Math.min(pointerY + OFFSET, window.innerHeight - list.offsetHeight - OFFSET);
-  list.style.left = `${left}px`;
-  list.style.top = `${top}px`;
+  layers.forEach((layer) => list.appendChild(createItem(layer)));
+  placeMenu(list, toWindowPoint(point, page));
 }
 
 export function startLayerMenu(): void {
-  onPage(
-    "contextmenu",
-    (e) => {
-      if (!isInspecting() || isOwn(e.target)) return;
-      e.preventDefault();
-      e.stopPropagation();
-      openMenu((e.target as Node).ownerDocument ?? document, e.clientX, e.clientY);
-    },
-    true,
-  );
+  onPageCapture("contextmenu", (event) => {
+    if (!isInspecting() || isOwn(event.target)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    // Cast: a context menu opens on a node.
+    const page = (event.target as Node).ownerDocument ?? document;
+    openMenu(page, { x: event.clientX, y: event.clientY });
+  });
   // A press anywhere else closes the menu.
-  onPage(
-    "mousedown",
-    (e) => {
-      if (menu && !e.composedPath().includes(menu)) closeMenu();
-    },
-    true,
-  );
+  onPageCapture("mousedown", (event) => {
+    if (menu && !event.composedPath().includes(menu)) closeMenu();
+  });
 }

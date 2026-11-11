@@ -8,21 +8,22 @@ import type { ComponentReader } from "./types";
 
 function declaredProps(root: Element): Record<string, unknown> {
   try {
-    const props = JSON.parse(root.getAttribute("data-props") ?? "{}");
-    return props && typeof props === "object" ? props : {};
+    const props: unknown = JSON.parse(root.getAttribute("data-props") ?? "{}");
+    // Cast: a JSON object, checked just above, is a record.
+    return props && typeof props === "object" ? (props as Record<string, unknown>) : {};
   } catch {
     return {};
   }
 }
 
-export const declaredComponent: ComponentReader = (el) => {
-  const root = el.closest("[data-component]");
+export const declaredComponent: ComponentReader = (element) => {
+  const root = element.closest("[data-component]");
   const name = root?.getAttribute("data-component");
-  if (!root || !name) return null;
+  if (!root || !name) return undefined;
   return {
     name,
     sourcePath: root.getAttribute("data-source") ?? undefined,
-    inside: root !== el,
+    inside: root !== element,
     element: root,
     props: declaredProps(root),
   };

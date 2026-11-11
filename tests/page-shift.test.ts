@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { all, el, inspector, page, reset, ui } from "./helpers";
+import { all, getElement, inspector, page, reset, ui } from "./helpers";
 
 const root = document.documentElement;
 const panelWidth = (): number => ui(".panel")!.offsetWidth;
 const marginRight = (): number => parseFloat(getComputedStyle(root).marginRight);
-const cardWidth = (): number => el(".card").getBoundingClientRect().width;
+const cardWidth = (): number => getElement(".card").getBoundingClientRect().width;
 const savedMode = (): string => JSON.parse(localStorage.getItem("__groma_panel") ?? "{}").mode;
 const pushItem = (): HTMLElement => ui('[data-action="push"]')!;
 
@@ -15,7 +15,9 @@ function openMenuAndChoose(item: HTMLElement): void {
 
 function dragResizeHandle(by: number): void {
   const startX = ui(".panel")!.getBoundingClientRect().left;
-  ui(".resize")!.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, clientX: startX }));
+  ui(".resize")!.dispatchEvent(
+    new MouseEvent("mousedown", { bubbles: true, cancelable: true, clientX: startX }),
+  );
   document.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, clientX: startX + by }));
   document.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
 }
@@ -31,13 +33,13 @@ beforeEach(() => {
 
 describe("push mode (the default)", () => {
   it("takes the panel's width out of the page", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(marginRight()).toBe(panelWidth());
     expect(cardWidth()).toBe(widthBefore - panelWidth());
   });
 
   it("gives the page its width back when the panel closes", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     ui(".close")!.click();
     expect(cardWidth()).toBe(widthBefore);
     expect(root.style.getPropertyValue("margin-right")).toBe("");
@@ -46,7 +48,7 @@ describe("push mode (the default)", () => {
   it("keeps the margin the page had, from a stylesheet, and restores it", () => {
     page(`<style>html { margin-right: 7px }</style><div class="card" style="height: 100px">Card</div>`);
     expect(marginRight()).toBe(7);
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(marginRight()).toBe(7 + panelWidth());
     ui(".close")!.click();
     expect(marginRight()).toBe(7);
@@ -55,14 +57,14 @@ describe("push mode (the default)", () => {
 
   it("keeps an inline margin the page had on <html>, and restores it", () => {
     root.style.setProperty("margin-right", "5px");
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(marginRight()).toBe(5 + panelWidth());
     ui(".close")!.click();
     expect(root.style.getPropertyValue("margin-right")).toBe("5px");
   });
 
   it("follows the panel when it collapses, expands and is resized", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     ui(".more-button")!.click();
     ui(".more-item.collapse")!.click();
     expect(marginRight()).toBe(28);
@@ -78,14 +80,14 @@ describe("push mode (the default)", () => {
   });
 
   it("is on in the » menu", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(pushItem().getAttribute("aria-checked")).toBe("true");
   });
 });
 
 describe("float mode", () => {
   it("leaves the page alone while the panel covers it", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     openMenuAndChoose(pushItem());
 
     expect(pushItem().getAttribute("aria-checked")).toBe("false");
@@ -96,15 +98,15 @@ describe("float mode", () => {
   });
 
   it("does not push the page for a panel that opens later", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     openMenuAndChoose(pushItem());
     ui(".close")!.click();
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(marginRight()).toBe(0);
   });
 
   it("switches back to push at once", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     openMenuAndChoose(pushItem());
     openMenuAndChoose(pushItem());
     expect(marginRight()).toBe(panelWidth());
@@ -112,7 +114,7 @@ describe("float mode", () => {
   });
 
   it("is remembered, in either direction", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     openMenuAndChoose(pushItem());
     expect(savedMode()).toBe("float");
     openMenuAndChoose(pushItem());
@@ -120,7 +122,7 @@ describe("float mode", () => {
   });
 
   it("closes the menu after the choice", () => {
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     openMenuAndChoose(pushItem());
     expect(ui(".more-menu")!.hidden).toBe(true);
     expect(all(".more-item")).toHaveLength(4);

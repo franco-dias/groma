@@ -9,12 +9,12 @@
 /** "pinned": another element was chosen. "updated": same element, new data. */
 export type SelectionChange = "pinned" | "updated";
 
-type Listener = (el: Element | null, change: SelectionChange) => void;
+type Listener = (element: Element | undefined, change: SelectionChange) => void;
 
-let pinned: Element | null = null;
+let pinned: Element | undefined;
 const listeners: Listener[] = [];
 
-export const pinnedElement = (): Element | null => pinned;
+export const findPinnedElement = (): Element | undefined => pinned;
 
 export function onSelection(listener: Listener): void {
   listeners.push(listener);
@@ -24,13 +24,13 @@ function notify(change: SelectionChange): void {
   listeners.forEach((listener) => listener(pinned, change));
 }
 
-export function pin(el: Element): void {
-  pinned = el;
+export function pin(element: Element): void {
+  pinned = element;
   notify("pinned");
 }
 
 export function unpin(): void {
-  pinned = null;
+  pinned = undefined;
   notify("pinned");
 }
 

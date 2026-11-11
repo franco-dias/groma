@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { pageCopy, setCanvas } from "../src/canvas/canvas";
+import { pageCopy, showCanvas } from "../src/canvas/canvas";
 import { isGromaFrame } from "../src/page";
 import {
   all,
   click,
   clipboard,
-  el,
+  getElement,
   frames,
   holdAlt,
   hover,
@@ -31,7 +31,8 @@ const FRAMED_PAGE = `<!doctype html>
 <div id="other" class="box">Other</div>`;
 
 const frame = (): HTMLIFrameElement => ui<HTMLIFrameElement>(".canvas iframe")!;
-const framed = (selector: string): HTMLElement => frame().contentDocument!.querySelector<HTMLElement>(selector)!;
+const framed = (selector: string): HTMLElement =>
+  frame().contentDocument!.querySelector<HTMLElement>(selector)!;
 const saved = (): { on?: boolean; width?: number; height?: number } =>
   JSON.parse(localStorage.getItem("__groma_canvas") ?? "{}");
 const zoom = (): number => frame().getBoundingClientRect().width / frame().offsetWidth;
@@ -39,17 +40,16 @@ const zoomLabel = (): string => ui(".canvas-zoom")!.textContent ?? "";
 const sizeLabel = (): string => ui(".canvas-size")!.textContent ?? "";
 const bar = (action: string): HTMLElement => ui(`.canvas-bar [data-action="${action}"]`)!;
 
-async function until(condition: () => boolean): Promise<void> {
-  for (let tries = 0; tries < 300; tries++) {
-    if (condition()) return;
-    await wait(10);
-  }
-  throw new Error("Timed out waiting for the canvas");
+async function until(condition: () => boolean, remaining = 300): Promise<void> {
+  if (remaining === 0) throw new Error("Timed out waiting for the canvas");
+  if (condition()) return;
+  await wait(10);
+  return until(condition, remaining - 1);
 }
 
 /** Turns the canvas on with `html` in the frame, and waits for the frame to load it. */
 async function openCanvas(html = FRAMED_PAGE): Promise<void> {
-  setCanvas(true, URL.createObjectURL(new Blob([html], { type: "text/html" })));
+  showCanvas({ source: URL.createObjectURL(new Blob([html], { type: "text/html" })) });
   await until(() => {
     const doc = frame().contentDocument;
     return doc?.readyState === "complete" && doc.URL.startsWith("blob:");
@@ -77,7 +77,7 @@ function expectOver(node: Element, box: ReturnType<typeof onScreen>): void {
   expect(rect.height).toBeCloseTo(box.height, 1);
 }
 
-function dragHandle(handle: string, dx: number, dy: number): void {
+function dragHandle(handle: string, { dx, dy }: { dx: number; dy: number }): void {
   const target = ui(`.canvas-handle.${handle}`)!;
   const at = { clientX: 500, clientY: 400, pointerId: 1, bubbles: true, cancelable: true };
   target.dispatchEvent(new PointerEvent("pointerdown", at));
@@ -198,17 +198,17 @@ describe("the frame", () => {
     expect(ui(".title-size")!.textContent).toBe("200 × 100");
     ui('.canvas-bar [data-size="375x812"]')!.click();
     expect(ui(".title-size")!.textContent).toBe("120 × 100");
-    dragHandle("is-x", 400, 0);
+    dragHandle("is-x", { dx: 400, dy: 0 });
     expect(ui(".title-size")!.textContent).toBe("200 × 100");
   });
 
   it("is resized by dragging its edges, in page pixels at any zoom", async () => {
     await openCanvas();
     const scale = zoom();
-    dragHandle("is-x", -100, 0);
+    dragHandle("is-x", { dx: -100, dy: 0 });
     expect(frame().offsetWidth).toBe(Math.round(1280 - 100 / scale));
     expect(frame().offsetHeight).toBe(800);
-    dragHandle("is-y", 0, -50);
+    dragHandle("is-y", { dx: 0, dy: -50 });
     expect(frame().offsetHeight).toBe(Math.round(800 - 50 / scale));
     expect(saved().width).toBe(frame().offsetWidth);
     expect(sizeLabel()).toBe(`${frame().offsetWidth} × ${frame().offsetHeight}`);
@@ -221,6 +221,8 @@ describe("the frame", () => {
     expect(ui(".canvas-handle.is-y")!.getBoundingClientRect().top).toBeCloseTo(box.bottom, 1);
   });
 });
+
+const frameLeft = (): number => frame().getBoundingClientRect().left;
 
 describe("zoom and position", () => {
   it("zooms with the toolbar and goes back with Fit", async () => {
@@ -262,16 +264,15 @@ describe("zoom and position", () => {
   it("moves the frame on a wheel over the canvas and on a drag of the canvas", async () => {
     await openCanvas();
     const canvas = ui(".canvas")!;
-    const left = () => frame().getBoundingClientRect().left;
-    const start = left();
+    const start = frameLeft();
     canvas.dispatchEvent(new WheelEvent("wheel", { deltaX: 30, bubbles: true, cancelable: true }));
-    expect(left()).toBeCloseTo(start - 30, 1);
+    expect(frameLeft()).toBeCloseTo(start - 30, 1);
 
     const at = { clientX: 5, clientY: 300, pointerId: 1, bubbles: true, cancelable: true };
     canvas.dispatchEvent(new PointerEvent("pointerdown", at));
     canvas.dispatchEvent(new PointerEvent("pointermove", { ...at, clientX: 45 }));
     canvas.dispatchEvent(new PointerEvent("pointerup", { ...at, clientX: 45 }));
-    expect(left()).toBeCloseTo(start - 30 + 40, 1);
+    expect(frameLeft()).toBeCloseTo(start - 30 + 40, 1);
   });
 
   it("keeps a fitted frame fitted when the panel takes room", async () => {
@@ -279,38 +280,54 @@ describe("zoom and position", () => {
     const before = zoom();
     inspector().pin(framed("#card"));
     await until(() => zoom() < before);
-    expect(frame().getBoundingClientRect().right).toBeLessThanOrEqual(ui(".panel")!.getBoundingClientRect().left);
+    expect(frame().getBoundingClientRect().right).toBeLessThanOrEqual(
+      ui(".panel")!.getBoundingClientRect().left,
+    );
   });
 });
 
-describe("moving the canvas from over the page", () => {
-  const left = (): number => frame().getBoundingClientRect().left;
-  const space = (type: "keydown" | "keyup", target: EventTarget = document): KeyboardEvent => {
-    const event = new KeyboardEvent(type, { code: "Space", key: " ", bubbles: true, cancelable: true, composed: true });
-    target.dispatchEvent(event);
-    return event;
+/** A press on `target`, a move of `dx` and a release, with `button`. Coordinates are the target's document's. */
+function dragOn(target: Element, { dx, button = 0 }: { dx: number; button?: number }): void {
+  const at = {
+    clientX: 100,
+    clientY: 100,
+    pointerId: 1,
+    button,
+    bubbles: true,
+    cancelable: true,
+    composed: true,
   };
-  /** A press on `target`, a move of `dx` and a release, with `button`. Coordinates are the target's document's. */
-  function dragOn(target: Element, dx: number, button = 0): void {
-    const at = { clientX: 100, clientY: 100, pointerId: 1, button, bubbles: true, cancelable: true, composed: true };
-    target.dispatchEvent(new PointerEvent("pointerdown", at));
-    target.dispatchEvent(new PointerEvent("pointermove", { ...at, clientX: 100 + dx }));
-    target.dispatchEvent(new PointerEvent("pointerup", { ...at, clientX: 100 + dx }));
-  }
+  target.dispatchEvent(new PointerEvent("pointerdown", at));
+  target.dispatchEvent(new PointerEvent("pointermove", { ...at, clientX: 100 + dx }));
+  target.dispatchEvent(new PointerEvent("pointerup", { ...at, clientX: 100 + dx }));
+}
 
+const space = (type: "keydown" | "keyup", target: EventTarget = document): KeyboardEvent => {
+  const event = new KeyboardEvent(type, {
+    code: "Space",
+    key: " ",
+    bubbles: true,
+    cancelable: true,
+    composed: true,
+  });
+  target.dispatchEvent(event);
+  return event;
+};
+
+describe("moving the canvas from over the page", () => {
   it("moves it on a drag while Space is held, and gives the page its pointer back after", async () => {
     await openCanvas();
-    const start = left();
+    const start = frameLeft();
     expect(space("keydown").defaultPrevented).toBe(true);
     // The frame lets the pointer through, so the press lands on the canvas.
     expect(getComputedStyle(frame()).pointerEvents).toBe("none");
-    dragOn(ui(".canvas-frame")!, 60);
-    expect(left()).toBeCloseTo(start + 60, 1);
+    dragOn(ui(".canvas-frame")!, { dx: 60 });
+    expect(frameLeft()).toBeCloseTo(start + 60, 1);
 
     space("keyup");
     expect(getComputedStyle(frame()).pointerEvents).toBe("auto");
-    dragOn(ui(".canvas-frame")!, 60);
-    expect(left()).toBeCloseTo(start + 60, 1);
+    dragOn(ui(".canvas-frame")!, { dx: 60 });
+    expect(frameLeft()).toBeCloseTo(start + 60, 1);
   });
 
   it("also takes Space pressed while the focus is in the page", async () => {
@@ -322,7 +339,9 @@ describe("moving the canvas from over the page", () => {
   });
 
   it("leaves Space to a field the user types in", async () => {
-    await openCanvas(`<input id="field" /><textarea id="area"></textarea><p id="note" contenteditable>Note</p>`);
+    await openCanvas(
+      `<input id="field" /><textarea id="area"></textarea><p id="note" contenteditable>Note</p>`,
+    );
     for (const id of ["#field", "#area", "#note"]) {
       expect(space("keydown", framed(id)).defaultPrevented).toBe(false);
     }
@@ -335,15 +354,15 @@ describe("moving the canvas from over the page", () => {
     await openCanvas(CONTROLS);
     let clicks = 0;
     framed("#go").addEventListener("click", () => clicks++);
-    const start = left();
+    const start = frameLeft();
     for (const id of ["#go", "#check"]) {
       expect(space("keydown", framed(id)).defaultPrevented).toBe(true);
-      dragOn(ui(".canvas-frame")!, 30);
+      dragOn(ui(".canvas-frame")!, { dx: 30 });
       // The key repeats while it is held, also after the drag.
       space("keydown", framed(id));
       expect(space("keyup", framed(id)).defaultPrevented).toBe(true);
     }
-    expect(left()).toBeCloseTo(start + 60, 1);
+    expect(frameLeft()).toBeCloseTo(start + 60, 1);
     expect(clicks).toBe(0);
     expect((framed("#check") as HTMLInputElement).checked).toBe(false);
   });
@@ -369,7 +388,7 @@ describe("moving the canvas from over the page", () => {
     const tab = ui('.tab[data-tab="layers"]')!;
     expect(space("keydown", tab).defaultPrevented).toBe(true);
     expect(ui(".canvas")!.classList.contains("is-panning")).toBe(true);
-    dragOn(ui(".canvas-frame")!, 30);
+    dragOn(ui(".canvas-frame")!, { dx: 30 });
     space("keyup", tab);
     expect(ui(".panel")!.dataset.tab).toBe("specs");
     // ...and still types in the panel's search field.
@@ -378,21 +397,21 @@ describe("moving the canvas from over the page", () => {
 
   it("keeps the toolbar working while Space is held", async () => {
     await openCanvas();
-    const start = left();
+    const start = frameLeft();
     space("keydown");
-    dragOn(bar("fit"), 60);
-    expect(left()).toBe(start);
+    dragOn(bar("fit"), { dx: 60 });
+    expect(frameLeft()).toBe(start);
     space("keyup");
   });
 
   it("moves it on a middle-button drag over the page, and leaves a plain drag to the page", async () => {
     await openCanvas();
-    const start = left();
+    const start = frameLeft();
     // The page's own coordinates: 40 screen pixels are 40 / zoom of the page's.
-    dragOn(framed("#card"), 40 / zoom(), 1);
-    expect(left()).toBeCloseTo(start + 40, 1);
-    dragOn(framed("#card"), 40 / zoom(), 0);
-    expect(left()).toBeCloseTo(start + 40, 1);
+    dragOn(framed("#card"), { dx: 40 / zoom(), button: 1 });
+    expect(frameLeft()).toBeCloseTo(start + 40, 1);
+    dragOn(framed("#card"), { dx: 40 / zoom(), button: 0 });
+    expect(frameLeft()).toBeCloseTo(start + 40, 1);
   });
 
   it("does nothing with Space when the canvas is off", () => {
@@ -400,18 +419,21 @@ describe("moving the canvas from over the page", () => {
   });
 });
 
+const blocked = () => ui(".canvas-blocked")!;
+
+const item = () => ui('.more-item[data-action="canvas"]')!;
+
 describe("switching", () => {
   it("keeps the element pinned when the canvas opens and when it closes", async () => {
-    inspector().pin(el("#card"));
+    inspector().pin(getElement("#card"));
     await openCanvas();
     expect(inspector().pinnedElement()).toBe(framed("#card"));
     bar("exit").click();
-    expect(inspector().pinnedElement()).toBe(el("#card"));
+    expect(inspector().pinnedElement()).toBe(getElement("#card"));
   });
 
   it("shows its state in the » menu, which also turns it off", async () => {
-    inspector().pin(el("#card"));
-    const item = () => ui('.more-item[data-action="canvas"]')!;
+    inspector().pin(getElement("#card"));
     ui(".more-button")!.click();
     expect(item().getAttribute("aria-checked")).toBe("false");
     await openCanvas();
@@ -427,7 +449,6 @@ describe("switching", () => {
     await openCanvas();
     // A data: page is another origin, as another site is.
     frame().src = "data:text/html,<p>Elsewhere</p>";
-    const blocked = () => ui(".canvas-blocked")!;
     await until(() => !blocked().hidden);
     expect(blocked().textContent).toContain("cannot be shown on a canvas");
     ui('.canvas-blocked [data-action="exit"]')!.click();
@@ -436,14 +457,14 @@ describe("switching", () => {
   });
 });
 
-describe("a page whose address the browser refuses to frame", () => {
-  /** Opens the canvas on an address the browser will not let us read, with `FRAMED_PAGE` as the copy. */
-  async function openRefused(): Promise<void> {
-    setCanvas(true, "data:text/html,<p>Refused</p>", () => FRAMED_PAGE);
-    await until(() => frame().contentDocument?.querySelector("#card") != null);
-    await wait(0);
-  }
+/** Opens the canvas on an address the browser will not let us read, with `FRAMED_PAGE` as the copy. */
+async function openRefused(): Promise<void> {
+  showCanvas({ source: "data:text/html,<p>Refused</p>", copy: () => FRAMED_PAGE });
+  await until(() => Boolean(frame().contentDocument?.querySelector("#card")));
+  await wait(0);
+}
 
+describe("a page whose address the browser refuses to frame", () => {
   it("is shown from a copy of the open page instead, and inspected as usual", async () => {
     await openRefused();
     expect(ui(".canvas-blocked")!.hidden).toBe(true);
@@ -467,11 +488,11 @@ describe("a page whose address the browser refuses to frame", () => {
     await openRefused();
     bar("exit").click();
     expect(ui(".canvas")).toBeNull();
-    expect(el("#card").textContent).toBe("Card");
+    expect(getElement("#card").textContent).toBe("Card");
   });
 
   it("copies the page as it is now, without the inspector", () => {
-    inspector().pin(el("#card"));
+    inspector().pin(getElement("#card"));
     const html = pageCopy(document);
     expect(html.startsWith("<!doctype html>")).toBe(true);
     expect(html).toContain('id="card"');
@@ -484,10 +505,12 @@ describe("a page whose address the browser refuses to frame", () => {
     await openRefused();
     const picker = ui<HTMLInputElement>('.canvas input[type="file"]')!;
     const files = new DataTransfer();
-    files.items.add(new File([`<!doctype html><p id="original">From the file</p>`], "page.html", { type: "text/html" }));
+    files.items.add(
+      new File([`<!doctype html><p id="original">From the file</p>`], "page.html", { type: "text/html" }),
+    );
     picker.files = files.files;
     picker.dispatchEvent(new Event("change"));
-    await until(() => frame().contentDocument?.querySelector("#original") != null);
+    await until(() => Boolean(frame().contentDocument?.querySelector("#original")));
     expect(framed("#original").textContent).toBe("From the file");
     expect(ui(".canvas-blocked")!.hidden).toBe(true);
   });
@@ -499,7 +522,13 @@ describe("a page whose address the browser refuses to frame", () => {
 
   it("takes the panel's push off the page when the canvas opens with nothing pinned", async () => {
     document.dispatchEvent(
-      new KeyboardEvent("keydown", { code: "KeyG", altKey: true, shiftKey: true, bubbles: true, cancelable: true }),
+      new KeyboardEvent("keydown", {
+        code: "KeyG",
+        altKey: true,
+        shiftKey: true,
+        bubbles: true,
+        cancelable: true,
+      }),
     );
     expect(document.documentElement.style.marginRight).not.toBe("");
     await openCanvas();

@@ -14,23 +14,36 @@ const INHERITED = new Set([
   "letter-spacing",
 ]);
 
+/** The properties to look at, and how to read the declarations that apply to an element. */
+export type TokenQuery = { props: string[]; stylesOf: StyleLookup };
+
 /**
  * The tokens named in the declarations that set `props` on an element.
  * Text and icon colours usually come from an ancestor, so for inherited
  * properties the search walks up until some element declares one.
  */
-export function declaredTokens(el: Element, props: string[], stylesOf: StyleLookup): string[] {
-  const inherits = props.length > 0 && props.every((prop) => INHERITED.has(prop));
-  for (let node: Element | null = el; node; node = inherits ? node.parentElement : null) {
-    const styles = stylesOf(node);
-    const values = props
-      .map((prop) => styles.findLast((style) => style.getPropertyValue(prop))?.getPropertyValue(prop))
-      .filter((value) => value !== undefined);
-    if (!values.length) continue;
-    const names = values.flatMap((value) => [...value.matchAll(/var\(\s*(--[\w-]+)/g)]);
-    return [...new Set(names.map((match) => match[1]))];
-  }
-  return [];
+export function declaredTokens(element: Element, query: TokenQuery): string[] {
+  const inherits = query.props.length > 0 && query.props.every((prop) => INHERITED.has(prop));
+  return tokensFrom(element, { ...query, inherits });
+}
+
+function tokensFrom(node: Element | undefined, query: TokenQuery & { inherits: boolean }): string[] {
+  if (!node) return [];
+  const values = declaredValues(node, query);
+  if (values.length) return tokenNames(values);
+  return query.inherits ? tokensFrom(node.parentElement ?? undefined, query) : [];
+}
+
+function declaredValues(node: Element, { props, stylesOf }: TokenQuery): string[] {
+  const styles = stylesOf(node);
+  return props
+    .map((prop) => styles.findLast((style) => style.getPropertyValue(prop))?.getPropertyValue(prop))
+    .filter((value) => value !== undefined);
+}
+
+function tokenNames(values: string[]): string[] {
+  const names = values.flatMap((value) => [...value.matchAll(/var\(\s*(--[\w-]+)/g)]);
+  return [...new Set(names.map((match) => match[1]))];
 }
 
 /**
@@ -41,6 +54,12 @@ export function declaredTokens(el: Element, props: string[], stylesOf: StyleLook
 export function tokenPath(token: string, prefixes: string[]): string {
   const prefix = prefixes.find((candidate) => token.startsWith(candidate));
   return prefix ? token.slice(prefix.length).replaceAll("-", ".") : "";
+}
+
+/** ":root, .light" -> "light"; ".dark" -> "dark"; ":root" -> "default". */
+export function scopeName(selector: string): string {
+  const name = /([\w-]+)["'\]]*\s*$/.exec(selector)?.[1] ?? selector;
+  return name === "root" ? "default" : name;
 }
 
 const modesByToken = new Map<string, [scope: string, value: string][]>();
@@ -64,5 +83,5 @@ export function tokenModes(token: string): [scope: string, value: string][] {
 }
 
 /** True when the page defines any CSS variable the element can see. */
-export const hasTokens = (cs: CSSStyleDeclaration): boolean =>
-  Array.from(cs).some((prop) => prop.startsWith("--"));
+export const hasTokens = (computedStyle: CSSStyleDeclaration): boolean =>
+  Array.from(computedStyle).some((prop) => prop.startsWith("--"));

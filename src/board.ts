@@ -8,12 +8,12 @@ import { rectOf } from "./page";
  */
 const BOARD_SELECTOR = ".sa-stage, .dc-card, [data-artboard]";
 
-/** The artboard that contains `el`, if any. */
-export function boardOf(el: Element): Element | null {
-  return el.parentElement?.closest(BOARD_SELECTOR) ?? null;
+/** The artboard that contains `element`, if any. */
+export function findBoard(element: Element): Element | undefined {
+  return element.parentElement?.closest(BOARD_SELECTOR) ?? undefined;
 }
 
-export interface BoardPosition {
+export type BoardPosition = {
   /** Offset from the board's top-left corner, in the board's own pixels at any zoom. */
   x: number;
   y: number;
@@ -21,18 +21,19 @@ export interface BoardPosition {
   text: string;
   /** The board's name, when the page labels it. */
   board: string;
-}
+};
+
+const roundToTenth = (value: number): number => Math.round(value * 10) / 10;
 
 /** Where an element sits on its artboard. */
-export function boardPosition(el: Element): BoardPosition | null {
-  const board = boardOf(el);
-  if (!board) return null;
-  const rect = rectOf(el);
+export function findBoardPosition(element: Element): BoardPosition | undefined {
+  const board = findBoard(element);
+  if (!board) return undefined;
+  const rect = rectOf(element);
   const boardRect = rectOf(board);
   const scale = scaleOf(board, boardRect);
-  const tenth = (value: number) => Math.round(value * 10) / 10;
-  const x = tenth((rect.left - boardRect.left) / scale.x);
-  const y = tenth((rect.top - boardRect.top) / scale.y);
+  const x = roundToTenth((rect.left - boardRect.left) / scale.x);
+  const y = roundToTenth((rect.top - boardRect.top) / scale.y);
   return {
     x,
     y,

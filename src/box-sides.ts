@@ -5,8 +5,17 @@ export type Side = (typeof SIDES)[number];
 export type Sides = Record<Side, number>;
 
 /** An element's margin, padding or border widths, in CSS pixels. */
-export function sidesOf(cs: CSSStyleDeclaration, property: "margin" | "padding" | "border"): Sides {
+export function sidesOf(
+  computedStyle: CSSStyleDeclaration,
+  property: "margin" | "padding" | "border",
+): Sides {
   const suffix = property === "border" ? "-width" : "";
-  const side = (name: Side) => parseFloat(cs.getPropertyValue(`${property}-${name}${suffix}`)) || 0;
-  return { top: side("top"), right: side("right"), bottom: side("bottom"), left: side("left") };
+  const readSide = (name: Side): number =>
+    parseFloat(computedStyle.getPropertyValue(`${property}-${name}${suffix}`)) || 0;
+  return {
+    top: readSide("top"),
+    right: readSide("right"),
+    bottom: readSide("bottom"),
+    left: readSide("left"),
+  };
 }

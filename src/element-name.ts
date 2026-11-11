@@ -1,19 +1,19 @@
 /** How the inspector names an element in its UI. */
 import { type Box, layoutSize } from "./dom";
-import { componentOf } from "./specs/component";
+import { findComponent } from "./specs/component";
 
 /**
  * The name a developer knows the element by: its component when it is the
  * root of one ("Card"), otherwise its tag.
  */
-export function elementName(el: Element): string {
-  const component = componentOf(el);
-  return component && !component.inside ? component.name : el.localName;
+export function elementName(element: Element): string {
+  const component = findComponent(element);
+  return component && !component.inside ? component.name : element.localName;
 }
 
 /** "444 × 382": the element's size in its own CSS pixels. */
-export function sizeText(el: Element, rect: Box = el.getBoundingClientRect()): string {
-  const { width, height } = layoutSize(el, rect);
+export function sizeText(element: Element, rect: Box = element.getBoundingClientRect()): string {
+  const { width, height } = layoutSize(element, rect);
   return `${width} × ${height}`;
 }
 
@@ -21,11 +21,11 @@ export function sizeText(el: Element, rect: Box = el.getBoundingClientRect()): s
  * The tag and the classes of an element as two spans, so the tag reads first:
  * `<span>div<span class="classes">.card</span></span>`.
  */
-export function tagAndClasses(el: Element, className: string): HTMLElement {
+export function tagAndClasses(element: Element, className: string): HTMLElement {
   const name = document.createElement("span");
   name.className = className;
-  name.textContent = el.localName;
-  const first = el.classList[0];
+  name.textContent = element.localName;
+  const first = element.classList[0];
   if (first) {
     const classes = name.appendChild(document.createElement("span"));
     classes.className = "classes";

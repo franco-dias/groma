@@ -7,17 +7,17 @@
  * project knows that.
  */
 
-export interface HandoffValue {
+export type HandoffValue = {
   /** A CSS property, or "" for the element's content. */
   prop: string;
-  /** Null when the value the page had is not known. */
-  before: string | null;
+  /** Undefined when the value the page had is not known. */
+  before: string | undefined;
   after: string;
   /** Design tokens of the page that hold the new value. */
   tokens: string[];
-}
+};
 
-export interface HandoffElement {
+export type HandoffElement = {
   name: string;
   selector: string;
   /** False when the page no longer has the element. */
@@ -27,15 +27,12 @@ export interface HandoffElement {
   text?: string;
   values: HandoffValue[];
   note: string;
-}
+};
 
-export interface HandoffPage {
-  address: string;
-  width: number;
-  height: number;
-}
+export type HandoffPage = { address: string; width: number; height: number };
 
 const MAX_TOKENS = 3;
+
 /**
  * Inline code on one line. A value that holds backticks gets a longer fence,
  * as Markdown asks, so the reader sees where the value ends.
@@ -50,13 +47,18 @@ function code(text: string): string {
 /** A note keeps its lines. More than one line is quoted, so nothing in it reads as a heading of this text. */
 function noteLines(note: string): string[] {
   const lines = note.split("\n").map((line) => line.trim());
-  return lines.length === 1 ? [`Note: ${lines[0]}`] : ["Note:", ...lines.map((line) => (line ? `> ${line}` : ">"))];
+  return lines.length === 1
+    ? [`Note: ${lines[0]}`]
+    : ["Note:", ...lines.map((line) => (line ? `> ${line}` : ">"))];
 }
 
 function valueLine({ prop, before, after, tokens }: HandoffValue): string {
   // Content is quoted as JSON, so line breaks and quotes in it stay on one line.
   const show = prop ? code : (text: string) => JSON.stringify(text);
-  const change = before === null ? `${show(after)} (the value before is not known)` : `${show(before)} → ${show(after)}`;
+  const change =
+    before === undefined
+      ? `${show(after)} (the value before is not known)`
+      : `${show(before)} → ${show(after)}`;
   const names = tokens.slice(0, MAX_TOKENS).map(code).join(", ");
   return `- ${prop ? code(prop) : "Content"}: ${change}${names ? ` (matches ${names})` : ""}`;
 }

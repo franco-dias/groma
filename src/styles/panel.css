@@ -92,7 +92,9 @@
   color: var(--ins-fg-muted);
   border-radius: var(--ins-radius-md);
   font: 500 12px/24px var(--ins-font-sans);
-  transition: background var(--ins-dur), color var(--ins-dur);
+  transition:
+    background var(--ins-dur),
+    color var(--ins-dur);
 }
 
 .tab:hover {

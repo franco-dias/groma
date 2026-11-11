@@ -5,11 +5,22 @@ export type Unit = "px" | "rem";
 /** "push": the panel takes its width out of the page. "float": it covers the page. */
 export type PanelMode = "push" | "float";
 
-export const options = {
+type Options = {
+  panelMode: PanelMode;
+  unit: Unit;
+  gridStep: number;
+  highlightPinned: boolean;
+  hideDefaults: boolean;
+  search: string;
+  compareWith: Element | undefined;
+  pickedColor: string;
+};
+
+export const options: Options = {
   /** Whether the side panel pushes the page aside or floats over it. */
-  panelMode: "push" as PanelMode,
+  panelMode: "push",
   /** How the Specs tab shows and copies lengths. */
-  unit: "px" as Unit,
+  unit: "px",
   /** Artboard pixels between grid lines; 0 turns the grid off. */
   gridStep: 0,
   /** Outline the pinned element on the page. */
@@ -19,7 +30,7 @@ export const options = {
   /** All CSS tab: only show properties whose name contains this text. */
   search: "",
   /** Specs tab: the element the pinned one is compared with. */
-  compareWith: null as Element | null,
+  compareWith: undefined,
   /** Specs tab: the last colour taken with the eyedropper. */
   pickedColor: "",
 };

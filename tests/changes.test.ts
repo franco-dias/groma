@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { el, inspector, openTab, page, reset, texts, ui, wait } from "./helpers";
+import { getElement, inspector, openTab, page, reset, texts, ui, wait } from "./helpers";
 
 const exportData = (overrides: object = {}) => ({
   exported: "Nov 9, 2026",
@@ -27,6 +27,13 @@ const asExportFile = (data: object): string =>
   `<html><script type="application/json" id="dc-data">${JSON.stringify(data).replace(/<\//g, "<\\/")}</script></html>`;
 
 /** Picks a file in the Changes tab, as the file dialog would. */
+/** Polls for the file's name in the tab, for up to five seconds. */
+async function waitForFileName(name: string, waited = 0): Promise<void> {
+  if (waited >= 5000 || texts(".file-name").includes(name)) return;
+  await wait(10);
+  return waitForFileName(name, waited + 10);
+}
+
 async function chooseFile(name: string, content: string): Promise<void> {
   const input = ui<HTMLInputElement>('.panel input[type="file"]')!;
   const files = new DataTransfer();
@@ -35,7 +42,7 @@ async function chooseFile(name: string, content: string): Promise<void> {
   input.dispatchEvent(new Event("change"));
   // The tab reads the file before it shows anything. That takes as long as
   // the machine lets it: wait for the file's name, not for a fixed time.
-  for (let waited = 0; waited < 5000 && !texts(".file-name").includes(name); waited += 10) await wait(10);
+  await waitForFileName(name);
 }
 
 beforeEach(() => {
@@ -45,7 +52,7 @@ beforeEach(() => {
     <script type="application/json" id="dc-data">${JSON.stringify(exportData())}</script>
     <section id="card"><div class="card">Card</div></section>
   `);
-  inspector().pin(el(".card"));
+  inspector().pin(getElement(".card"));
   openTab("changes");
 });
 
@@ -74,6 +81,7 @@ describe("Changes tab", () => {
     expect(lines.hidden).toBe(false);
     expect(texts(".change-line")).toEqual(["+<p>new line</p>", "−<p>old line</p>"]);
     expect(location.hash).toBe("#card");
+    // oxlint-disable-next-line unicorn/no-null -- the History API takes null for "no state"
     history.replaceState(null, "", location.pathname);
   });
 

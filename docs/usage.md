@@ -16,13 +16,13 @@ machine can reach the server. Ctrl+C stops it. It needs
 [Node.js](https://nodejs.org) 18.3 or newer and installs nothing in your
 project.
 
-| Option | What it does |
-| --- | --- |
-| `--copy=css\|sx` | What a click on a length copies (see [Settings](#settings)) |
-| `--token-prefix=<prefix>` | Shows a theme path for tokens with this prefix |
-| `--port=<number>` | The port to serve on; the default is 4777 |
-| `--no-open` | Does not open the browser |
-| `-h`, `--help` | Lists these options |
+| Option                    | What it does                                                |
+| ------------------------- | ----------------------------------------------------------- |
+| `--copy=css\|sx`          | What a click on a length copies (see [Settings](#settings)) |
+| `--token-prefix=<prefix>` | Shows a theme path for tokens with this prefix              |
+| `--port=<number>`         | The port to serve on; the default is 4777                   |
+| `--no-open`               | Does not open the browser                                   |
+| `-h`, `--help`            | Lists these options                                         |
 
 ```bash
 npx gromajs design.html --copy=sx --token-prefix=--ds-
@@ -102,10 +102,10 @@ Optional. Put them on the script tag:
 <script src="groma.js" data-copy="sx" data-token-prefix="--ds-"></script>
 ```
 
-| Attribute | Values | What it changes |
-| --- | --- | --- |
-| `data-copy` | `css` (default), `sx` | What a click on a length copies. `css`: `24px` and `padding: 12px 16px`. `sx`: `24` and `py: 12, px: 16`, for styling libraries that take style objects where a bare number means pixels |
-| `data-token-prefix` | one or more prefixes, separated by spaces | Tokens with that prefix also show their path in the theme object the variables mirror: with `--ds-`, `--ds-color-text-primary` shows `color.text.primary` |
+| Attribute           | Values                                    | What it changes                                                                                                                                                                          |
+| ------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data-copy`         | `css` (default), `sx`                     | What a click on a length copies. `css`: `24px` and `padding: 12px 16px`. `sx`: `24` and `py: 12, px: 16`, for styling libraries that take style objects where a bare number means pixels |
+| `data-token-prefix` | one or more prefixes, separated by spaces | Tokens with that prefix also show their path in the theme object the variables mirror: with `--ds-`, `--ds-color-text-primary` shows `color.text.primary`                                |
 
 The same settings can be changed from code with
 `Groma.configure({ copyFormat: "sx", tokenPrefixes: ["--ds-"] })`.
@@ -137,13 +137,13 @@ only your codebase knows that.
 
 A page can talk to the inspector through `window.Groma`:
 
-| Method | What it does |
-| --- | --- |
-| `pin(el)` | Pins an element, as Alt + click does |
-| `pinnedElement()` | The pinned element, or `null` |
-| `replayOverrides(root?)` | Re-applies saved edits to the page, or inside `root` |
-| `highlight(el)` | Moves the pinned-element outline to `el` |
-| `configure(settings)` | Changes the [settings](#settings); with no argument, restores the defaults |
+| Method                   | What it does                                                               |
+| ------------------------ | -------------------------------------------------------------------------- |
+| `pin(el)`                | Pins an element, as Alt + click does                                       |
+| `pinnedElement()`        | The pinned element, or `null`                                              |
+| `replayOverrides(root?)` | Re-applies saved edits to the page, or inside `root`                       |
+| `highlight(el)`          | Moves the pinned-element outline to `el`                                   |
+| `configure(settings)`    | Changes the [settings](#settings); with no argument, restores the defaults |
 
 ## Hand your edits to a coding agent
 
@@ -172,6 +172,7 @@ These edits were made on the live page with Groma. …
 - Text: "Get started"
 
 Edits:
+
 - `padding-top`: `12px` → `16px` (matches `--space-4`)
 - `color`: `rgb(0, 128, 0)` → `red`
 

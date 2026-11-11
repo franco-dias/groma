@@ -18,7 +18,7 @@
  */
 import { startCanvas } from "./canvas/canvas";
 import { type Config, configure, configureFromScriptTag } from "./config";
-import { replayOverrides } from "./edits/overrides";
+import { replayOverrides } from "./edits/replay";
 import { startLauncher } from "./launcher";
 import { pinFromLink } from "./link";
 import { highlight, startOutlines } from "./outlines";
@@ -26,21 +26,26 @@ import { startHover } from "./overlay/hover";
 import { startLayerMenu } from "./overlay/layer-menu";
 import { startPanel } from "./panel/panel";
 import { isGromaFrame } from "./page";
-import { pin, pinnedElement } from "./selection";
+import { findPinnedElement, pin } from "./selection";
 
 /** For pages that re-render and need to bring the inspector along. */
-export interface GromaApi {
+export type GromaApi = {
   /** Pins an element, as Alt+click does. */
-  pin(el: Element): void;
+  pin(element: Element): void;
   /** The element pinned in the panel, or null. */
+  // oxlint-disable-next-line unicorn/no-null -- the published contract answers null
   pinnedElement(): Element | null;
   /** Re-applies saved edits to the whole page, or only inside `root`. */
   replayOverrides(root?: ParentNode): void;
-  /** Moves the pinned-element outline to `el`. */
-  highlight(el: Element): void;
+  /** Moves the pinned-element outline to `element`. */
+  highlight(element: Element): void;
   /** Changes how values are copied and which tokens show a theme path (see config.ts). */
   configure(changes?: Partial<Config>): void;
-}
+};
+
+/** The pinned element for a host page, which expects null when nothing is pinned (the public contract). */
+// oxlint-disable-next-line unicorn/no-null -- `Groma.pinnedElement()` answers null, as published
+const findOrNull = (): Element | null => findPinnedElement() ?? null;
 
 function start(): void {
   configureFromScriptTag();
@@ -54,7 +59,7 @@ function start(): void {
   // which says when some are missing. A page can still call replayOverrides().
   pinFromLink();
 
-  window.Groma = { pin, pinnedElement, replayOverrides, highlight, configure };
+  window.Groma = { pin, pinnedElement: findOrNull, replayOverrides, highlight, configure };
   // Last: the frame's own copy of the script looks for `Groma` in this window.
   startCanvas();
 }

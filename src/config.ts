@@ -12,7 +12,7 @@ import { rerender } from "./selection";
 
 export type CopyFormat = "css" | "sx";
 
-export interface Config {
+export type Config = {
   /**
    * What a click on a length copies.
    *   "css"  `24px`, and `padding: 12px 16px` for a box side group
@@ -26,7 +26,7 @@ export interface Config {
    * "--ds-" turns `--ds-color-text-primary` into `color.text.primary`.
    */
   tokenPrefixes: string[];
-}
+};
 
 const DEFAULTS: Config = { copyFormat: "css", tokenPrefixes: [] };
 
@@ -49,6 +49,7 @@ export function configureFromScriptTag(): void {
   const tag = document.currentScript ?? document.querySelector("script[data-groma]");
   if (!(tag instanceof HTMLElement)) return;
   configure({
+    // Cast: any text may be there; `configure` takes only the two formats.
     copyFormat: tag.dataset.copy as CopyFormat | undefined,
     tokenPrefixes: tag.dataset.tokenPrefix?.split(/[\s,]+/).filter(Boolean),
   });

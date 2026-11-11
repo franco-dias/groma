@@ -1,12 +1,15 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { all, el, inspector, openTab, page, reset, texts, ui } from "./helpers";
+import { all, getElement, inspector, openTab, page, reset, texts, ui } from "./helpers";
 
 const SPECS = '.body[data-for="specs"]';
 
 /** The row of buttons that sets a property of the container. */
 const control = (property: string): HTMLElement => ui(`${SPECS} .flex-control[data-prop="${property}"]`)!;
 const checked = (property: string): string[] =>
-  Array.from(control(property).querySelectorAll<HTMLElement>('[aria-checked="true"]'), (b) => b.dataset.value!);
+  Array.from(
+    control(property).querySelectorAll<HTMLElement>('[aria-checked="true"]'),
+    (button) => button.dataset.value!,
+  );
 const press = (property: string, value: string): void =>
   control(property).querySelector<HTMLElement>(`[data-value="${value}"]`)!.click();
 
@@ -15,7 +18,8 @@ const tracks = (axis: "columns" | "rows"): HTMLElement | null =>
   ui(`${SPECS} .tracks[data-prop="grid-template-${axis}"]`);
 const sizes = (axis: "columns" | "rows"): string[] =>
   Array.from(tracks(axis)!.querySelectorAll(".track .value"), (node) => node.textContent ?? "");
-const count = (axis: "columns" | "rows"): string => tracks(axis)!.querySelector(".track-count")!.textContent ?? "";
+const count = (axis: "columns" | "rows"): string =>
+  tracks(axis)!.querySelector(".track-count")!.textContent ?? "";
 const step = (axis: "columns" | "rows", sign: "−" | "+"): void =>
   Array.from(tracks(axis)!.querySelectorAll<HTMLElement>(".step"))
     .find((button) => button.textContent === sign)!
@@ -25,7 +29,7 @@ const doubleClick = (node: Element): boolean =>
   node.dispatchEvent(new MouseEvent("dblclick", { bubbles: true, composed: true }));
 
 /** Double-clicks the size of a track, types over it and leaves the field. */
-function retype(axis: "columns" | "rows", index: number, text: string): void {
+function retype({ axis, index }: { axis: "columns" | "rows"; index: number }, text: string): void {
   const field = tracks(axis)!.querySelector<HTMLElement>(`[data-track="${index}"]`)!;
   doubleClick(field);
   field.textContent = text;
@@ -54,12 +58,15 @@ function pinGrid(style: string): HTMLElement {
       <div class="child">A</div><div>B</div><div>C</div>
     </div>
   `);
-  grid = el(".grid");
+  grid = getElement(".grid");
   inspector().pin(grid);
   return grid;
 }
 
 beforeEach(reset);
+
+const turn = (property: string): string =>
+  getComputedStyle(control(property).querySelector('[data-value="center"] .icon')!).transform;
 
 describe("where a grid puts each item in its cell", () => {
   beforeEach(() => {
@@ -91,12 +98,13 @@ describe("where a grid puts each item in its cell", () => {
   });
 
   it("turns only the drawings that move the items down the cell", () => {
-    const turn = (property: string): string =>
-      getComputedStyle(control(property).querySelector('[data-value="center"] .icon')!).transform;
     expect(turn("justify-items")).toBe("none");
     expect(turn("align-items")).not.toBe("none");
   });
 });
+
+const trackIntentButtons = () =>
+  Array.from(tracks("columns")!.querySelectorAll<HTMLElement>(".track .intent"));
 
 describe("the columns and rows of a grid", () => {
   it("shows the number of columns and each one's size, as the page declares them", () => {
@@ -124,7 +132,7 @@ describe("the columns and rows of a grid", () => {
 
   it("edits one column's size and leaves the others", () => {
     pinGrid("grid-template-columns: repeat(3, 1fr)");
-    retype("columns", 1, "2fr");
+    retype({ axis: "columns", index: 1 }, "2fr");
 
     expect(grid.style.gridTemplateColumns).toBe("1fr 2fr 1fr");
     expect(sizes("columns")).toEqual(["1fr", "2fr", "1fr"]);
@@ -132,29 +140,28 @@ describe("the columns and rows of a grid", () => {
 
   it("takes a bare number as pixels, and an emptied field as the column removed", () => {
     pinGrid("grid-template-columns: repeat(3, 1fr)");
-    retype("columns", 0, "120");
+    retype({ axis: "columns", index: 0 }, "120");
     expect(grid.style.gridTemplateColumns).toBe("120px 1fr 1fr");
 
-    retype("columns", 0, "");
+    retype({ axis: "columns", index: 0 }, "");
     expect(grid.style.gridTemplateColumns).toBe("repeat(2, 1fr)");
   });
 
   it("drops a size the browser rejects", () => {
     pinGrid("grid-template-columns: 1fr 1fr");
-    retype("columns", 0, "banana");
+    retype({ axis: "columns", index: 0 }, "banana");
     expect(grid.style.gridTemplateColumns).toBe("1fr 1fr");
   });
 
   it("says whether each column is fixed, hugs or fills, and changes it from a menu", () => {
     pinGrid("grid-template-columns: 100px auto 1fr");
-    const intents = () => Array.from(tracks("columns")!.querySelectorAll<HTMLElement>(".track .intent"));
-    expect(intents().map((button) => button.title.split(".")[0])).toEqual([
+    expect(trackIntentButtons().map((button) => button.title.split(".")[0])).toEqual([
       "This column is fixed",
       "This column is hugging",
       "This column is filling",
     ]);
 
-    intents()[0].click();
+    trackIntentButtons()[0].click();
     expect(texts(".row-menu .more-item")).toEqual([
       "fixeda set size",
       "hugauto: as big as its content",
@@ -165,8 +172,8 @@ describe("the columns and rows of a grid", () => {
     expect(grid.style.gridTemplateColumns).toBe("1fr auto 1fr");
 
     // Fixed keeps the size the column has now.
-    const width = el(".child").getBoundingClientRect().width;
-    intents()[0].click();
+    const width = getElement(".child").getBoundingClientRect().width;
+    trackIntentButtons()[0].click();
     ui('.row-menu [data-value="fixed"]')!.click();
     expect(parseFloat(grid.style.gridTemplateColumns)).toBeCloseTo(width);
   });
@@ -193,7 +200,7 @@ describe("the columns and rows of a grid", () => {
       </style>
       <div class="grid"><div>A</div><div>B</div><div>C</div></div>
     `);
-    inspector().pin(el(".grid"));
+    inspector().pin(getElement(".grid"));
     expect(tracks("columns")!.querySelector(".stepper")).toBeNull();
     expect(tracks("columns")!.querySelector(".hint")!.textContent).toBe("3 laid out");
   });
@@ -219,7 +226,7 @@ describe("the columns and rows of a grid", () => {
     expect(sizes("columns")).toEqual(["1fr"]);
     expect(tracks("columns")!.querySelector(".track .hint")!.textContent).toBe("each");
 
-    retype("columns", 0, "40");
+    retype({ axis: "columns", index: 0 }, "40");
     expect(grid.style.gridTemplateColumns).toBe("repeat(6, 40px)");
     step("columns", "−");
     step("columns", "−");
@@ -248,28 +255,30 @@ describe("the columns and rows of a grid", () => {
 
   it("is not there for an element that is not a grid", () => {
     page(`<div class="plain" style="width: 100px">Plain</div>`);
-    inspector().pin(el(".plain"));
+    inspector().pin(getElement(".plain"));
     expect(all(`${SPECS} .tracks`)).toEqual([]);
     expect(all(`${SPECS} .flex-control`)).toEqual([]);
   });
 });
 
-describe("an item of a grid", () => {
-  const intents = (): string[] => texts(".intent");
-  function choose(axis: "width" | "height", intent: string): void {
-    ui(`.intent.is-${axis}`)!.click();
-    ui(`.row-menu [data-value="${intent}"]`)!.click();
-  }
-  const pinChild = (gridStyle: string, childStyle = ""): HTMLElement => {
-    page(`
-      <div style="display: grid; width: 300px; height: 200px; grid-template-columns: 1fr 1fr; ${gridStyle}">
-        <div class="child" style="${childStyle}">A</div><div>B</div>
-      </div>
-    `);
-    inspector().pin(el(".child"));
-    return el(".child");
-  };
+const pinChild = (gridStyle: string, childStyle = ""): HTMLElement => {
+  page(`
+    <div style="display: grid; width: 300px; height: 200px; grid-template-columns: 1fr 1fr; ${gridStyle}">
+      <div class="child" style="${childStyle}">A</div><div>B</div>
+    </div>
+  `);
+  inspector().pin(getElement(".child"));
+  return getElement(".child");
+};
 
+function choose(axis: "width" | "height", intent: string): void {
+  ui(`.intent.is-${axis}`)!.click();
+  ui(`.row-menu [data-value="${intent}"]`)!.click();
+}
+
+const intents = (): string[] => texts(".intent");
+
+describe("an item of a grid", () => {
   it("reads as filling its cell on both axes, and as hugging in a grid that does not stretch", () => {
     pinChild("");
     expect(intents()).toEqual(["fill", "fill"]);
