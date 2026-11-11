@@ -57,3 +57,15 @@ export function sxSpacing(name: "padding" | "margin", sides: number[]): string {
   if (top === bottom && right === left) return `${key}y: ${top}, ${key}x: ${right}`;
   return `${key}t: ${top}, ${key}r: ${right}, ${key}b: ${bottom}, ${key}l: ${left}`;
 }
+
+/**
+ * A value whose leading number went one step up or down: "12px" -> "13px".
+ * Null when the text does not start with a number. A step of 0.1, or a number
+ * that already has decimals, keeps one decimal.
+ */
+export function nudged(text: string, direction: 1 | -1, step: number): string | null {
+  const number = /^(-?\d*\.?\d+)(.*)/.exec(text);
+  if (!number) return null;
+  const decimals = step === 0.1 || number[1].includes(".") ? 1 : 0;
+  return (parseFloat(number[1]) + direction * step).toFixed(decimals) + number[2];
+}

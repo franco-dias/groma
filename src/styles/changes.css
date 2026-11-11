@@ -191,7 +191,8 @@ button.change-row:hover,
 }
 
 /* ── empty and error states ── */
-.changes-empty {
+.changes-empty,
+.edits-empty {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -200,6 +201,7 @@ button.change-row:hover,
 }
 
 .changes-empty b,
+.edits-empty b,
 .alert b {
   font: 600 12px/16px var(--ins-font-sans);
 }

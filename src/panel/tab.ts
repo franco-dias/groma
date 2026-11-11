@@ -6,6 +6,8 @@ export interface Tab {
   mount(panel: HTMLElement): void;
   /** Shows the pinned element. Called on every pin and every change. */
   render(el: Element, change: SelectionChange): void;
+  /** For a tab with something to show while the panel is open with nothing pinned. */
+  renderUnpinned?(): void;
 }
 
 /** An element of panel.html. Throws when the markup and the code disagree. */
