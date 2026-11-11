@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><style>
+/* Every color on the page (colors.py). */
+:root {
+  --color-accent: #2f6bff;
+  --color-accent-08: rgba(47, 107, 255, 0.08);
+  --color-accent-10: rgba(47, 107, 255, 0.1);
+  --color-accent-12: rgba(47, 107, 255, 0.12);
+  --color-accent-14: rgba(47, 107, 255, 0.14);
+  --color-accent-22: rgba(47, 107, 255, 0.22);
+  --color-accent-24: rgba(47, 107, 255, 0.24);
+  --color-accent-25: rgba(47, 107, 255, 0.25);
+  --color-accent-26: rgba(47, 107, 255, 0.26);
+  --color-accent-28: rgba(47, 107, 255, 0.28);
+  --color-accent-30: rgba(47, 107, 255, 0.3);
+  --color-accent-35: rgba(47, 107, 255, 0.35);
+  --color-accent-42: rgba(47, 107, 255, 0.42);
+  --color-accent-45: rgba(47, 107, 255, 0.45);
+  --color-accent-50: rgba(47, 107, 255, 0.5);
+  --color-accent-60: rgba(47, 107, 255, 0.6);
+  --color-accent-bright: #4f86ff;
+  --color-accent-hover: #3d77ff;
+  --color-accent-soft: #7aa2ff;
+  --color-accent-soft-07: rgba(122, 162, 255, 0.07);
+  --color-accent-soft-12: rgba(122, 162, 255, 0.12);
+  --color-accent-soft-25: rgba(122, 162, 255, 0.25);
+  --color-accent-soft-30: rgba(122, 162, 255, 0.3);
+  --color-accent-soft-32: rgba(122, 162, 255, 0.32);
+  --color-accent-soft-35: rgba(122, 162, 255, 0.35);
+  --color-accent-soft-38: rgba(122, 162, 255, 0.38);
+  --color-accent-soft-40: rgba(122, 162, 255, 0.4);
+  --color-accent-soft-45: rgba(122, 162, 255, 0.45);
+  --color-accent-soft-50: rgba(122, 162, 255, 0.5);
+  --color-accent-soft-55: rgba(122, 162, 255, 0.55);
+  --color-accent-soft-60: rgba(122, 162, 255, 0.6);
+  --color-accent-soft-75: rgba(122, 162, 255, 0.75);
+  --color-accent-soft-80: rgba(122, 162, 255, 0.8);
+  --color-black: #000000;
+  --color-black-20: rgba(0, 0, 0, 0.2);
+  --color-black-25: rgba(0, 0, 0, 0.25);
+  --color-black-40: rgba(0, 0, 0, 0.4);
+  --color-black-45: rgba(0, 0, 0, 0.45);
+  --color-black-50: rgba(0, 0, 0, 0.5);
+  --color-black-60: rgba(0, 0, 0, 0.6);
+  --color-cyan: #5ee7ff;
+  --color-cyan-08: rgba(94, 231, 255, 0.08);
+  --color-cyan-10: rgba(94, 231, 255, 0.1);
+  --color-cyan-12: rgba(94, 231, 255, 0.12);
+  --color-cyan-18: rgba(94, 231, 255, 0.18);
+  --color-cyan-20: rgba(94, 231, 255, 0.2);
+  --color-cyan-35: rgba(94, 231, 255, 0.35);
+  --color-cyan-40: rgba(94, 231, 255, 0.4);
+  --color-cyan-50: rgba(94, 231, 255, 0.5);
+  --color-gray-600: #2c323c;
+  --color-gray-650: #2a2f38;
+  --color-gray-700: #262a31;
+  --color-gray-750: #20242b;
+  --color-gray-775: #1c2028;
+  --color-gray-800: #1b1f26;
+  --color-gray-825: #1a1e25;
+  --color-gray-850: #181c22;
+  --color-gray-875: #151a24;
+  --color-gray-900: #13161b;
+  --color-highlight-95: rgba(230, 251, 255, 0.95);
+  --color-ink: #050608;
+  --color-measure: #d92d20;
+  --color-measure-soft: #ff6b5e;
+  --color-page: #08090b;
+  --color-page-50: rgba(8, 9, 11, 0.5);
+  --color-page-62: rgba(8, 9, 11, 0.62);
+  --color-surface: #0f1115;
+  --color-surface-50: rgba(15, 17, 21, 0.5);
+  --color-surface-96: rgba(15, 17, 21, 0.96);
+  --color-surface-raised: #14171c;
+  --color-surface-raised-70: rgba(20, 23, 28, 0.7);
+  --color-surface-raised-80: rgba(20, 23, 28, 0.8);
+  --color-surface-sunken: #0b0d10;
+  --color-text-faint: #59616c;
+  --color-text-muted: #747d88;
+  --color-text-primary: #f5f7fa;
+  --color-text-secondary: #9aa3af;
+  --color-text-tertiary: #7f8895;
+  --color-transparent: transparent;
+  --color-white: #ffffff;
+  --color-white-02: rgba(255, 255, 255, 0.02);
+  --color-white-04: rgba(255, 255, 255, 0.04);
+  --color-white-05: rgba(255, 255, 255, 0.05);
+  --color-white-06: rgba(255, 255, 255, 0.06);
+  --color-white-07: rgba(255, 255, 255, 0.07);
+  --color-white-08: rgba(255, 255, 255, 0.08);
+  --color-white-10: rgba(255, 255, 255, 0.1);
+  --color-white-12: rgba(255, 255, 255, 0.12);
+  --color-white-14: rgba(255, 255, 255, 0.14);
+  --color-white-16: rgba(255, 255, 255, 0.16);
+  --color-white-20: rgba(255, 255, 255, 0.2);
+  --color-white-22: rgba(255, 255, 255, 0.22);
+  --color-white-24: rgba(255, 255, 255, 0.24);
+  --color-white-25: rgba(255, 255, 255, 0.25);
+  --color-white-28: rgba(255, 255, 255, 0.28);
+  --color-white-30: rgba(255, 255, 255, 0.3);
+}
+</style><script>window.__gromaVersion = "0.6.1";</script><script>window.__resources = {"https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js": "../assets/react.production.min.js", "https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js": "../assets/react-dom.production.min.js"};</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Groma · Verifique o design de AI antes de construir</title><meta name="description" content="Um inspetor open source para designs em HTML. Veja box model, specs, tokens, componentes e distâncias de cada elemento. Um script, sem dependências."><meta property="og:title" content="Groma · Verifique o design de AI antes de construir"><meta property="og:description" content="Um inspetor open source para designs em HTML. Veja box model, specs, tokens, componentes e distâncias de cada elemento. Um script, sem dependências."><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="alternate" hreflang="en" href="../"><link rel="alternate" hreflang="pt-BR" href="./">
+<script src="../assets/runtime.js"></script>
+<meta name="hz:slide-selector" content="[data-canvas-width]"><meta name="hz:canvas-width" content="1280"><meta name="hz:canvas-height" content="7740"><style>
+/* A flex row, so the keycap and the text share one centre line. */
+.try-hint { position:absolute; z-index:50; display:flex; align-items:center; transform:translate(-50%, 6px) scale(.96); opacity:0; pointer-events:none;
+  font:500 14px/1 Geist, system-ui, sans-serif; letter-spacing:-0.01em; color:var(--color-text-primary); white-space:nowrap; max-width:calc(100vw - 24px);
+  background:var(--color-surface-96); border:1px solid var(--color-accent-soft-45); border-radius:999px; padding:12px 16px;
+  box-shadow:0 0 0 4px var(--color-accent-12), 0 12px 32px var(--color-black-50);
+  transition:opacity .25s ease-out, transform .35s cubic-bezier(.2,.9,.3,1.3); }
+.try-hint::before { content:""; position:absolute; left:calc(50% + var(--arrow, 0px)); top:-6px; width:10px; height:10px; transform:translateX(-50%) rotate(45deg);
+  background:inherit; border-left:1px solid var(--color-accent-soft-45); border-top:1px solid var(--color-accent-soft-45); }
+.try-hint.is-shown { opacity:1; transform:translate(-50%, 0) scale(1); }
+/* As tall as the line of text around it. The page's own keycaps are 36px tall: undo that. */
+.try-hint kbd { display:inline-block; height:auto; min-width:0; margin:0 8px; padding:0 8px; border-radius:4px; background:var(--color-accent); color:var(--color-white);
+  font:600 12px/18px "Geist Mono", ui-monospace, monospace; box-shadow:inset 0 -1px 0 var(--color-black-25); }
+.try-hint.is-shown kbd { animation:try-press 1.2s ease-in-out .35s infinite; }
+@keyframes try-press { 0%, 100% { transform:none } 45% { transform:translateY(1px); box-shadow:inset 0 0 0 var(--color-black-25) } }
+@media (prefers-reduced-motion: reduce) { .try-hint, .try-hint kbd { transition:none; animation:none !important } }
+.npm-touch { display:none !important; }
+@media (pointer: coarse) { .try-it { display:none !important; } .npm-touch { display:inline-flex !important; } }
+</style></head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwRGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwYGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwTGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwSGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/font-1.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwRGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwYGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwTGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwSGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/font-1.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwRGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwYGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwTGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geist/v5/gyByhwUxId8gMEwSGFWNOITddY4.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/font-1.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrodmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrMdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* symbols2 */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFg08vz7MhEIVVeA.woff2) format('woff2');
+  unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrgdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrkdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/font-2.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrodmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrMdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* symbols2 */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFg08vz7MhEIVVeA.woff2) format('woff2');
+  unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrgdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrkdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/font-2.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrodmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrMdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* symbols2 */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFg08vz7MhEIVVeA.woff2) format('woff2');
+  unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrgdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/geistmono/v6/or3nQ6H-1_WfwkMZI_qYFrkdmhHkjkotbA.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/font-2.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+@property --beam { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+:root { --bg:var(--color-page); --s1:var(--color-surface); --s2:var(--color-surface-raised); --line:var(--color-white-08); --line2:var(--color-white-14); --tx:var(--color-text-primary); --tx2:var(--color-text-secondary); --tx3:var(--color-text-tertiary); --blue:var(--color-accent); --blue2:var(--color-accent-soft); --cyan:var(--color-cyan); --red:var(--color-measure); --sans:'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; --mono:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+html { background:var(--color-page); -webkit-text-size-adjust:100%; }
+body { margin:0; background:var(--color-page); color:var(--color-text-primary); }
+* { box-sizing:border-box; }
+a { color:var(--color-text-primary); text-decoration:none; } a:hover { color:var(--color-accent-soft); }
+::selection { background:var(--color-accent-45); color:var(--color-white); }
+button, input { font:inherit; color:inherit; }
+button { cursor:pointer; }
+:focus-visible { outline:2px solid var(--color-accent-soft); outline-offset:2px; }
+
+.gp { background:var(--color-page); color:var(--color-text-primary); font-family:'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size:16px; line-height:1.6; min-height:100vh; overflow-x:clip; -webkit-font-smoothing:antialiased; }
+.wrap { width:100%; max-width:1248px; margin:0 auto; padding:0 24px; }
+.mono { font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+/* header */
+.hdr { position:sticky; top:0; z-index:50; background:var(--color-page-62); -webkit-backdrop-filter:saturate(160%) blur(14px); backdrop-filter:saturate(160%) blur(14px); border-bottom:1px solid var(--color-white-08); }
+.hdr-in { height:64px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.logo { display:inline-flex; align-items:center; gap:12px; font-weight:600; font-size:16px; letter-spacing:-0.02em; color:var(--color-text-primary); }
+.logo:hover { color:var(--color-text-primary); }
+.logo-mark { width:28px; height:28px; border-radius:8px; display:grid; place-items:center; background:linear-gradient(180deg,var(--color-gray-825),var(--color-surface)); box-shadow:inset 0 0 0 1px var(--color-white-10), 0 0 24px var(--color-accent-25); color:var(--color-accent-soft); }
+.logo-mark svg { width:20px; height:20px; }
+.logo-mark svg * { stroke-width:1.6; stroke-linecap:round; }
+.nav { display:flex; align-items:center; gap:4px; }
+.nav a { font-size:14px; color:var(--color-text-secondary); padding:0 12px; height:44px; display:inline-flex; align-items:center; gap:8px; border-radius:8px; transition:color .2s, background .2s; }
+.nav a:hover { color:var(--color-text-primary); background:var(--color-white-04); }
+.nav svg { width:14px; height:14px; }
+.nav svg * { stroke-width:1.6; }
+
+/* hero */
+.top { position:relative; isolation:isolate; padding-bottom:96px; }
+.grid-bg { position:absolute; inset:0; z-index:-2; pointer-events:none;
+  background-image: radial-gradient(var(--color-white-16) 1px, var(--color-transparent) 1.4px), linear-gradient(var(--color-white-05) 1px, var(--color-transparent) 1px), linear-gradient(90deg, var(--color-white-05) 1px, var(--color-transparent) 1px);
+  background-size: 24px 24px, 96px 96px, 96px 96px; background-position: -12px -12px, -1px -1px, -1px -1px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, var(--color-black) 20%, var(--color-transparent) 75%); mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, var(--color-black) 20%, var(--color-transparent) 75%); }
+.spot { position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:0; transition:opacity .4s;
+  background-image: radial-gradient(var(--color-accent-soft-75) 1px, var(--color-transparent) 1.6px), linear-gradient(var(--color-cyan-18) 1px, var(--color-transparent) 1px), linear-gradient(90deg, var(--color-cyan-18) 1px, var(--color-transparent) 1px), radial-gradient(360px circle at var(--mx, 50%) var(--my, 30%), var(--color-accent-14), var(--color-transparent) 70%);
+  background-size: 24px 24px, 96px 96px, 96px 96px, 100% 100%; background-position: -12px -12px, -1px -1px, -1px -1px, 0 0;
+  -webkit-mask-image: radial-gradient(220px circle at var(--mx, 50%) var(--my, 30%), var(--color-black), var(--color-transparent) 75%); mask-image: radial-gradient(220px circle at var(--mx, 50%) var(--my, 30%), var(--color-black), var(--color-transparent) 75%); }
+.top:hover .spot { opacity:1; }
+.hero { padding:96px 0 64px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+.pill { display:inline-flex; align-items:center; gap:8px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-secondary); height:28px; padding:0 12px; border-radius:999px; background:var(--color-surface-raised-70); border:1px solid var(--color-white-14); letter-spacing:0; }
+.pill i { width:6px; height:6px; border-radius:50%; background:var(--color-cyan); box-shadow:0 0 10px var(--color-cyan); }
+.h1 { margin:24px 0 0; font-size:72px; line-height:1.02; font-weight:600; letter-spacing:-0.03em; max-width:960px; text-wrap:balance; }
+.g { background-image:linear-gradient(180deg, var(--color-white) 18%, var(--color-accent-soft) 100%); -webkit-background-clip:text; background-clip:text; color:var(--color-transparent); -webkit-box-decoration-break:clone; box-decoration-break:clone; }
+.sweep { background-image: linear-gradient(105deg, var(--color-transparent) 42%, var(--color-highlight-95) 50%, var(--color-transparent) 58%), linear-gradient(180deg, var(--color-white) 18%, var(--color-accent-soft) 100%); background-size: 300% 100%, 100% 100%; background-repeat:no-repeat; background-position: 100% 0, 0 0; animation: sweep 7s ease-in-out 1.2s infinite; }
+@keyframes sweep { 0% { background-position:100% 0, 0 0; } 34% { background-position:0% 0, 0 0; } 100% { background-position:0% 0, 0 0; } }
+.lead { margin:24px 0 0; font-size:20px; line-height:1.55; color:var(--color-text-secondary); max-width:640px; text-wrap:pretty; }
+.term { margin-top:40px; display:inline-flex; align-items:center; gap:12px; height:52px; padding:0 8px 0 20px; border-radius:12px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:14px; max-width:100%;
+  background:linear-gradient(var(--color-surface),var(--color-surface)) padding-box, linear-gradient(135deg, var(--color-accent-soft-55), var(--color-white-08) 45%, var(--color-white-06)) border-box; border:1px solid var(--color-transparent); box-shadow:0 10px 40px var(--color-black-40); }
+.term .ps { color:var(--color-accent-soft); user-select:none; }
+.term code { font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:var(--color-text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.term .arg { color:var(--color-cyan); }
+.caret { display:inline-block; width:8px; height:18px; background:var(--color-accent-soft); margin-left:-8px; animation:blink 1.1s steps(1) infinite; border-radius:1px; flex:none; }
+@keyframes blink { 50% { opacity:0; } }
+.cp { flex:none; height:40px; min-width:40px; padding:0 12px; border-radius:8px; border:1px solid var(--color-white-08); background:var(--color-surface-raised); color:var(--color-text-secondary); display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; transition:color .2s, border-color .2s, background .2s; }
+.cp:hover { color:var(--color-text-primary); border-color:var(--color-white-14); }
+.cp.ok { color:var(--color-cyan); border-color:var(--color-cyan-35); }
+.cp svg { width:16px; height:16px; }
+.cp svg * { stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.btns { margin-top:24px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+.btn { height:44px; padding:0 20px; border-radius:10px; display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:500; letter-spacing:-0.01em; transition:transform .2s, background .2s, box-shadow .2s, border-color .2s; }
+.btn svg { width:16px; height:16px; }
+.btn svg * { stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.btn-p { background:var(--color-accent); color:var(--color-white); box-shadow:inset 0 1px 0 var(--color-white-22), 0 0 0 1px var(--color-accent-60), 0 8px 30px var(--color-accent-35); }
+.btn-p:hover { color:var(--color-white); background:var(--color-accent-hover); transform:translateY(-1px); box-shadow:inset 0 1px 0 var(--color-white-28), 0 0 0 1px var(--color-accent-soft-80), 0 10px 40px var(--color-accent-50); }
+.btn-s { background:var(--color-surface-raised-80); color:var(--color-text-primary); border:1px solid var(--color-white-14); }
+.btn-s:hover { color:var(--color-text-primary); border-color:var(--color-white-24); background:var(--color-gray-850); }
+.load { animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+.d1 { animation-delay:.06s; } .d2 { animation-delay:.14s; } .d3 { animation-delay:.22s; } .d4 { animation-delay:.3s; } .d5 { animation-delay:.42s; }
+@keyframes rise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+/* product frame */
+.fw { position:relative; max-width:1200px; margin:0 auto; }
+.glow { position:absolute; left:8%; right:8%; top:6%; bottom:-6%; z-index:-1; background:radial-gradient(ellipse at 50% 40%, var(--color-accent-42), var(--color-accent-12) 40%, var(--color-transparent) 70%); filter:blur(40px); pointer-events:none; }
+.frame { position:relative; aspect-ratio:16 / 10; border-radius:16px; background:var(--color-surface); box-shadow:0 0 0 1px var(--color-white-10), 0 40px 120px var(--color-black-60); overflow:hidden; }
+.beam { position:absolute; inset:0; border-radius:16px; padding:1px; pointer-events:none; z-index:3;
+  background:conic-gradient(from var(--beam), var(--color-transparent) 0deg, var(--color-transparent) 290deg, var(--color-accent-60) 320deg, var(--color-cyan) 345deg, var(--color-white) 352deg, var(--color-transparent) 360deg);
+  -webkit-mask:linear-gradient(var(--color-black) 0 0) content-box, linear-gradient(var(--color-black) 0 0); -webkit-mask-composite:xor; mask:linear-gradient(var(--color-black) 0 0) content-box exclude, linear-gradient(var(--color-black) 0 0);
+  animation:beam 7s linear infinite; }
+@keyframes beam { to { --beam:360deg; } }
+.coord-f { position:absolute; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-tertiary); white-space:nowrap; }
+.frame-meta { display:flex; justify-content:space-between; margin-top:12px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-tertiary); }
+
+/* motion graphic still (scaled with the frame) */
+.mg { position:absolute; inset:0; container-type:inline-size; display:flex; flex-direction:column; background:var(--color-surface-sunken); }
+.mg-bar { height:4.2cqw; flex:none; display:flex; align-items:center; gap:.7cqw; padding:0 1.6cqw; border-bottom:1px solid var(--color-white-08); background:var(--color-surface); }
+.mg-bar i { width:.9cqw; height:.9cqw; border-radius:50%; background:var(--color-gray-700); }
+.mg-url { margin-left:2cqw; height:2.3cqw; padding:0 1.2cqw; border-radius:.6cqw; background:var(--color-surface-raised); border:1px solid var(--color-white-08); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:1.05cqw; color:var(--color-text-tertiary); display:flex; align-items:center; gap:.6cqw; }
+.mg-url b { font-weight:400; color:var(--color-text-secondary); }
+.mg-body { flex:1; display:flex; min-height:0; }
+.mg-page { flex:1; position:relative; padding:3.4cqw 4cqw; background:radial-gradient(ellipse at 30% 0%, var(--color-accent-08), var(--color-transparent) 60%), var(--color-surface-sunken); }
+.mg-nav { display:flex; justify-content:space-between; align-items:center; }
+.mg-sk { height:.9cqw; border-radius:.5cqw; background:var(--color-gray-750); }
+.mg-h { margin-top:4.4cqw; height:2.6cqw; width:62%; border-radius:.6cqw; background:linear-gradient(90deg,var(--color-gray-650),var(--color-gray-750)); }
+.mg-h2 { margin-top:1cqw; height:2.6cqw; width:44%; border-radius:.6cqw; background:var(--color-gray-750); }
+.mg-p { margin-top:1.8cqw; height:.9cqw; width:52%; }
+.mg-cards { position:absolute; left:4cqw; right:4cqw; bottom:4cqw; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:2cqw; }
+.mg-card { height:15cqw; border-radius:1.2cqw; background:var(--color-gray-900); border:1px solid var(--color-white-06); padding:1.6cqw; display:flex; flex-direction:column; gap:.9cqw; }
+.mg-card .mg-sk:first-child { width:40%; background:var(--color-gray-650); height:1.2cqw; }
+.mg-card.sel { position:relative; background:var(--color-gray-875); }
+.mg-sel { position:absolute; inset:-1.2cqw; border:1.2cqw solid var(--color-cyan-10); pointer-events:none; }
+.mg-sel::before { content:''; position:absolute; inset:0; box-shadow:inset 0 0 0 1.6cqw var(--color-accent-24); }
+.mg-sel::after { content:''; position:absolute; inset:-1px; border:1px solid var(--color-accent-soft); }
+.mg-chip { position:absolute; left:-1.2cqw; top:-4.4cqw; height:2.4cqw; padding:0 .9cqw; border-radius:.5cqw; background:var(--color-accent); color:var(--color-white); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:1.05cqw; display:flex; align-items:center; gap:.6cqw; white-space:nowrap; }
+.mg-chip span { opacity:.75; }
+.mg-btn { width:9cqw; height:2.6cqw; border-radius:.6cqw; background:var(--color-accent); margin-top:auto; opacity:.85; }
+.mg-dist { position:absolute; height:1px; background:var(--color-measure); }
+.mg-dist::before, .mg-dist::after { content:''; position:absolute; top:-.6cqw; width:1px; height:1.3cqw; background:var(--color-measure); }
+.mg-dist::before { left:0; } .mg-dist::after { right:0; }
+.mg-dv { position:absolute; width:1px; background:var(--color-measure); }
+.mg-dv::before, .mg-dv::after { content:''; position:absolute; left:-.6cqw; height:1px; width:1.3cqw; background:var(--color-measure); }
+.mg-dv::before { top:0; } .mg-dv::after { bottom:0; }
+.mg-dl { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:var(--color-measure); color:var(--color-white); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:1cqw; padding:.15cqw .5cqw; border-radius:.35cqw; white-space:nowrap; }
+.mg-cursor { position:absolute; width:2.2cqw; height:2.2cqw; color:var(--color-white); filter:drop-shadow(0 .3cqw .6cqw var(--color-black-60)); }
+.mg-cursor * { stroke-width:1.4; stroke-linejoin:round; }
+.mg-panel { width:30%; flex:none; border-left:1px solid var(--color-white-08); background:var(--color-surface); padding:1.8cqw; display:flex; flex-direction:column; gap:1.4cqw; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:1.05cqw; color:var(--color-text-secondary); }
+.mg-tabs { display:flex; gap:.4cqw; }
+.mg-tabs span { padding:.4cqw .9cqw; border-radius:.5cqw; color:var(--color-text-tertiary); }
+.mg-tabs span.on { background:var(--color-gray-825); color:var(--color-text-primary); }
+.mg-sec { border-top:1px solid var(--color-white-08); padding-top:1.2cqw; display:flex; flex-direction:column; gap:.8cqw; }
+.mg-t { font-family:'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size:1.1cqw; color:var(--color-text-primary); font-weight:500; }
+.mg-row { display:flex; justify-content:space-between; gap:1cqw; }
+.mg-row b { font-weight:400; color:var(--color-text-primary); }
+.mg-sw { display:inline-block; width:1cqw; height:1cqw; border-radius:.25cqw; background:var(--color-gray-900); box-shadow:inset 0 0 0 1px var(--color-white-20); vertical-align:middle; margin-right:.5cqw; }
+.mg-tok { color:var(--color-accent-soft); }
+.mg-box { position:relative; height:9cqw; border:1px dashed var(--color-cyan-35); display:grid; place-items:center; }
+.mg-box > div { width:62%; height:58%; border:1px solid var(--color-accent-60); background:var(--color-accent-12); display:grid; place-items:center; color:var(--color-text-primary); }
+
+/* facts */
+.facts { border-top:1px solid var(--color-white-08); border-bottom:1px solid var(--color-white-08); background:var(--color-surface-50); }
+.facts-in { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); }
+.fact { padding:28px 24px; display:flex; align-items:baseline; justify-content:center; gap:12px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; border-left:1px solid var(--color-white-08); white-space:nowrap; }
+.fact:first-child { border-left:0; }
+.fact b { font-size:32px; font-weight:500; color:var(--color-text-primary); letter-spacing:-0.03em; font-variant-numeric:tabular-nums; }
+.fact span { font-size:14px; color:var(--color-text-secondary); }
+
+/* sections */
+.sec { position:relative; padding:128px 0; border-top:1px solid var(--color-white-08); }
+.ruler { position:absolute; left:0; right:0; top:0; height:12px; pointer-events:none;
+  background: repeating-linear-gradient(90deg, var(--color-white-20) 0 1px, var(--color-transparent) 1px 64px) 0 0 / 100% 12px no-repeat, repeating-linear-gradient(90deg, var(--color-white-10) 0 1px, var(--color-transparent) 1px 8px) 0 0 / 100% 6px no-repeat;
+  -webkit-mask-image:linear-gradient(90deg, var(--color-transparent), var(--color-black) 12%, var(--color-black) 88%, var(--color-transparent)); mask-image:linear-gradient(90deg, var(--color-transparent), var(--color-black) 12%, var(--color-black) 88%, var(--color-transparent)); }
+.ruler-v { position:absolute; top:0; bottom:0; left:0; width:10px; pointer-events:none;
+  background: repeating-linear-gradient(180deg, var(--color-white-16) 0 1px, var(--color-transparent) 1px 64px) 0 0 / 10px 100% no-repeat, repeating-linear-gradient(180deg, var(--color-white-08) 0 1px, var(--color-transparent) 1px 8px) 0 0 / 5px 100% no-repeat;
+  -webkit-mask-image:linear-gradient(180deg, var(--color-black), var(--color-transparent) 70%); mask-image:linear-gradient(180deg, var(--color-black), var(--color-transparent) 70%); }
+.coord { position:absolute; top:24px; right:24px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-tertiary); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.sh { display:flex; flex-direction:column; align-items:flex-start; gap:0; margin-bottom:56px; }
+.sh.c { align-items:center; text-align:center; }
+.eye { font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-accent-soft); letter-spacing:.04em; text-transform:uppercase; display:inline-flex; align-items:center; gap:12px; }
+.eye::before { content:''; width:16px; height:1px; background:currentColor; }
+.hw { display:inline-block; max-width:100%; margin-top:16px; }
+.h2 { margin:0; font-size:48px; line-height:1.08; font-weight:600; letter-spacing:-0.03em; text-wrap:balance; }
+.hw .h2 { display:block; }
+.dim { display:block; position:relative; height:12px; margin-top:16px; border-left:1px solid var(--color-accent-soft-60); border-right:1px solid var(--color-accent-soft-60); }
+.dim::before { content:''; position:absolute; left:0; right:0; top:50%; height:1px; background:var(--color-accent-soft-45); }
+.dim span { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:var(--color-page); padding:0 8px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; line-height:1; color:var(--color-accent-soft); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.sub { margin:20px 0 0; font-size:16px; color:var(--color-text-secondary); max-width:600px; text-wrap:pretty; }
+.sh.c .sub { margin-left:auto; margin-right:auto; }
+
+/* reveal */
+.rv { opacity:0; transform:translateY(12px); transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+.rv.in { opacity:1; transform:none; }
+
+/* gradient-border card */
+.gc { position:relative; border-radius:16px; background:linear-gradient(var(--color-surface), var(--color-surface)) padding-box, linear-gradient(140deg, var(--color-white-22), var(--color-white-06) 32%, var(--color-white-04) 60%, var(--color-accent-soft-12)) border-box; border:1px solid var(--color-transparent); transition:background .3s; }
+.gc::after { content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:radial-gradient(400px circle at 0% 0%, var(--color-accent-soft-07), var(--color-transparent) 50%); }
+
+/* split */
+.split { position:relative; height:520px; display:flex; overflow:hidden; border-radius:16px; user-select:none; -webkit-user-select:none; }
+.pane { position:relative; overflow:hidden; min-width:0; }
+.pane-in { position:absolute; top:0; bottom:0; width:max(100%, 300px); padding:24px; }
+.pane-l { background:var(--color-surface-sunken); }
+.pane-l .pane-in { left:0; }
+.pane-r { flex:1; background:var(--color-surface); }
+.pane-r .pane-in { right:0; }
+.ptag { display:inline-flex; align-items:center; gap:8px; height:24px; padding:0 12px; border-radius:6px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; border:1px solid var(--color-white-08); color:var(--color-text-secondary); background:var(--color-white-02); white-space:nowrap; }
+.ptag.b { color:var(--color-accent-soft); border-color:var(--color-accent-soft-30); background:var(--color-accent-08); }
+.wall { margin-top:20px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; line-height:1.75; color:var(--color-text-muted); columns:2; column-gap:28px; white-space:nowrap; }
+.wall div { overflow:hidden; text-overflow:ellipsis; }
+.wall em { font-style:normal; color:var(--color-text-faint); }
+.pane-l::after { content:''; position:absolute; left:0; right:0; bottom:0; height:120px; background:linear-gradient(var(--color-transparent), var(--color-surface-sunken)); pointer-events:none; }
+.gsp { margin-top:20px; display:flex; flex-direction:column; gap:16px; max-width:420px; margin-left:auto; }
+.gsp-sec { border:1px solid var(--color-white-08); border-radius:12px; padding:16px 16px; background:var(--color-page-50); display:flex; flex-direction:column; gap:12px; }
+.gsp-h { font-size:12px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:var(--color-text-tertiary); text-transform:uppercase; letter-spacing:.04em; }
+.gsp-row { display:flex; justify-content:space-between; align-items:center; gap:12px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; color:var(--color-text-secondary); }
+.gsp-row b { font-weight:500; color:var(--color-text-primary); }
+.badge { font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; padding:4px 8px; border-radius:6px; background:var(--color-cyan-08); color:var(--color-cyan); border:1px solid var(--color-cyan-20); }
+.swatch { width:14px; height:14px; border-radius:4px; background:var(--color-accent); box-shadow:inset 0 0 0 1px var(--color-white-25); display:inline-block; vertical-align:-2px; margin-right:8px; }
+.tok { color:var(--color-accent-soft); }
+.cname { display:inline-flex; align-items:center; gap:8px; color:var(--color-text-primary); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; font-weight:500; }
+.cname svg { width:14px; height:14px; color:var(--color-accent-soft); }
+.cname svg * { stroke-width:1.6; stroke-linejoin:round; }
+.divider { position:absolute; top:0; bottom:0; width:44px; margin-left:-24px; z-index:4; border:0; background:var(--color-transparent); padding:0; cursor:ew-resize; touch-action:none; display:flex; justify-content:center; }
+.divider::before { content:''; width:1px; height:100%; background:linear-gradient(180deg, var(--color-transparent), var(--color-accent-soft-80) 20%, var(--color-cyan) 50%, var(--color-accent-soft-80) 80%, var(--color-transparent)); box-shadow:0 0 16px var(--color-cyan-50); }
+.knob { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:32px; height:44px; border-radius:10px; background:var(--color-surface-raised); border:1px solid var(--color-accent-soft-50); display:grid; place-items:center; box-shadow:0 8px 24px var(--color-black-50), 0 0 20px var(--color-accent-30); color:var(--color-accent-soft); transition:transform .2s; }
+.divider:hover .knob, .divider.drag .knob { transform:translate(-50%,-50%) scale(1.06); }
+.knob svg { width:16px; height:16px; }
+.knob svg * { stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.split-cap { margin-top:16px; display:flex; justify-content:space-between; gap:16px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-tertiary); }
+
+/* bento */
+.bento { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; grid-auto-flow:dense; }
+.bc { display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+.bc.w2 { grid-column:span 2; }
+.bc.h2r { grid-row:span 2; }
+.demo { position:relative; flex:1; min-height:220px; margin:8px 8px 0; border-radius:10px; background:var(--color-surface-sunken); border:1px solid var(--color-white-05); overflow:hidden; display:flex; align-items:center; justify-content:center;
+  background-image:radial-gradient(var(--color-white-07) 1px, var(--color-transparent) 1.2px); background-size:16px 16px; background-position:-8px -8px; }
+.bmeta { padding:20px 24px 24px; }
+.bmeta h3 { margin:0; font-size:16px; font-weight:600; letter-spacing:-0.01em; display:flex; align-items:center; gap:12px; }
+.bmeta h3 svg { width:16px; height:16px; color:var(--color-accent-soft); flex:none; }
+.bmeta h3 svg * { stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.bmeta p { margin:8px 0 0; font-size:14px; color:var(--color-text-secondary); line-height:1.55; }
+.hint { position:absolute; left:12px; bottom:10px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-tertiary); pointer-events:none; }
+
+/* inspect demo */
+.mock { width:320px; max-width:calc(100% - 48px); padding:20px; border-radius:14px; background:var(--color-surface-raised); border:1px solid var(--color-white-07); box-shadow:0 20px 50px var(--color-black-45); display:flex; flex-direction:column; gap:16px; }
+.mock-top { display:flex; align-items:center; gap:12px; }
+.t { position:relative; border:0; background:none; padding:0; margin:0; text-align:left; display:block; cursor:crosshair; border-radius:0; }
+.t:focus-visible { outline:none; }
+.ov { position:absolute; inset:-8px; border:8px solid var(--color-cyan-12); pointer-events:none; opacity:0; transition:opacity .15s; z-index:2; }
+.ov::before { content:''; position:absolute; inset:0; box-shadow:inset 0 0 0 var(--p, 0px) var(--color-accent-26); }
+.ov::after { content:''; position:absolute; inset:-1px; border:1px solid var(--color-accent-soft); }
+.chip { position:absolute; left:-9px; bottom:calc(100% + 6px); height:22px; padding:0 8px; border-radius:5px; background:var(--color-accent); color:var(--color-white); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; line-height:22px; white-space:nowrap; }
+.chip em { font-style:normal; opacity:.75; }
+.t:hover > .ov, .t.on > .ov, .t:focus-visible > .ov { opacity:1; }
+.mock:hover .t.on:not(:hover) > .ov { opacity:0; }
+.av { width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--color-accent),var(--color-cyan)); }
+.tt { width:180px; height:24px; font-size:16px; font-weight:600; line-height:24px; letter-spacing:-0.01em; color:var(--color-text-primary); white-space:nowrap; }
+.tx { width:240px; max-width:100%; padding:0; font-size:13px; line-height:20px; color:var(--color-text-secondary); }
+.mock-ft { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.tg { height:24px; padding:0 8px; border-radius:6px; background:var(--color-cyan-10); color:var(--color-cyan); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; line-height:24px; }
+.bt { height:36px; width:112px; padding:0 16px; border-radius:8px; background:var(--color-accent); color:var(--color-white); font-size:13px; font-weight:500; line-height:36px; text-align:center; }
+
+/* measure demo */
+.meas { position:absolute; inset:0; touch-action:pan-y; }
+.mb { position:absolute; top:calc(50% - 40px); width:64px; height:64px; border-radius:12px; }
+.mb.a { left:20px; background:var(--color-surface-raised); border:1px solid var(--color-accent-soft-40); box-shadow:inset 0 0 0 1px var(--color-black-20); }
+.mb.b { background:linear-gradient(135deg,var(--color-accent),var(--color-accent-bright)); border:0; cursor:grab; touch-action:none; box-shadow:0 10px 30px var(--color-accent-35); display:grid; place-items:center; color:var(--color-white); }
+.mb.b:active { cursor:grabbing; }
+.mb.b svg { width:18px; height:18px; opacity:.85; }
+.mb.b svg * { stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.ml { position:absolute; top:calc(50% - 8px); height:1px; background:var(--color-measure); }
+.ml::before, .ml::after { content:''; position:absolute; top:-5px; width:1px; height:11px; background:var(--color-measure); }
+.ml::before { left:0; } .ml::after { right:0; }
+.mlab { position:absolute; left:50%; top:-12px; transform:translate(-50%,-100%); background:var(--color-measure); color:var(--color-white); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; line-height:20px; padding:0 8px; border-radius:4px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+/* tokens demo */
+.tokd { width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; gap:16px; padding:20px; }
+.tk-sw { height:84px; border-radius:12px; display:flex; align-items:center; justify-content:center; transition:background .35s; border:1px solid var(--color-white-08); }
+.tk-btn { height:32px; padding:0 16px; border-radius:8px; color:var(--color-white); font-size:13px; font-weight:500; line-height:32px; transition:background .35s, color .35s; }
+.tk-name { display:flex; justify-content:space-between; align-items:center; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; }
+.tk-name b { font-weight:500; color:var(--color-accent-soft); }
+.tk-rows { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; }
+.tk-r { height:44px; border-radius:8px; border:1px solid var(--color-white-08); background:var(--color-transparent); display:flex; align-items:center; gap:8px; padding:0 8px; white-space:nowrap; overflow:hidden; min-width:0; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-secondary); transition:border-color .2s, background .2s, color .2s; }
+.tk-r i { width:14px; height:14px; border-radius:4px; box-shadow:inset 0 0 0 1px var(--color-white-20); flex:none; }
+.tk-r.on { border-color:var(--color-accent-soft-50); background:var(--color-accent-08); color:var(--color-text-primary); }
+
+/* component demo */
+.cmpd { width:100%; height:100%; display:flex; flex-direction:column; gap:12px; padding:20px; justify-content:center; }
+.cmp-prev { height:72px; border-radius:10px; border:1px dashed var(--color-accent-soft-30); display:grid; place-items:center; position:relative; }
+.cmp-b { border-radius:8px; font-weight:500; transition:all .2s; display:inline-flex; align-items:center; justify-content:center; }
+.cmp-b.primary { background:var(--color-accent); color:var(--color-white); }
+.cmp-b.secondary { background:var(--color-gray-800); color:var(--color-text-primary); box-shadow:inset 0 0 0 1px var(--color-white-14); }
+.cmp-b.ghost { background:var(--color-transparent); color:var(--color-accent-soft); box-shadow:inset 0 0 0 1px var(--color-accent-soft-30); }
+.cmp-b.sm { height:28px; padding:0 12px; font-size:12px; }
+.cmp-b.md { height:36px; padding:0 16px; font-size:13px; }
+.cmp-b.lg { height:44px; padding:0 20px; font-size:14px; }
+.cmp-b.hl { outline:1px solid var(--color-accent-soft); outline-offset:4px; }
+.cmp-rows { display:flex; flex-direction:column; gap:4px; }
+.cmp-r { height:40px; display:flex; align-items:center; justify-content:space-between; padding:0 12px; border-radius:8px; border:1px solid var(--color-transparent); background:var(--color-white-02); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; color:var(--color-text-secondary); text-align:left; transition:background .15s, border-color .15s; }
+.cmp-r:hover { background:var(--color-accent-08); border-color:var(--color-accent-soft-30); }
+.cmp-r b { font-weight:500; color:var(--color-cyan); }
+.cmp-r b::after { content:' ↻'; color:var(--color-text-tertiary); font-weight:400; }
+
+/* canvas demo */
+.cvd { position:absolute; inset:0; padding:24px; display:flex; flex-direction:column; gap:12px; }
+.cv-top { display:flex; justify-content:space-between; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-tertiary); }
+.cv-top b { color:var(--color-accent-soft); font-weight:500; font-variant-numeric:tabular-nums; }
+.cv-stage { position:relative; flex:1; min-height:0; }
+.cv-frame { position:absolute; left:0; top:0; bottom:0; border-radius:10px; background:var(--color-surface-raised); border:1px solid var(--color-accent-soft-40); overflow:hidden; padding:16px; display:flex; flex-direction:column; gap:12px; }
+.cv-nav { display:flex; justify-content:space-between; align-items:center; }
+.cv-nav i { display:block; height:8px; border-radius:4px; background:var(--color-gray-650); }
+.cv-grid { display:grid; gap:8px; flex:1; min-height:0; align-content:start; }
+.cv-c { height:56px; border-radius:8px; background:var(--color-gray-800); border:1px solid var(--color-white-06); padding:8px; display:flex; flex-direction:column; gap:8px; transition:all .25s; }
+.cv-c i { display:block; height:6px; border-radius:3px; background:var(--color-gray-600); }
+.cv-c i:first-child { width:50%; background:var(--color-accent-soft-50); }
+.cv-h { position:absolute; top:50%; width:44px; height:64px; margin-top:-32px; margin-left:-24px; border:0; background:var(--color-transparent); cursor:ew-resize; touch-action:none; display:grid; place-items:center; padding:0; z-index:2; }
+.cv-h span { width:10px; height:40px; border-radius:5px; background:var(--color-accent); box-shadow:0 0 0 3px var(--color-accent-25), 0 0 20px var(--color-accent-50); }
+
+/* edit demo */
+.edd { width:100%; height:100%; display:flex; flex-direction:column; gap:12px; padding:20px; justify-content:center; }
+.ed-prev { height:96px; display:grid; place-items:center; border-radius:10px; border:1px dashed var(--color-white-10); overflow:hidden; }
+.ed-el { background:linear-gradient(135deg,var(--color-accent),var(--color-cyan)); color:var(--color-white); font-size:13px; font-weight:500; transition:border-radius .25s, padding .25s; max-width:90%; white-space:nowrap; }
+.ed-r { display:flex; align-items:center; justify-content:space-between; gap:8px; height:44px; padding:0 4px 0 12px; border-radius:8px; background:var(--color-white-02); border:1px solid var(--color-white-08); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; color:var(--color-text-secondary); }
+.ed-r input { width:96px; height:34px; border-radius:6px; border:1px solid var(--color-accent-soft-35); background:var(--color-page); padding:0 8px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; color:var(--color-cyan); text-align:right; }
+.ed-r input:focus { outline:none; border-color:var(--color-accent-soft); box-shadow:0 0 0 3px var(--color-accent-25); }
+.ed-r.bad input { border-color:var(--color-white-25); color:var(--color-text-tertiary); }
+.ed-r label { cursor:text; }
+
+/* changes demo */
+.chd { width:100%; height:100%; display:flex; flex-direction:column; gap:12px; padding:20px; justify-content:center; }
+.ch-boards { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
+.ch-b { border-radius:8px; background:var(--color-surface-raised); border:1px solid var(--color-white-08); padding:12px; display:flex; flex-direction:column; gap:8px; position:relative; min-height:96px; }
+.ch-b > span { font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-tertiary); }
+.ch-l { height:8px; border-radius:4px; background:var(--color-gray-650); transition:box-shadow .2s, background .2s; }
+.ch-l.rm { background:var(--color-transparent); border:1px dashed var(--color-white-30); height:10px; }
+.ch-l.ad { background:var(--color-cyan-35); }
+.ch-l.hl { box-shadow:0 0 0 2px var(--color-accent-soft-80); }
+.ch-list { display:flex; flex-direction:column; gap:4px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; }
+.ch-row { height:32px; display:flex; align-items:center; gap:12px; padding:0 12px; border-radius:6px; border:0; background:var(--color-transparent); text-align:left; color:var(--color-text-secondary); transition:background .15s; }
+.ch-row:hover, .ch-row.hl { background:var(--color-white-04); }
+.ch-row i { font-style:normal; width:12px; flex:none; }
+.ch-row.ad i, .ch-row.ad b { color:var(--color-cyan); }
+.ch-row.rm b { text-decoration:line-through; color:var(--color-text-tertiary); }
+.ch-row.rm i { color:var(--color-text-secondary); }
+.ch-row b { font-weight:400; }
+
+/* copy link demo */
+.lkd { width:100%; padding:20px; display:flex; flex-direction:column; gap:12px; }
+.lk-url { height:44px; border-radius:8px; background:var(--color-surface-raised); border:1px solid var(--color-white-08); display:flex; align-items:center; gap:8px; padding:0 4px 0 12px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-secondary); min-width:0; }
+.lk-url span { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lk-url b { color:var(--color-cyan); font-weight:400; }
+.lk-url svg { width:14px; height:14px; flex:none; color:var(--color-text-tertiary); }
+.lk-url svg * { stroke-width:1.6; stroke-linecap:round; }
+.lk-btn { height:36px; padding:0 12px; border-radius:6px; border:1px solid var(--color-white-14); background:var(--color-gray-825); color:var(--color-text-primary); font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; display:inline-flex; align-items:center; gap:8px; flex:none; transition:all .2s; }
+.lk-btn svg { width:14px; height:14px; color:inherit; }
+.lk-btn.ok { color:var(--color-cyan); border-color:var(--color-cyan-40); background:var(--color-cyan-08); }
+.lk-note { font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:var(--color-text-tertiary); display:flex; align-items:center; gap:8px; }
+.lk-note i { width:8px; height:8px; border-radius:2px; background:var(--color-accent); box-shadow:0 0 0 3px var(--color-accent-25); }
+
+/* three ways */
+.ways { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+.way { padding:28px 24px 24px; display:flex; flex-direction:column; gap:12px; min-width:0; }
+.num { font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; color:var(--color-accent-soft); display:flex; align-items:center; gap:12px; }
+.num::after { content:''; flex:1; height:1px; background:linear-gradient(90deg, var(--color-accent-soft-35), var(--color-transparent)); }
+.way h3 { margin:4px 0 0; font-size:20px; font-weight:600; letter-spacing:-0.02em; }
+.way p { margin:0; font-size:14px; color:var(--color-text-secondary); }
+.code { margin-top:auto; display:flex; align-items:center; gap:8px; border-radius:10px; background:var(--color-page); border:1px solid var(--color-white-08); padding:8px 8px 8px 16px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; line-height:1.6; color:var(--color-text-primary); min-height:52px; }
+.code-t { flex:1; min-width:0; overflow-x:auto; white-space:pre; padding:8px 0; scrollbar-width:thin; }
+.code .cp { height:36px; min-width:36px; padding:0 8px; }
+.k1 { color:var(--color-accent-soft); } .k2 { color:var(--color-cyan); } .k3 { color:var(--color-text-tertiary); }
+
+/* use cases */
+.uses { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+.use { padding:24px; display:flex; flex-direction:column; gap:12px; min-width:0; transition:transform .3s; }
+.use:hover { transform:translateY(-2px); }
+.use-ic { width:40px; height:40px; border-radius:10px; display:grid; place-items:center; background:var(--color-accent-10); border:1px solid var(--color-accent-soft-25); color:var(--color-accent-soft); }
+.use-ic svg { width:20px; height:20px; }
+.use-ic svg * { stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.use h3 { margin:8px 0 0; font-size:20px; font-weight:600; letter-spacing:-0.02em; line-height:1.3; }
+.use p { margin:0; font-size:14px; color:var(--color-text-secondary); }
+
+/* keys */
+.keys { display:flex; flex-direction:column; border-top:1px solid var(--color-white-08); }
+.key-r { display:grid; grid-template-columns:minmax(0, 340px) minmax(0,1fr); gap:24px; align-items:center; padding:20px 0; border-bottom:1px solid var(--color-white-08); }
+.kc { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.kc i { font-style:normal; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; color:var(--color-text-tertiary); }
+kbd { display:inline-flex; align-items:center; justify-content:center; min-width:36px; height:36px; padding:0 12px; border-radius:8px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; font-weight:500; color:var(--color-text-primary);
+  background:linear-gradient(180deg, var(--color-gray-775), var(--color-gray-900)); border:1px solid var(--color-white-12); border-bottom-color:var(--color-black-60); box-shadow:inset 0 1px 0 var(--color-white-08), 0 2px 0 var(--color-ink), 0 3px 8px var(--color-black-40); transition:transform .12s, box-shadow .12s; }
+kbd.ac { color:var(--color-accent-soft); }
+.key-r:hover kbd { transform:translateY(2px); box-shadow:inset 0 1px 0 var(--color-white-08), 0 0 0 var(--color-ink), 0 1px 4px var(--color-black-40); }
+.key-d { font-size:16px; color:var(--color-text-secondary); }
+.key-d b { color:var(--color-text-primary); font-weight:500; }
+
+/* closing */
+.close { position:relative; isolation:isolate; padding:144px 0; border-top:1px solid var(--color-white-08); overflow:hidden; text-align:center; }
+.close .grid-bg { -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 50%, var(--color-black) 10%, var(--color-transparent) 70%); mask-image:radial-gradient(ellipse 60% 70% at 50% 50%, var(--color-black) 10%, var(--color-transparent) 70%); }
+.close-glow { position:absolute; left:50%; top:50%; width:720px; height:360px; transform:translate(-50%,-50%); background:radial-gradient(ellipse, var(--color-accent-28), var(--color-transparent) 70%); filter:blur(30px); z-index:-1; pointer-events:none; }
+.close .h2 { font-size:72px; line-height:1.02; max-width:900px; margin:0 auto; }
+
+/* footer */
+.ft { border-top:1px solid var(--color-white-08); padding:32px 0 40px; }
+.ft-in { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; font-size:14px; color:var(--color-text-secondary); }
+.ft-l { display:flex; align-items:center; gap:12px; }
+.ft-links { display:flex; gap:4px; }
+.ft-links a { color:var(--color-text-secondary); padding:0 12px; height:44px; display:inline-flex; align-items:center; border-radius:8px; }
+.ft-links a:hover { color:var(--color-text-primary); background:var(--color-white-04); }
+
+/* tablet */
+@media (max-width: 1024px) {
+  .h1 { font-size:48px; }
+  .close .h2 { font-size:48px; }
+  .h2 { font-size:32px; }
+  .bento { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .bc.h2r { grid-row:auto; }
+  .bc.cv { grid-column:span 2; }
+  .ways { grid-template-columns:1fr; }
+  .uses { grid-template-columns:1fr; }
+  .sec { padding:96px 0; }
+  .facts-in { grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .fact:nth-child(3) { border-left:0; }
+  .fact:nth-child(n+3) { border-top:1px solid var(--color-white-08); }
+  .frame-meta .fm-x { display:none; }
+}
+/* phone */
+@media (max-width: 640px) {
+  .wrap { padding:0 16px; }
+  .h1 { font-size:40px; line-height:1.06; }
+  .close .h2 { font-size:40px; }
+  .lead { font-size:16px; }
+  .hero { padding:64px 0 48px; }
+  .term { gap:8px; padding-left:16px; font-size:13px; height:52px; width:100%; }
+  .term code { flex:1; text-align:left; }
+  .caret { display:none; }
+  .nav a.hide-s { display:none; }
+  .top { padding-bottom:64px; }
+  .frame { border-radius:12px; }
+  .beam { border-radius:12px; }
+  .bento { grid-template-columns:1fr; }
+  .bc.w2, .bc.cv { grid-column:auto; }
+  .fact { padding:20px 12px; gap:8px; }
+  .fact b { font-size:20px; }
+  .fact span { font-size:13px; }
+  .sec { padding:80px 0; }
+  .sh { margin-bottom:40px; }
+  .coord { top:20px; right:16px; }
+  .split { height:460px; }
+  .wall { columns:1; }
+  .key-r { grid-template-columns:1fr; gap:12px; }
+  .close { padding:96px 0; }
+  .ft-in { flex-direction:column; align-items:flex-start; }
+  .split-cap span:last-child { display:none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+  .rv { opacity:1; transform:none; }
+  .spot { display:none; }
+  .caret { opacity:1; }
+}
+</style>
+</helmet>
+
+<div class="gp" data-canvas-width="1280" data-canvas-height="7740" data-document-role="page" data-label="Groma · landing page">
+
+<!-- 1 · Header -->
+<header class="hdr" data-component="SiteHeader" data-source="src/components/SiteHeader.tsx" data-props='{"sticky": true, "blur": true}'>
+  <div class="wrap hdr-in">
+    <a class="logo" href="#top" aria-label="Groma, voltar ao topo" data-component="Logo" data-source="src/components/Logo.tsx" data-props='{"size": "md", "withName": true}'>
+      <span class="logo-mark" aria-hidden="true" data-component="LogoMark" data-source="src/components/LogoMark.tsx" data-props='{"size": 28}'>
+        <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4v17"></path><path d="M4 7.5h16"></path><path d="M4 7.5v7"></path><path d="M20 7.5v7"></path><circle cx="4" cy="16" r="1.3" fill="currentColor"></circle><circle cx="20" cy="16" r="1.3" fill="currentColor"></circle><path d="M9.5 21h5"></path></svg>
+      </span>
+      Groma
+    </a>
+    <nav class="nav" aria-label="Links do projeto" data-component="NavBar" data-source="src/components/NavBar.tsx" data-props='{"items": 2, "external": true}'>
+      <a href="https://github.com/franco-dias/groma" data-component="NavLink" data-source="src/components/NavLink.tsx" data-props='{"external": true, "icon": "arrow-up-right"}' target="_blank" rel="noopener"><span>GitHub</span>
+        <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></a>
+      <a href="https://www.npmjs.com/package/gromajs" data-component="NavLink" data-source="src/components/NavLink.tsx" data-props='{"external": true, "icon": "arrow-up-right"}' target="_blank" rel="noopener"><span>npm</span>
+        <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></a>
+    <span class="lang" role="group" aria-label="Idioma" data-component="LanguageSwitch" data-source="src/components/LanguageSwitch.tsx" data-props='{"current": "pt-BR", "options": ["en", "pt-BR"]}'><a href="../" hreflang="en" data-component="LanguageOption" data-source="src/components/LanguageOption.tsx" data-props='{"lang": "en", "selected": false}' lang="en"><span>EN</span></a><a aria-current="page" href="./" hreflang="pt-BR" data-component="LanguageOption" data-source="src/components/LanguageOption.tsx" data-props='{"lang": "pt-BR", "selected": true}' lang="pt-BR"><span>PT</span></a></span>
+    </nav>
+  </div>
+</header>
+
+
+
+<!-- 11 · Footer -->
+<main id="top">
+<!-- 2 + 3 · Hero and product frame -->
+<div class="top" ref="{{ refs.hero }}" sc-camel-on-pointer-move="{{ onHeroMove }}">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="spot" aria-hidden="true"></div>
+  <section class="wrap hero" aria-labelledby="hero-title" data-component="Hero" data-source="src/components/Hero.tsx" data-props='{"align": "center"}'>
+    <span class="pill load" data-component="VersionPill" data-source="src/components/VersionPill.tsx" data-props='{"version": "0.6.1", "license": "MIT", "dot": true}'><i aria-hidden="true"></i><span>v<span data-version>0.6.1</span> · MIT · zero dependências</span></span>
+    <h1 id="hero-title" class="h1 load d1"><span class="g">Verifique o design de AI </span><span class="g sweep">antes de construir</span><span class="g">.</span></h1>
+    <p class="lead load d2">Um inspetor open source para designs em HTML. Veja espaçamentos, tokens e props de componentes, como numa ferramenta de design.</p>
+    <div class="term load d3" data-component="CommandLine" data-source="src/components/CommandLine.tsx" data-props='{"command": "npx gromajs your-design.html", "copyable": true, "caret": true}'>
+      <span class="ps" aria-hidden="true">$</span>
+      <code>npx gromajs <span class="arg">your-design.html</span></code>
+      <span class="caret" aria-hidden="true"></span>
+      <button type="button" class="{{ cpHero }}" sc-camel-on-click="{{ copyHero }}" aria-label="Copiar comando">
+        <sc-if value="{{ heroOk }}" hint-placeholder-val="{{ false }}">
+          <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+        </sc-if>
+        <sc-if value="{{ heroIdle }}" hint-placeholder-val="{{ true }}">
+          <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg>
+        </sc-if>
+      </button>
+    </div>
+    <div class="btns load d4">
+      <a class="btn btn-p" href="https://github.com/franco-dias/groma" target="_blank" rel="noopener" data-component="Button" data-source="src/components/Button.tsx" data-props='{"variant": "primary", "size": "lg", "icon": "arrow-right", "href": "github"}'><span>Ver no GitHub</span>
+        <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></a>
+      <button class="btn btn-s try-it" type="button" data-try-it data-component="Button" data-source="src/components/Button.tsx" data-props='{"variant": "secondary", "size": "lg", "action": "try-it"}'><span>Experimente aqui</span></button><a class="btn btn-s npm-touch" href="https://www.npmjs.com/package/gromajs" target="_blank" rel="noopener" data-component="Button" data-source="src/components/Button.tsx" data-props='{"variant": "secondary", "size": "lg", "href": "npm"}'><span>npm</span></a>
+    </div>
+  </section>
+
+  <div class="wrap load d5">
+    <div class="fw">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="frame" data-component="ProductFrame" data-source="src/components/ProductFrame.tsx" data-props='{"aspect": "16:10", "beam": true, "glow": true}'>
+        <span class="beam" aria-hidden="true"></span>
+        <!-- MOTION GRAPHIC GOES HERE --><video class="mg-video" autoplay muted loop playsinline preload="auto" poster="../media/groma-motion-poster.jpg" aria-label="O Groma numa página de produto: um clique fixa um elemento e o painel mostra o componente e as props, o token de cada cor e a distância até outro elemento; depois a página é ampliada e movida num canvas." style="display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:inherit" data-component="MotionGraphic" data-source="src/components/MotionGraphic.tsx" data-props='{"autoplay": true, "loop": true, "muted": true}'><source src="../media/groma-motion.webm" type="video/webm"><source src="../media/groma-motion.mp4" type="video/mp4"></video><style>.frame .mg{display:none}</style>
+        <div class="mg" role="img" aria-label="Groma inspecting a design: a selected card shows its box model and a name chip, a red line marks the distance to the next element, and the side panel lists its specs, token and component.">
+          <div class="mg-bar"><i></i><i></i><i></i><div class="mg-url">file:// <b>your-design.html</b></div></div>
+          <div class="mg-body">
+            <div class="mg-page">
+              <div class="mg-nav"><div class="mg-sk" style="width: 9cqw; height: 1.4cqw; background: var(--color-gray-650)"></div><div style="display: flex; gap: 1.6cqw"><div class="mg-sk" style="width: 4cqw"></div><div class="mg-sk" style="width: 4cqw"></div><div class="mg-sk" style="width: 4cqw"></div></div></div>
+              <div class="mg-h"></div>
+              <div class="mg-h2"></div>
+              <div class="mg-sk mg-p"></div>
+              <div class="mg-sk mg-p" style="width: 40%; margin-top: 1cqw"></div>
+              <div class="mg-cards">
+                <div class="mg-card"><div class="mg-sk"></div><div class="mg-sk" style="width: 80%"></div><div class="mg-sk" style="width: 64%"></div></div>
+                <div class="mg-card sel">
+                  <div class="mg-sel"><div class="mg-chip">Card <span>320 × 184</span></div></div>
+                  <div class="mg-sk"></div><div class="mg-sk" style="width: 80%"></div><div class="mg-sk" style="width: 64%"></div><div class="mg-btn"></div>
+                  <div class="mg-cursor" style="right: 2cqw; bottom: 3cqw"><svg sc-camel-view-box="0 0 24 24" style="fill:var(--color-page)" stroke="currentColor"><path d="M5 3l14 8-6 2-3 6z"></path></svg></div>
+                </div>
+                <div class="mg-card"><div class="mg-sk"></div><div class="mg-sk" style="width: 80%"></div><div class="mg-sk" style="width: 64%"></div></div>
+              </div>
+              <div class="mg-dist" style="left: calc(4cqw + (100% - 12cqw) / 3 * 2 + 2cqw); width: 2cqw; bottom: 11.5cqw"><span class="mg-dl">24</span></div>
+              <div class="mg-dv" style="left: 50%; bottom: 19cqw; height: 6.6cqw"><span class="mg-dl">48</span></div>
+            </div>
+            <div class="mg-panel">
+              <div class="mg-tabs"><span class="on">Specs</span><span>All CSS</span><span>Layers</span><span>Changes</span></div>
+              <div class="mg-sec">
+                <div class="mg-t">Card</div>
+                <div class="mg-row">W <b>320 · Fill</b></div>
+                <div class="mg-row">H <b>184 · Hug</b></div>
+              </div>
+              <div class="mg-sec">
+                <div class="mg-box"><div>24</div></div>
+              </div>
+              <div class="mg-sec">
+                <div class="mg-row"><span><span class="mg-sw"></span>Fill</span><b class="mg-tok">surface.raised</b></div>
+                <div class="mg-row">Radius <b class="mg-tok">radius.lg</b></div>
+              </div>
+              <div class="mg-sec">
+                <div class="mg-row">Component <b>PlanCard</b></div>
+                <div class="mg-row">plan <b>"pro"</b></div>
+                <div class="mg-row">featured <b>true</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-meta" aria-hidden="true" data-component="Dimensions" data-source="src/components/Dimensions.tsx" data-props='{"x": 0, "y": 0, "ratio": "16:10", "width": 1056}'><span>x 0 · y 0</span><span class="fm-x">16 : 10</span><span>w 1056 · max</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 · Facts -->
+<section class="facts" aria-label="Groma em números" ref="{{ refs.facts }}" data-rv="facts" data-component="FactsStrip" data-source="src/components/FactsStrip.tsx" data-props='{"columns": 4}'>
+  <div class="wrap facts-in">
+    <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "1", "label": "script", "countUp": true}'><b>{{ f1 }}</b><span>script</span></div>
+    <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "0", "label": "dependencies", "countUp": true}'><b>{{ f2 }}</b><span>dependências</span></div>
+    <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "30 KB", "label": "gzipped", "countUp": true}'><b>{{ f3 }}<small>KB</small></b><span>com gzip</span></div>
+    <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "MIT", "label": "license", "countUp": true}'><b>MIT</b><span>licença</span></div>
+  </div>
+</section>
+
+<!-- 5 · Devtools answer the wrong question -->
+<section class="sec" aria-labelledby="why-title" ref="{{ refs.why }}" data-rv="why" data-component="Section" data-source="src/components/Section.tsx" data-props='{"id": "why", "ruler": true, "coordinates": true}'>
+  <span class="ruler" aria-hidden="true"></span>
+  <span class="coord" aria-hidden="true">x {{ co.why.x }} · y {{ co.why.y }}</span>
+  <div class="wrap {{ c.why }}">
+    <div class="sh" data-component="SectionHeader" data-source="src/components/SectionHeader.tsx" data-props='{"eyebrow": "O problema", "title": "O devtools responde a pergunta errada", "dimension": true}'>
+      <span class="eye">O problema</span>
+      <span class="hw" ref="{{ dref.why }}">
+        <h2 id="why-title" class="h2">O devtools responde a pergunta errada</h2>
+        <span class="dim" aria-hidden="true"><span>{{ d.why }}</span></span>
+      </span>
+      <p class="sub">Ele lista centenas de propriedades calculadas por elemento e mesmo assim não diz de qual token veio uma cor nem qual componente você está vendo. Arraste o divisor para comparar.</p>
+    </div>
+
+    <div class="gc" style="padding: 8px" data-component="ComparisonSlider" data-source="src/components/ComparisonSlider.tsx" data-props='{"left": "devtools", "right": "groma", "start": 50}'>
+      <div class="split" ref="{{ refs.split }}">
+        <div class="pane pane-l" style="width: {{ splitPct }}%">
+          <div class="pane-in">
+            <span class="ptag" data-component="Tag" data-source="src/components/Tag.tsx" data-props='{"tone": "neutral"}'>Devtools · Computed</span>
+            <div class="wall" aria-hidden="true">
+              <sc-for list="{{ wall }}" as="w" hint-placeholder-count="40">
+                <div>{{ w.k }}: <em>{{ w.v }}</em>;</div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="{{ divCls }}" style="left: {{ splitPct }}%" aria-label="Arraste para comparar o devtools com o Groma" sc-camel-on-pointer-down="{{ splitDown }}" sc-camel-on-pointer-move="{{ splitMove }}" sc-camel-on-pointer-up="{{ splitUp }}" sc-camel-on-pointer-cancel="{{ splitUp }}" sc-camel-on-key-down="{{ splitKey }}">
+          <span class="knob"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m9 7-5 5 5 5"></path><path d="m15 7 5 5-5 5"></path></svg></span>
+        </button>
+        <div class="pane pane-r">
+          <div class="pane-in">
+            <div style="display: flex; justify-content: flex-end"><span class="ptag b" data-component="Tag" data-source="src/components/Tag.tsx" data-props='{"tone": "accent"}'>Groma · Specs</span></div>
+            <div class="gsp">
+              <div class="gsp-sec" data-component="SpecCard" data-source="src/components/SpecCard.tsx" data-props='{"title": "Tipografia"}'>
+                <div class="gsp-h">Tipografia</div>
+                <div class="gsp-row">Família <b>Geist</b></div>
+                <div class="gsp-row">Tamanho <b>14 / 20</b></div>
+                <div class="gsp-row">Peso <b>500</b></div>
+              </div>
+              <div class="gsp-sec" data-component="SpecCard" data-source="src/components/SpecCard.tsx" data-props='{"title": "Distâncias"}'>
+                <div class="gsp-h">Distâncias</div>
+                <div class="gsp-row">Até "Total" <b class="red">24</b></div>
+                <div class="gsp-row">Até "Cancelar" <b class="red">12</b></div>
+                <div class="gsp-row">No board <b>x 64 · y 216</b></div>
+              </div>
+              <div class="gsp-sec" data-component="SpecCard" data-source="src/components/SpecCard.tsx" data-props='{"title": "Tamanho"}'>
+                <div class="gsp-h">Tamanho</div>
+                <div class="gsp-row">Largura <span><b>320</b> <span class="badge" data-component="Badge" data-source="src/components/Badge.tsx" data-props='{"tone": "cyan"}'>Fill</span></span></div>
+                <div class="gsp-row">Altura <span><b>48</b> <span class="badge" data-component="Badge" data-source="src/components/Badge.tsx" data-props='{"tone": "cyan"}'>Hug</span></span></div>
+              </div>
+              <div class="gsp-sec" data-component="SpecCard" data-source="src/components/SpecCard.tsx" data-props='{"title": "Espaçamento"}'>
+                <div class="gsp-h">Espaçamento</div>
+                <div class="gsp-row">Padding <b>12 · 20</b></div>
+                <div class="gsp-row">Gap <b>8</b></div>
+              </div>
+              <div class="gsp-sec" data-component="SpecCard" data-source="src/components/SpecCard.tsx" data-props='{"title": "Token"}'>
+                <div class="gsp-h">Token</div>
+                <div class="gsp-row"><span><span class="swatch" data-component="Swatch" data-source="src/components/Swatch.tsx" data-props='{"size": 14}'></span>Fill</span><b class="tok">color.accent</b></div>
+              </div>
+              <div class="gsp-sec" data-component="SpecCard" data-source="src/components/SpecCard.tsx" data-props='{"title": "Componente"}'>
+                <div class="gsp-h">Componente</div>
+                <div class="gsp-row"><span class="cname" data-component="ComponentName" data-source="src/components/ComponentName.tsx" data-props='{"icon": "component"}'><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m12 3 4 4-4 4-4-4z"></path><path d="m12 13 4 4-4 4-4-4z"></path><path d="m7 8 4 4-4 4-4-4z"></path><path d="m17 8 4 4-4 4-4-4z"></path></svg>Button</span></div>
+                <div class="gsp-row">variant <b>"primary"</b></div>
+                <div class="gsp-row">size <b>"md"</b></div>
+              </div>
+              <div class="gsp-sec" data-component="SpecCard" data-source="src/components/SpecCard.tsx" data-props='{"title": "Cores"}'>
+                <div class="gsp-h">Cores</div>
+                <div class="gsp-row"><span><span class="swatch" style="background:var(--color-white)" data-component="Swatch" data-source="src/components/Swatch.tsx" data-props='{"size": 14}'></span>Texto</span><b class="tok">text.on-accent</b></div>
+                <div class="gsp-row">claro <b>#ffffff</b></div>
+                <div class="gsp-row">escuro <b>#0b0d10</b></div>
+              </div>
+              <div class="gsp-sec" data-component="SpecCard" data-source="src/components/SpecCard.tsx" data-props='{"title": "Movimento"}'>
+                <div class="gsp-h">Movimento</div>
+                <div class="gsp-row">fundo <b>150ms</b></div>
+                <div class="gsp-row">curva <b>ease-out</b></div>
+                <div class="gsp-row">Radius <b class="tok">radius.md</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="split-cap" aria-hidden="true"><span>← devtools</span><span>split {{ splitRound }} / {{ splitRest }}</span><span>groma →</span></div>
+  </div>
+</section>
+
+<!-- 6 · Features -->
+<section class="sec" aria-labelledby="feat-title" ref="{{ refs.feat }}" data-rv="feat" data-component="Section" data-source="src/components/Section.tsx" data-props='{"id": "features", "ruler": true, "coordinates": true}'>
+  <span class="ruler" aria-hidden="true"></span>
+  <span class="ruler-v" aria-hidden="true"></span>
+  <span class="coord" aria-hidden="true">x {{ co.feat.x }} · y {{ co.feat.y }}</span>
+  <div class="wrap {{ c.feat }}">
+    <div class="sh" data-component="SectionHeader" data-source="src/components/SectionHeader.tsx" data-props='{"eyebrow": "O que ele lê", "title": "As respostas estão na página", "dimension": true}'>
+      <span class="eye">O que ele lê</span>
+      <span class="hw" ref="{{ dref.feat }}">
+        <h2 id="feat-title" class="h2">As respostas estão na página</h2>
+        <span class="dim" aria-hidden="true"><span>{{ d.feat }}</span></span>
+      </span>
+      <p class="sub">Cada card abaixo é uma demo de verdade. Pode mexer.</p>
+    </div>
+
+    <div class="bento">
+      <!-- Inspect -->
+      <article class="gc bc w2 h2r" data-component="FeatureCard" data-source="src/components/FeatureCard.tsx" data-props='{"title": "Inspecionar", "demo": "live", "wide": true}'>
+        <div class="demo" style="min-height: 360px">
+          <div class="mock" sc-camel-on-mouse-leave="{{ inspLeave }}">
+            <div class="mock-top">
+              <button type="button" class="{{ ic.av }}" style="--p: 0px" sc-camel-on-click="{{ ip.av }}" aria-label="Inspect avatar"><span class="av" style="display: block"></span><span class="ov"><span class="chip">Avatar <em>40 × 40</em></span></span></button>
+              <button type="button" class="{{ ic.tt }}" style="--p: 0px" sc-camel-on-click="{{ ip.tt }}" aria-label="Inspect title"><span class="tt" style="display: block">Pro plan</span><span class="ov"><span class="chip">Title <em>180 × 24</em></span></span></button>
+            </div>
+            <button type="button" class="{{ ic.tx }}" style="--p: 0px" sc-camel-on-click="{{ ip.tx }}" aria-label="Inspect description"><span class="tx" style="display: block">Unlimited boards, shared tokens and a review link for every frame.</span><span class="ov"><span class="chip">Text <em>240 × 40</em></span></span></button>
+            <div class="mock-ft">
+              <button type="button" class="{{ ic.tg }}" style="--p: 8px" sc-camel-on-click="{{ ip.tg }}" aria-label="Inspect tag"><span class="tg" style="display: block">Popular</span><span class="ov"><span class="chip">Tag <em>p 0 · 8</em></span></span></button>
+              <button type="button" class="{{ ic.bt }}" style="--p: 16px" sc-camel-on-click="{{ ip.bt }}" aria-label="Inspect button"><span class="bt" style="display: block">Choose plan</span><span class="ov"><span class="chip">Button <em>112 × 36</em></span></span></button>
+            </div>
+          </div>
+          <span class="hint" aria-hidden="true">passe o mouse ou toque num elemento</span>
+        </div>
+        <div class="bmeta">
+          <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M21 16v3a2 2 0 0 1-2 2h-3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><rect x="8" y="8" width="8" height="8" rx="1"></rect></svg>Inspecionar</h3>
+          <p>Segure <span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span> e passe o mouse. Você vê o box model, com margem e padding em faixas, e uma etiqueta com o nome e o tamanho do elemento.</p>
+        </div>
+      </article>
+
+      <!-- Measure -->
+      <article class="gc bc" data-component="FeatureCard" data-source="src/components/FeatureCard.tsx" data-props='{"title": "Medir", "demo": "live", "wide": false}'>
+        <div class="demo">
+          <div class="meas" ref="{{ refs.meas }}">
+            <div class="mb a" aria-hidden="true"></div>
+            <div class="ml" style="left: 84px; width: {{ gap }}px" aria-hidden="true"><span class="mlab">{{ gap }}</span></div>
+            <button type="button" class="mb b" style="left: {{ bLeft }}px" aria-label="Drag to change the distance, now {{ gap }} pixels" sc-camel-on-pointer-down="{{ measDown }}" sc-camel-on-pointer-move="{{ measMove }}" sc-camel-on-pointer-up="{{ measUp }}" sc-camel-on-pointer-cancel="{{ measUp }}" sc-camel-on-key-down="{{ measKey }}">
+              <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m9 7-5 5 5 5"></path><path d="m15 7 5 5-5 5"></path></svg>
+            </button>
+          </div>
+          <span class="hint" aria-hidden="true">arraste a caixa azul</span>
+        </div>
+        <div class="bmeta">
+          <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 12h18"></path><path d="M3 8v8"></path><path d="M21 8v8"></path></svg>Medir</h3>
+          <p>Fixe um elemento e passe o mouse em outro. As distâncias entre eles aparecem em vermelho.</p>
+        </div>
+      </article>
+
+      <!-- Tokens -->
+      <article class="gc bc" data-component="FeatureCard" data-source="src/components/FeatureCard.tsx" data-props='{"title": "Tokens", "demo": "live", "wide": false}'>
+        <div class="demo" sc-camel-on-mouse-enter="{{ tokEnter }}" sc-camel-on-mouse-leave="{{ tokLeave }}">
+          <div class="tokd">
+            <div class="tk-sw" style="background: {{ tkSurface }}">
+              <span class="tk-btn" style="background: {{ tkColor }}; color: {{ tkInk }}">Get started</span>
+            </div>
+            <div class="tk-name"><span style="color: var(--color-text-secondary)">Fill</span><b>color.accent</b></div>
+            <div class="tk-rows">
+              <button type="button" class="{{ tkLightCls }}" sc-camel-on-click="{{ tokLight }}" aria-pressed="{{ tkLightOn }}"><i style="background: var(--color-accent)"></i>light #2f6bff</button>
+              <button type="button" class="{{ tkDarkCls }}" sc-camel-on-click="{{ tokDark }}" aria-pressed="{{ tkDarkOn }}"><i style="background: var(--color-accent-soft)"></i>dark #7aa2ff</button>
+            </div>
+          </div>
+        </div>
+        <div class="bmeta">
+          <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 4v16"></path><path d="M12 4a8 8 0 0 1 0 16"></path></svg>Tokens</h3>
+          <p>Cada cor mostra o token de onde veio e o valor dele em cada tema.</p>
+        </div>
+      </article>
+
+      <!-- Components -->
+      <article class="gc bc" data-component="FeatureCard" data-source="src/components/FeatureCard.tsx" data-props='{"title": "Componentes", "demo": "live", "wide": false}'>
+        <div class="demo">
+          <div class="cmpd">
+            <div class="cmp-prev"><span class="{{ cmpCls }}">Continue</span></div>
+            <div class="tk-name"><span class="cname" data-component="ComponentName" data-source="src/components/ComponentName.tsx" data-props='{"icon": "component"}'><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m12 3 4 4-4 4-4-4z"></path><path d="m12 13 4 4-4 4-4-4z"></path><path d="m7 8 4 4-4 4-4-4z"></path><path d="m17 8 4 4-4 4-4-4z"></path></svg>Button</span><span style="color: var(--color-text-tertiary); font-size: 12px">2 props</span></div>
+            <div class="cmp-rows">
+              <button type="button" class="cmp-r" sc-camel-on-click="{{ cycVariant }}" sc-camel-on-mouse-enter="{{ hlOn }}" sc-camel-on-mouse-leave="{{ hlOff }}" aria-label="variant is {{ variant }}, tap to change">variant <b>"{{ variant }}"</b></button>
+              <button type="button" class="cmp-r" sc-camel-on-click="{{ cycSize }}" sc-camel-on-mouse-enter="{{ hlOn }}" sc-camel-on-mouse-leave="{{ hlOff }}" aria-label="size is {{ size }}, tap to change">size <b>"{{ size }}"</b></button>
+            </div>
+          </div>
+        </div>
+        <div class="bmeta">
+          <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m12 3 4 4-4 4-4-4z"></path><path d="m12 13 4 4-4 4-4-4z"></path><path d="m7 8 4 4-4 4-4-4z"></path><path d="m17 8 4 4-4 4-4-4z"></path></svg>Componentes</h3>
+          <p>Veja a qual componente um elemento pertence e as props que o design passou para ele.</p>
+        </div>
+      </article>
+
+      <!-- Canvas -->
+      <article class="gc bc w2 cv" data-component="FeatureCard" data-source="src/components/FeatureCard.tsx" data-props='{"title": "Canvas", "demo": "live", "wide": true}'>
+        <div class="demo" style="min-height: 300px">
+          <div class="cvd">
+            <div class="cv-top" aria-hidden="true"><span>frame <b>{{ cvW }}</b> px</span><span><b>{{ cvCols }}</b> {{ cvColsLabel }}</span></div>
+            <div class="cv-stage" ref="{{ refs.stage }}">
+              <div class="cv-frame" style="width: {{ cvW }}px">
+                <div class="cv-nav"><i style="width: 48px; background: var(--color-accent-soft-50)"></i><i style="width: 72px"></i></div>
+                <div class="cv-grid" style="grid-template-columns: repeat({{ cvCols }}, minmax(0, 1fr))">
+                  <div class="cv-c"><i></i><i></i><i style="width: 70%"></i></div>
+                  <div class="cv-c"><i></i><i></i><i style="width: 70%"></i></div>
+                  <div class="cv-c"><i></i><i></i><i style="width: 70%"></i></div>
+                </div>
+              </div>
+              <button type="button" class="cv-h" style="left: {{ cvW }}px" aria-label="Drag to resize the frame, now {{ cvW }} pixels wide" sc-camel-on-pointer-down="{{ cvDown }}" sc-camel-on-pointer-move="{{ cvMove }}" sc-camel-on-pointer-up="{{ cvUp }}" sc-camel-on-pointer-cancel="{{ cvUp }}" sc-camel-on-key-down="{{ cvKey }}"><span></span></button>
+            </div>
+          </div>
+        </div>
+        <div class="bmeta">
+          <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="3" y="4" width="13" height="16" rx="2"></rect><path d="M20 9v6"></path></svg>Canvas</h3>
+          <p>Coloque a página num frame e redimensione pelas bordas para ver qualquer largura. Arraste a alça e o layout se ajusta.</p>
+        </div>
+      </article>
+
+      <!-- Edit -->
+      <article class="gc bc" data-component="FeatureCard" data-source="src/components/FeatureCard.tsx" data-props='{"title": "Editar", "demo": "live", "wide": false}'>
+        <div class="demo">
+          <div class="edd">
+            <div class="ed-prev"><span class="ed-el" style="border-radius: {{ edRad }}; padding: {{ edPad }}">Me edite</span></div>
+            <div class="{{ radCls }}"><label for="ed-rad">border-radius</label><input id="ed-rad" type="text" spellcheck="false" autocomplete="off" value="{{ radIn }}" sc-camel-on-change="{{ onRad }}" sc-camel-on-key-down="{{ edKey }}"></div>
+            <div class="{{ padCls }}"><label for="ed-pad">padding</label><input id="ed-pad" type="text" spellcheck="false" autocomplete="off" value="{{ padIn }}" sc-camel-on-change="{{ onPad }}" sc-camel-on-key-down="{{ edKey }}"></div>
+          </div>
+        </div>
+        <div class="bmeta">
+          <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m14 6 4 4"></path></svg>Editar</h3>
+          <p>Edite qualquer valor calculado para testar uma mudança na hora. Enter salva e Esc cancela.</p>
+        </div>
+      </article>
+
+      <!-- Changes -->
+      <article class="gc bc" data-component="FeatureCard" data-source="src/components/FeatureCard.tsx" data-props='{"title": "Mudanças", "demo": "live", "wide": false}'>
+        <div class="demo">
+          <div class="chd">
+            <div class="ch-boards" aria-hidden="true">
+              <div class="ch-b"><span>export antigo</span><div class="ch-l" style="width: 70%"></div><div class="{{ chBadge }}" style="width: 40%"></div><div class="ch-l" style="width: 85%"></div></div>
+              <div class="ch-b"><span>este export</span><div class="ch-l" style="width: 70%"></div><div class="{{ chSub }}" style="width: 60%"></div><div class="ch-l" style="width: 85%"></div></div>
+            </div>
+            <div class="ch-list">
+              <button type="button" class="{{ chRowRm }}" sc-camel-on-mouse-enter="{{ chHlRm }}" sc-camel-on-mouse-leave="{{ chHlOff }}" sc-camel-on-click="{{ chHlRm }}"><i>−</i><b>Badge "New"</b></button>
+              <button type="button" class="{{ chRowAd }}" sc-camel-on-mouse-enter="{{ chHlAd }}" sc-camel-on-mouse-leave="{{ chHlOff }}" sc-camel-on-click="{{ chHlAd }}"><i>+</i><b>Subtitle</b></button>
+            </div>
+          </div>
+        </div>
+        <div class="bmeta">
+          <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M6 3v12"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="6" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg>Mudanças</h3>
+          <p>Abra um export antigo e veja o que entrou e o que saiu, sem comparar no olho.</p>
+        </div>
+      </article>
+
+      <!-- Copy link -->
+      <article class="gc bc" data-component="FeatureCard" data-source="src/components/FeatureCard.tsx" data-props='{"title": "Copiar link", "demo": "live", "wide": false}'>
+        <div class="demo">
+          <div class="lkd">
+            <div class="lk-url">
+              <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>
+              <span>your-design.html<b>?inspect=…</b></span>
+              <button type="button" class="{{ lkCls }}" sc-camel-on-click="{{ copyLink }}">
+                <sc-if value="{{ lkOk }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" style="stroke-width: 2"><path d="M20 6 9 17l-5-5"></path></svg>copied</sc-if>
+                <sc-if value="{{ lkIdle }}" hint-placeholder-val="{{ true }}">copy</sc-if>
+              </button>
+            </div>
+            <div class="lk-note"><i aria-hidden="true"></i>abre com o elemento fixado</div>
+          </div>
+        </div>
+        <div class="bmeta">
+          <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>Copiar link</h3>
+          <p>Copie um link que reabre a página com o elemento já fixado e cole junto com a sua pergunta.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · Three ways in -->
+<section class="sec" aria-labelledby="ways-title" ref="{{ refs.ways }}" data-rv="ways" data-component="Section" data-source="src/components/Section.tsx" data-props='{"id": "get-started", "ruler": true, "coordinates": true}'>
+  <span class="ruler" aria-hidden="true"></span>
+  <span class="coord" aria-hidden="true">x {{ co.ways.x }} · y {{ co.ways.y }}</span>
+  <div class="wrap {{ c.ways }}">
+    <div class="sh" data-component="SectionHeader" data-source="src/components/SectionHeader.tsx" data-props='{"eyebrow": "Comece", "title": "Três jeitos de usar", "dimension": true}'>
+      <span class="eye">Comece</span>
+      <span class="hw" ref="{{ dref.ways }}">
+        <h2 id="ways-title" class="h2">Três jeitos de usar</h2>
+        <span class="dim" aria-hidden="true"><span>{{ d.ways }}</span></span>
+      </span>
+    </div>
+    <div class="ways">
+      <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "01", "title": "Rode num arquivo"}'>
+        <span class="num">01</span>
+        <h3>Rode num arquivo</h3>
+        <p>Abre o design com o Groma. Não instala nada no seu projeto nem mexe no arquivo. Precisa do Node.js 18.3 ou mais recente.</p>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "shell", "copyable": true}'><span class="code-t"><span class="k1">npx</span> gromajs <span class="k2">your-design.html</span></span><button type="button" class="{{ cpW1 }}" sc-camel-on-click="{{ copyW1 }}" aria-label="Copiar comando"><sc-if value="{{ w1Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w1Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
+      </div>
+      <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "02", "title": "Adicione o script"}'>
+        <span class="num">02</span>
+        <h3>Adicione o script</h3>
+        <p>Coloque como primeira tag dentro do <code class="mono" style="font-size: 13px; color: var(--color-text-primary)">&lt;head&gt;</code>. Funciona num arquivo aberto do disco e numa página servida.</p>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "html", "copyable": true}'><span class="code-t"><span class="k3">&lt;</span><span class="k1">script</span> src=<span class="k2">"https://cdn.jsdelivr.net/npm/gromajs@<span data-version>0.6.1</span>/dist/groma.js"</span><span class="k3">&gt;&lt;/</span><span class="k1">script</span><span class="k3">&gt;</span></span><button type="button" class="{{ cpW2 }}" sc-camel-on-click="{{ copyW2 }}" aria-label="Copiar a tag script"><sc-if value="{{ w2Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w2Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
+      </div>
+      <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "03", "title": "Configure"}'>
+        <span class="num">03</span>
+        <h3>Configure</h3>
+        <p>Escolha como os valores copiados saem: <code class="mono" style="font-size: 13px; color: var(--color-text-primary)">"css"</code> (o padrão) ou <code class="mono" style="font-size: 13px; color: var(--color-text-primary)">"sx"</code>.</p>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "js", "copyable": true}'><span class="code-t">Groma.<span class="k1">configure</span>({ copyFormat: <span class="k2">"sx"</span> })</span><button type="button" class="{{ cpW3 }}" sc-camel-on-click="{{ copyW3 }}" aria-label="Copiar configuração"><sc-if value="{{ w3Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w3Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · Use cases -->
+<section class="sec" aria-labelledby="uses-title" ref="{{ refs.uses }}" data-rv="uses" data-component="Section" data-source="src/components/Section.tsx" data-props='{"id": "use-cases", "ruler": true, "coordinates": true}'>
+  <span class="ruler" aria-hidden="true"></span>
+  <span class="coord" aria-hidden="true">x {{ co.uses.x }} · y {{ co.uses.y }}</span>
+  <div class="wrap {{ c.uses }}">
+    <div class="sh" data-component="SectionHeader" data-source="src/components/SectionHeader.tsx" data-props='{"eyebrow": "Casos de uso", "title": "Quando o handoff é o próprio HTML", "dimension": true}'>
+      <span class="eye">Casos de uso</span>
+      <span class="hw" ref="{{ dref.uses }}">
+        <h2 id="uses-title" class="h2">Quando o handoff é o próprio HTML</h2>
+        <span class="dim" aria-hidden="true"><span>{{ d.uses }}</span></span>
+      </span>
+    </div>
+    <div class="uses">
+      <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Construir a partir de um design gerado por IA", "icon": true}'>
+        <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v3"></path><path d="M12 18v3"></path><path d="M3 12h3"></path><path d="M18 12h3"></path><rect x="7" y="7" width="10" height="10" rx="2"></rect></svg></span>
+        <h3>Construir a partir de um design gerado por IA</h3>
+        <p>O design chega como HTML funcionando, não como arquivo de design. Leia o que você precisa para construir direto na página.</p>
+      </article>
+      <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Revisar uma página contra o design", "icon": true}'>
+        <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="8" height="16" rx="1.5"></rect><rect x="13" y="4" width="8" height="16" rx="1.5"></rect><path d="M6 9h2"></path><path d="M16 9h2"></path></svg></span>
+        <h3>Revisar uma página contra o design</h3>
+        <p>Fixe um elemento e confira tamanho e espaçamento contra o que foi construído. Depois mande um link que abre nesse mesmo elemento.</p>
+      </article>
+      <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Testar um layout em qualquer largura", "icon": true}'>
+        <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M9 5v14"></path><path d="m14 10-2 2 2 2"></path><path d="m17 10 2 2-2 2"></path></svg></span>
+        <h3>Testar um layout em qualquer largura</h3>
+        <p>Coloque a página num canvas e arraste as bordas do frame para achar onde o layout quebra, antes de alguém construir.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · Shortcuts -->
+<section class="sec" aria-labelledby="keys-title" ref="{{ refs.keys }}" data-rv="keys" data-component="Section" data-source="src/components/Section.tsx" data-props='{"id": "shortcuts", "ruler": true, "coordinates": true}'>
+  <span class="ruler" aria-hidden="true"></span>
+  <span class="coord" aria-hidden="true">x {{ co.keys.x }} · y {{ co.keys.y }}</span>
+  <div class="wrap {{ c.keys }}">
+    <div class="sh" data-component="SectionHeader" data-source="src/components/SectionHeader.tsx" data-props='{"eyebrow": "Atalhos", "title": "Segure  ⌥ Option  Alt  e veja", "dimension": true}'>
+      <span class="eye">Atalhos</span>
+      <span class="hw" ref="{{ dref.keys }}">
+        <h2 id="keys-title" class="h2">Segure <span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span> e veja</h2>
+        <span class="dim" aria-hidden="true"><span>{{ d.keys }}</span></span>
+      </span>
+      <p class="sub">Prefere não segurar tecla? A pílula no canto inferior direito deixa o modo de inspeção ligado.</p>
+    </div>
+    <div class="keys">
+      <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "passar o mouse"], "action": "Inspecionar"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>passar o mouse</kbd></div><div class="key-d"><b>Inspecionar.</b> O box model e uma etiqueta com o nome e o tamanho do elemento.</div></div>
+      <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "clique"], "action": "Fixar"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>clique</kbd></div><div class="key-d"><b>Fixar.</b> Abre o painel lateral nele. Passe o mouse em outro elemento para medir.</div></div>
+      <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "clique direito"], "action": "Camadas"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>clique direito</kbd></div><div class="key-d"><b>Camadas.</b> Um menu com todas as camadas sob o ponteiro.</div></div>
+      <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "Shift", "G"], "action": "Painel"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>Shift</kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>G</kbd></div><div class="key-d"><b>Painel.</b> Abre ou fecha o painel lateral.</div></div>
+      <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Espaço", "arrastar"], "action": "Mover"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'>Espaço</kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>arrastar</kbd></div><div class="key-d"><b>Mover.</b> Arrasta o canvas.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · Closing -->
+<section class="close" aria-labelledby="close-title" ref="{{ refs.close }}" data-rv="close" data-component="ClosingCallToAction" data-source="src/components/ClosingCallToAction.tsx" data-props='{"grid": true, "glow": true}'>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="close-glow" aria-hidden="true"></div>
+  <div class="wrap {{ c.close }}" style="display: flex; flex-direction: column; align-items: center">
+    <h2 id="close-title" class="h2"><span class="g">Verifique o design de AI </span><span class="g sweep">antes de construir</span><span class="g">.</span></h2>
+    <div class="term" data-component="CommandLine" data-source="src/components/CommandLine.tsx" data-props='{"command": "npx gromajs your-design.html", "copyable": true, "caret": true}'>
+      <span class="ps" aria-hidden="true">$</span>
+      <code>npx gromajs <span class="arg">your-design.html</span></code>
+      <span class="caret" aria-hidden="true"></span>
+      <button type="button" class="{{ cpClose }}" sc-camel-on-click="{{ copyClose }}" aria-label="Copiar comando">
+        <sc-if value="{{ closeOk }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if>
+        <sc-if value="{{ closeIdle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if>
+      </button>
+    </div>
+    <div class="btns">
+      <a class="btn btn-p" href="https://github.com/franco-dias/groma" target="_blank" rel="noopener" data-component="Button" data-source="src/components/Button.tsx" data-props='{"variant": "primary", "size": "lg", "icon": "arrow-right", "href": "github"}'><span>Ver no GitHub</span>
+        <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></a>
+      <a class="btn btn-s" href="https://www.npmjs.com/package/gromajs" target="_blank" rel="noopener" data-component="Button" data-source="src/components/Button.tsx" data-props='{"variant": "secondary", "size": "lg", "href": "npm"}'><span>npm</span></a>
+    </div>
+  </div>
+</section>
+</main><footer class="ft" data-component="SiteFooter" data-source="src/components/SiteFooter.tsx" data-props='{"license": "MIT", "links": 2}'>
+  <div class="wrap ft-in">
+    <div class="ft-l">
+      <span class="logo-mark" aria-hidden="true" data-component="LogoMark" data-source="src/components/LogoMark.tsx" data-props='{"size": 28}'><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 4v17"></path><path d="M4 7.5h16"></path><path d="M4 7.5v7"></path><path d="M20 7.5v7"></path><circle cx="4" cy="16" r="1.3" fill="currentColor"></circle><circle cx="20" cy="16" r="1.3" fill="currentColor"></circle><path d="M9.5 21h5"></path></svg></span>
+      <span>Licença MIT · Feito por Gabriel Franco</span>
+    </div>
+    <nav class="ft-links" aria-label="Links do rodapé">
+      <a href="https://github.com/franco-dias/groma" data-component="NavLink" data-source="src/components/NavLink.tsx" data-props='{"external": true, "icon": null}' target="_blank" rel="noopener"><span>GitHub</span></a>
+      <a href="https://www.npmjs.com/package/gromajs" data-component="NavLink" data-source="src/components/NavLink.tsx" data-props='{"external": true, "icon": null}' target="_blank" rel="noopener"><span>npm</span></a>
+    </nav>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:7740}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    var self = this;
+    this.state = {
+      rv: {}, prog: {}, dims: {}, coords: {},
+      copied: '', split: 50, dragSplit: false,
+      gap: 96, trackW: 0,
+      tokDark: false, tokHover: false,
+      variant: 'primary', size: 'md', cmpHl: false,
+      cvW: 0, stageW: 0,
+      radIn: '12px', padIn: '10px 18px', rad: '12px', pad: '10px 18px',
+      chHl: '', lk: false,
+      insp: 'bt'
+    };
+    this.reduced = false;
+    try { this.reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
+    this.els = {};
+    this.dimEls = {};
+    this.rafs = {};
+    this.timers = {};
+    this.io = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      this.io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            var k = en.target.getAttribute('data-rv');
+            if (k) { self.reveal(k); }
+            self.io.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    }
+    this.ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      this.ro = new ResizeObserver(function () { self.scheduleMeasure(); });
+    }
+    var mk = function (k) {
+      return function (el) {
+        if (el) {
+          self.els[k] = el;
+          if (el.getAttribute('data-rv')) {
+            if (self.io) { self.io.observe(el); } else { self.reveal(k); }
+          }
+          if (self.ro && (k === 'meas' || k === 'stage' || k === 'split')) { self.ro.observe(el); }
+        } else if (self.els[k]) {
+          if (self.io) { self.io.unobserve(self.els[k]); }
+          if (self.ro) { self.ro.unobserve(self.els[k]); }
+          delete self.els[k];
+        }
+      };
+    };
+    var mkDim = function (k) {
+      return function (el) {
+        if (el) { self.dimEls[k] = el; if (self.ro) { self.ro.observe(el); } }
+        else if (self.dimEls[k]) { if (self.ro) { self.ro.unobserve(self.dimEls[k]); } delete self.dimEls[k]; }
+      };
+    };
+    this.refs = {};
+    ['hero', 'facts', 'why', 'feat', 'ways', 'uses', 'keys', 'close', 'split', 'meas', 'stage'].forEach(function (k) { self.refs[k] = mk(k); });
+    this.dref = {};
+    ['why', 'feat', 'ways', 'uses', 'keys'].forEach(function (k) { self.dref[k] = mkDim(k); });
+
+    this.onResize = function () { self.scheduleMeasure(); };
+
+    this.onHeroMove = function (e) {
+      var el = self.els.hero;
+      if (!el || self.reduced) { return; }
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', Math.round(e.clientX - r.left) + 'px');
+      el.style.setProperty('--my', Math.round(e.clientY - r.top) + 'px');
+    };
+
+    this.copyText = function (text, key) {
+      var done = function () {
+        self.setState({ copied: key });
+        clearTimeout(self.timers.copy);
+        self.timers.copy = setTimeout(function () { self.setState({ copied: '' }); }, 1600);
+      };
+      var fallback = function () {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = text; ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed'; ta.style.opacity = '0'; ta.style.top = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); } catch (e2) {}
+          document.body.removeChild(ta);
+        } catch (e1) {}
+      };
+      try {
+        if (navigator.clipboard && window.isSecureContext && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { fallback(); done(); });
+          return;
+        }
+      } catch (e) {}
+      fallback(); done();
+    };
+    var CMD = 'npx gromajs your-design.html';
+    this.copyHero = function () { self.copyText(CMD, 'hero'); };
+    this.copyClose = function () { self.copyText(CMD, 'close'); };
+    this.copyW1 = function () { self.copyText(CMD, 'w1'); };
+    this.copyW2 = function () { self.copyText('<script src="https://cdn.jsdelivr.net/npm/gromajs@' + window.__gromaVersion + '/dist/groma.js"></' + 'script>', 'w2'); };
+    this.copyW3 = function () { self.copyText('Groma.configure({ copyFormat: "sx" })', 'w3'); };
+
+    /* split divider */
+    this.splitAt = function (clientX) {
+      var el = self.els.split; if (!el) { return; }
+      var r = el.getBoundingClientRect();
+      var p = (clientX - r.left) / r.width * 100;
+      self.setState({ split: Math.max(5, Math.min(95, p)) });
+    };
+    this.splitDown = function (e) {
+      try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {}
+      self.setState({ dragSplit: true });
+      self.splitAt(e.clientX);
+    };
+    this.splitMove = function (e) { if (self.state.dragSplit) { self.splitAt(e.clientX); } };
+    this.splitUp = function () { if (self.state.dragSplit) { self.setState({ dragSplit: false }); } };
+    this.splitKey = function (e) {
+      var d = e.key === 'ArrowLeft' ? -5 : e.key === 'ArrowRight' ? 5 : 0;
+      if (e.key === 'Home') { e.preventDefault(); self.setState({ split: 5 }); return; }
+      if (e.key === 'End') { e.preventDefault(); self.setState({ split: 95 }); return; }
+      if (d) { e.preventDefault(); self.setState(function (s) { return { split: Math.max(5, Math.min(95, s.split + d)) }; }); }
+    };
+
+    /* measure */
+    this.maxGap = function (w) { return Math.max(16, (w || 300) - 84 - 64 - 20); };
+    this.measDown = function (e) {
+      try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {}
+      var tr = self.els.meas; if (!tr) { return; }
+      var r = tr.getBoundingClientRect();
+      self.measGrab = e.clientX - (r.left + 84 + self.state.gap);
+      self.measDrag = true;
+    };
+    this.measMove = function (e) {
+      if (!self.measDrag) { return; }
+      var tr = self.els.meas; if (!tr) { return; }
+      var r = tr.getBoundingClientRect();
+      var g = Math.round(e.clientX - r.left - 84 - self.measGrab);
+      self.setState({ gap: Math.max(8, Math.min(self.maxGap(r.width), g)) });
+    };
+    this.measUp = function () { self.measDrag = false; };
+    this.measKey = function (e) {
+      var d = e.key === 'ArrowLeft' ? -4 : e.key === 'ArrowRight' ? 4 : 0;
+      if (d) { e.preventDefault(); self.setState(function (s) { return { gap: Math.max(8, Math.min(self.maxGap(s.trackW), s.gap + d)) }; }); }
+    };
+
+    /* tokens */
+    this.tokEnter = function () { self.setState({ tokHover: true }); };
+    this.tokLeave = function () { self.setState({ tokHover: false }); };
+    this.tokLight = function () { self.setState({ tokDark: false, tokHover: false }); };
+    this.tokDark = function () { self.setState({ tokDark: true, tokHover: false }); };
+
+    /* components */
+    var VARS = ['primary', 'secondary', 'ghost'];
+    var SIZES = ['sm', 'md', 'lg'];
+    this.cycVariant = function () { self.setState(function (s) { return { variant: VARS[(VARS.indexOf(s.variant) + 1) % VARS.length] }; }); };
+    this.cycSize = function () { self.setState(function (s) { return { size: SIZES[(SIZES.indexOf(s.size) + 1) % SIZES.length] }; }); };
+    this.hlOn = function () { self.setState({ cmpHl: true }); };
+    this.hlOff = function () { self.setState({ cmpHl: false }); };
+
+    /* canvas */
+    this.cvAt = function (clientX) {
+      var st = self.els.stage; if (!st) { return; }
+      var r = st.getBoundingClientRect();
+      var w = Math.round(clientX - r.left - self.cvGrab);
+      self.setState({ cvW: Math.max(Math.min(140, r.width), Math.min(r.width, w)) });
+    };
+    this.cvDown = function (e) {
+      try { e.currentTarget.setPointerCapture(e.pointerId); } catch (x) {}
+      var st = self.els.stage; if (!st) { return; }
+      var r = st.getBoundingClientRect();
+      self.cvGrab = e.clientX - (r.left + self.curCvW());
+      self.cvDrag = true;
+    };
+    this.cvMove = function (e) { if (self.cvDrag) { self.cvAt(e.clientX); } };
+    this.cvUp = function () { self.cvDrag = false; };
+    this.cvKey = function (e) {
+      var d = e.key === 'ArrowLeft' ? -20 : e.key === 'ArrowRight' ? 20 : 0;
+      if (d) {
+        e.preventDefault();
+        var sw = self.state.stageW || 400;
+        self.setState({ cvW: Math.max(Math.min(140, sw), Math.min(sw, self.curCvW() + d)) });
+      }
+    };
+    this.curCvW = function () { var s = self.state; return s.cvW > 0 ? Math.min(s.cvW, s.stageW || s.cvW) : (s.stageW || 0); };
+
+    /* edit */
+    var valid = function (prop, v) {
+      try { return !!(window.CSS && CSS.supports && CSS.supports(prop, v)); } catch (e) { return false; }
+    };
+    this.onRad = function (e) { var v = e.target.value; self.setState(function (s) { return { radIn: v, rad: valid('border-radius', v) ? v : s.rad }; }); };
+    this.onPad = function (e) { var v = e.target.value; self.setState(function (s) { return { padIn: v, pad: valid('padding', v) && v.length < 40 ? v : s.pad }; }); };
+    this.edKey = function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+      if (e.key === 'Escape') { e.preventDefault(); self.setState({ radIn: '12px', rad: '12px', padIn: '10px 18px', pad: '10px 18px' }); e.target.blur(); }
+    };
+
+    /* changes */
+    this.chHlRm = function () { self.setState({ chHl: 'rm' }); };
+    this.chHlAd = function () { self.setState({ chHl: 'ad' }); };
+    this.chHlOff = function () { self.setState({ chHl: '' }); };
+
+    /* copy link */
+    this.copyLink = function () {
+      self.setState({ lk: true });
+      clearTimeout(self.timers.lk);
+      self.timers.lk = setTimeout(function () { self.setState({ lk: false }); }, 1800);
+    };
+
+    /* inspect */
+    this.ip = {};
+    ['av', 'tt', 'tx', 'tg', 'bt'].forEach(function (k) { self.ip[k] = function () { self.setState({ insp: k }); }; });
+    this.inspLeave = function () {};
+
+    this.wall = [
+      ['accent-color', 'auto'], ['align-content', 'normal'], ['align-items', 'center'], ['align-self', 'auto'], ['animation', 'none 0s ease 0s 1 normal none running'], ['appearance', 'auto'], ['aspect-ratio', 'auto'], ['backdrop-filter', 'none'], ['backface-visibility', 'visible'], ['background-attachment', 'scroll'], ['background-blend-mode', 'normal'], ['background-clip', 'border-box'], ['background-color', 'rgb(47, 107, 255)'], ['background-image', 'none'], ['background-origin', 'padding-box'], ['background-position', '0% 0%'], ['background-repeat', 'repeat'], ['background-size', 'auto'], ['block-size', '48px'], ['border-block-end', '0px none rgb(255, 255, 255)'], ['border-bottom-left-radius', '10px'], ['border-bottom-right-radius', '10px'], ['border-collapse', 'separate'], ['border-image', 'none'], ['border-inline-start', '0px none rgb(255, 255, 255)'], ['border-top-left-radius', '10px'], ['border-top-right-radius', '10px'], ['bottom', 'auto'], ['box-shadow', 'rgba(255, 255, 255, 0.22) 0px 1px 0px 0px inset'], ['box-sizing', 'border-box'], ['break-inside', 'auto'], ['caption-side', 'top'], ['caret-color', 'rgb(255, 255, 255)'], ['clear', 'none'], ['clip-path', 'none'], ['color', 'rgb(255, 255, 255)'], ['column-gap', '8px'], ['contain', 'none'], ['content-visibility', 'visible'], ['cursor', 'pointer'], ['direction', 'ltr'], ['display', 'inline-flex'], ['empty-cells', 'show'], ['filter', 'none'], ['flex-basis', 'auto'], ['flex-direction', 'row'], ['flex-grow', '0'], ['flex-shrink', '1'], ['flex-wrap', 'nowrap'], ['float', 'none'], ['font-family', 'Geist, ui-sans-serif, system-ui'], ['font-feature-settings', 'normal'], ['font-kerning', 'auto'], ['font-optical-sizing', 'auto'], ['font-size', '14px'], ['font-stretch', '100%'], ['font-style', 'normal'], ['font-variant', 'normal'], ['font-weight', '500'], ['gap', '8px'], ['grid-area', 'auto'], ['height', '48px'], ['hyphens', 'manual'], ['image-rendering', 'auto'], ['inline-size', '320px'], ['inset', 'auto'], ['isolation', 'auto'], ['justify-content', 'center'], ['justify-items', 'normal'], ['left', 'auto'], ['letter-spacing', '-0.14px'], ['line-height', '20px'], ['list-style', 'outside none disc'], ['margin-block', '0px'], ['margin-inline', '0px'], ['mask', 'none'], ['max-height', 'none'], ['max-width', 'none'], ['min-height', 'auto'], ['min-width', 'auto'], ['mix-blend-mode', 'normal'], ['object-fit', 'fill'], ['opacity', '1'], ['order', '0'], ['outline', 'rgb(255, 255, 255) none 0px'], ['overflow', 'visible'], ['overscroll-behavior', 'auto'], ['padding-block', '12px'], ['padding-inline', '20px'], ['perspective', 'none'], ['pointer-events', 'auto'], ['position', 'static'], ['quotes', 'auto'], ['resize', 'none'], ['right', 'auto'], ['rotate', 'none'], ['row-gap', '8px'], ['scale', 'none'], ['scroll-behavior', 'auto']
+    ].map(function (p) { return { k: p[0], v: p[1] }; });
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+    this.scheduleMeasure();
+    if (!this.io) { var self = this; ['facts', 'why', 'feat', 'ways', 'uses', 'keys', 'close'].forEach(function (k) { self.reveal(k); }); }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    if (this.io) { this.io.disconnect(); }
+    if (this.ro) { this.ro.disconnect(); }
+    var self = this;
+    Object.keys(this.rafs).forEach(function (k) { cancelAnimationFrame(self.rafs[k]); });
+    Object.keys(this.timers).forEach(function (k) { clearTimeout(self.timers[k]); });
+    if (this.measureRaf) { cancelAnimationFrame(this.measureRaf); }
+    this.dead = true;
+  }
+
+  scheduleMeasure() {
+    var self = this;
+    if (this.measureRaf) { cancelAnimationFrame(this.measureRaf); }
+    this.measureRaf = requestAnimationFrame(function () { self.measureRaf = 0; if (!self.dead) { self.measure(); } });
+  }
+
+  measure() {
+    var self = this;
+    var dims = {};
+    Object.keys(this.dimEls).forEach(function (k) {
+      var el = self.dimEls[k];
+      dims[k] = Math.round(el.getBoundingClientRect().width);
+    });
+    var coords = {};
+    var sx = window.scrollX || 0, sy = window.scrollY || 0;
+    ['why', 'feat', 'ways', 'uses', 'keys'].forEach(function (k) {
+      var el = self.els[k];
+      if (el) {
+        var r = el.getBoundingClientRect();
+        coords[k] = { x: Math.round(r.left + sx), y: Math.round(r.top + sy) };
+      }
+    });
+    var next = { dims: dims, coords: coords };
+    if (this.els.meas) {
+      var tw = this.els.meas.getBoundingClientRect().width;
+      next.trackW = tw;
+      next.gap = Math.max(8, Math.min(this.maxGap(tw), this.state.gap));
+    }
+    if (this.els.stage) {
+      var sw = Math.round(this.els.stage.getBoundingClientRect().width);
+      next.stageW = sw;
+      if (this.state.cvW > sw) { next.cvW = sw; }
+    }
+    this.setState(next);
+  }
+
+  reveal(k) {
+    if (this.state.rv[k]) { return; }
+    this.setState(function (s) { var rv = Object.assign({}, s.rv); rv[k] = true; return { rv: rv }; });
+    this.tween(k);
+  }
+
+  tween(k) {
+    var self = this;
+    var set = function (v) { self.setState(function (s) { var p = Object.assign({}, s.prog); p[k] = v; return { prog: p }; }); };
+    if (this.reduced) { set(1); return; }
+    var start = 0, dur = 1400;
+    var step = function (t) {
+      if (self.dead) { return; }
+      if (!start) { start = t; }
+      var p = Math.min(1, (t - start) / dur);
+      set(1 - Math.pow(1 - p, 3));
+      if (p < 1) { self.rafs[k] = requestAnimationFrame(step); }
+    };
+    this.rafs[k] = requestAnimationFrame(step);
+  }
+
+  renderVals() {
+    var s = this.state;
+    var self = this;
+    var pr = function (k) { return s.prog[k] || 0; };
+    var cls = function (k) { return 'rv' + (s.rv[k] ? ' in' : ''); };
+    var dimLabel = function (k) { var w = s.dims[k] || 0; return 'W ' + Math.round(w * pr(k)); };
+    var co = {};
+    ['why', 'feat', 'ways', 'uses', 'keys'].forEach(function (k) { co[k] = s.coords[k] || { x: 0, y: 0 }; });
+    var ic = {};
+    ['av', 'tt', 'tx', 'tg', 'bt'].forEach(function (k) { ic[k] = 't' + (s.insp === k ? ' on' : ''); });
+    var dark = s.tokHover ? !s.tokDark : s.tokDark;
+    var cvW = this.curCvW();
+    var cols = cvW >= 420 ? 3 : cvW >= 260 ? 2 : 1;
+    var radOk = s.rad === s.radIn, padOk = s.pad === s.padIn;
+    var cp = function (k) { return 'cp' + (s.copied === k ? ' ok' : ''); };
+    return {
+      refs: this.refs, dref: this.dref, onHeroMove: this.onHeroMove,
+      c: { why: cls('why'), feat: cls('feat'), ways: cls('ways'), uses: cls('uses'), keys: cls('keys'), close: cls('close') },
+      d: { why: dimLabel('why'), feat: dimLabel('feat'), ways: dimLabel('ways'), uses: dimLabel('uses'), keys: dimLabel('keys') },
+      co: co,
+      f1: String(Math.round(1 * pr('facts'))), f2: '0', f3: String(Math.round(30 * pr('facts'))),
+      cpHero: cp('hero'), heroOk: s.copied === 'hero', heroIdle: s.copied !== 'hero', copyHero: this.copyHero,
+      cpClose: cp('close'), closeOk: s.copied === 'close', closeIdle: s.copied !== 'close', copyClose: this.copyClose,
+      cpW1: cp('w1'), w1Ok: s.copied === 'w1', w1Idle: s.copied !== 'w1', copyW1: this.copyW1,
+      cpW2: cp('w2'), w2Ok: s.copied === 'w2', w2Idle: s.copied !== 'w2', copyW2: this.copyW2,
+      cpW3: cp('w3'), w3Ok: s.copied === 'w3', w3Idle: s.copied !== 'w3', copyW3: this.copyW3,
+      wall: this.wall,
+      splitPct: s.split.toFixed(2), splitRound: Math.round(s.split), splitRest: 100 - Math.round(s.split),
+      divCls: 'divider' + (s.dragSplit ? ' drag' : ''),
+      splitDown: this.splitDown, splitMove: this.splitMove, splitUp: this.splitUp, splitKey: this.splitKey,
+      ic: ic, ip: this.ip, inspLeave: this.inspLeave,
+      gap: s.gap, bLeft: 84 + s.gap,
+      measDown: this.measDown, measMove: this.measMove, measUp: this.measUp, measKey: this.measKey,
+      tokEnter: this.tokEnter, tokLeave: this.tokLeave, tokLight: this.tokLight, tokDark: this.tokDark,
+      tkSurface: dark ? 'var(--color-surface-raised)' : 'var(--color-text-primary)', tkColor: dark ? 'var(--color-accent-soft)' : 'var(--color-accent)', tkInk: dark ? 'var(--color-page)' : 'var(--color-white)',
+      tkLightCls: 'tk-r' + (dark ? '' : ' on'), tkDarkCls: 'tk-r' + (dark ? ' on' : ''),
+      tkLightOn: dark ? 'false' : 'true', tkDarkOn: dark ? 'true' : 'false',
+      variant: s.variant, size: s.size,
+      cmpCls: 'cmp-b ' + s.variant + ' ' + s.size + (s.cmpHl ? ' hl' : ''),
+      cycVariant: this.cycVariant, cycSize: this.cycSize, hlOn: this.hlOn, hlOff: this.hlOff,
+      cvW: cvW, cvCols: cols, cvColsLabel: cols === 1 ? 'coluna' : 'colunas',
+      cvDown: this.cvDown, cvMove: this.cvMove, cvUp: this.cvUp, cvKey: this.cvKey,
+      radIn: s.radIn, padIn: s.padIn, edRad: s.rad, edPad: s.pad,
+      radCls: 'ed-r' + (radOk ? '' : ' bad'), padCls: 'ed-r' + (padOk ? '' : ' bad'),
+      onRad: this.onRad, onPad: this.onPad, edKey: this.edKey,
+      chBadge: 'ch-l rm' + (s.chHl === 'rm' ? ' hl' : ''), chSub: 'ch-l ad' + (s.chHl === 'ad' ? ' hl' : ''),
+      chRowRm: 'ch-row rm' + (s.chHl === 'rm' ? ' hl' : ''), chRowAd: 'ch-row ad' + (s.chHl === 'ad' ? ' hl' : ''),
+      chHlRm: this.chHlRm, chHlAd: this.chHlAd, chHlOff: this.chHlOff,
+      lkCls: 'lk-btn' + (s.lk ? ' ok' : ''), lkOk: s.lk, lkIdle: !s.lk, copyLink: this.copyLink
+    };
+  }
+}
+</script>
+
+
+<style>
+/* The Alt key as the visitor's keyboard names it. */
+.k-mac { display:none; }
+html.is-mac .k-mac { display:inline; }
+html.is-mac .k-pc { display:none; }
+
+/* The video narrower than the content; the comparison keeps the full content width. */
+.fw { max-width:1056px; }
+
+/* Facts under the video: the number in the headline's type, the label under it. */
+.fact { flex-direction:column; align-items:center; gap:8px; padding:32px 24px; }
+.fact b { font-family:Geist, system-ui, sans-serif; font-size:56px; line-height:1; font-weight:600; letter-spacing:-0.04em;
+  background-image:linear-gradient(180deg, var(--color-white) 18%, var(--color-accent-soft) 100%); -webkit-background-clip:text; background-clip:text; color:var(--color-transparent); }
+.fact b small { font-size:24px; letter-spacing:-0.02em; margin-left:4px; }
+/* The page's script writes the counting numbers into a span, which the label rule would shrink. */
+.fact b span { font-size:inherit; letter-spacing:inherit; color:inherit; }
+.fact span { font-size:13px; letter-spacing:.02em; }
+@media (max-width: 640px) { .fact { padding:24px 12px; } .fact b { font-size:40px; } .fact b small { font-size:18px; } }
+
+/* The Groma side fills the whole comparison: both panes are as wide as the comparison,
+   and the divider only decides how much of each shows. */
+.split { container-type:inline-size; }
+.pane-in { width:100cqw; }
+/* The divider moves between 5% and 95%: 6% of padding on each side keeps both
+   contents whole at either end. */
+.pane-in { padding-left:6cqw; padding-right:6cqw; }
+.gsp { max-width:none; margin-left:0; display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px; align-items:start; }
+.gsp .red { color:var(--color-measure-soft); }
+/* The Groma cards sit in the middle of their pane, under the tag. */
+.pane-r .pane-in { display:flex; flex-direction:column; }
+.pane-r .gsp { flex:1; margin-top:0; align-content:center; }
+
+/* Scrollbars in the page's own colors. */
+html { scrollbar-color:var(--color-accent-soft-38) var(--color-page); scrollbar-width:thin; }
+::-webkit-scrollbar { width:10px; height:10px; }
+::-webkit-scrollbar-track { background:var(--color-page); }
+::-webkit-scrollbar-thumb { background:var(--color-accent-soft-32); border-radius:999px; border:3px solid var(--color-page); }
+::-webkit-scrollbar-thumb:hover { background:var(--color-accent); }
+
+/* Language switch in the header. */
+.lang { display:inline-flex; align-items:center; height:32px; margin-left:8px; padding:4px; border-radius:8px; border:1px solid var(--color-white-10); background:var(--color-white-02); }
+.nav .lang a { height:26px; padding:0 8px; border-radius:6px; font:500 12px/1 'Geist Mono', ui-monospace, monospace; letter-spacing:.04em; color:var(--color-text-tertiary); }
+.nav .lang a[aria-current] { color:var(--color-text-primary); background:var(--color-accent-22); box-shadow:inset 0 0 0 1px var(--color-accent-soft-40); }
+</style>
+<script>
+  // "macOS" from userAgentData, "MacIntel" from the older navigator.platform.
+  if (/mac|iphone|ipad/i.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform)) {
+    document.documentElement.classList.add("is-mac");
+  }
+</script><script src="../assets/version.js"></script><script src="../assets/try-it.js"></script><script src="../assets/typography.js"></script></body></html>

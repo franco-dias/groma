@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Groma">
+  <title>Groma</title>
+  <style>
+    .line { fill: none; stroke: #7aa2ff; stroke-width: 4.2; stroke-linecap: round; }
+    .bob { fill: #7aa2ff; }
+  </style>
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a1e25" />
+      <stop offset="1" stop-color="#0f1115" />
+    </linearGradient>
+  </defs>
+  <!-- the tile: a dark gradient with a faint ring, as on the landing page -->
+  <rect x=".5" y=".5" width="63" height="63" rx="17.8" fill="url(#tile)" stroke="#ffffff" stroke-opacity=".12" />
+  <!-- the staff, a stake driven into the ground, and its foot -->
+  <path class="line staff" d="M32.0 16.76L32.0 49.14" pathLength="1" />
+  <path class="line foot" d="M27.24 49.14L36.76 49.14" pathLength="1" />
+  <!-- the cross bar, and a plumb line hanging from each end -->
+  <path class="line bar" d="M16.76 23.43L47.24 23.43" pathLength="1" />
+  <path class="line plumb" d="M16.76 23.43L16.76 36.76" pathLength="1" />
+  <path class="line plumb" d="M47.24 23.43L47.24 36.76" pathLength="1" />
+  <!-- the plumb bobs -->
+  <circle class="bob" cx="16.76" cy="39.62" r="2.48" />
+  <circle class="bob" cx="47.24" cy="39.62" r="2.48" />
+</svg>

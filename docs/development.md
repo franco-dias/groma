@@ -85,6 +85,7 @@ Start at [src/main.ts](../src/main.ts): it only starts the features.
 | `scripts/` | `inspect.mjs`, the command that opens a file with the inspector attached. It ships in the package as its `bin` |
 | `tests/` | Browser tests, one file per feature |
 | `docs/features.md` | Every feature and the rules it follows |
+| `landing/` | The landing page, as a static site. Not part of the package; see [landing/README.md](../landing/README.md) |
 
 Each tab implements the small `Tab` interface in
 [src/panel/tab.ts](../src/panel/tab.ts); adding a tab means adding a file and
