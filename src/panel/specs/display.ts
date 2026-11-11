@@ -2,7 +2,7 @@
 import { config } from "../../config";
 import { options } from "../../options";
 import { pageDocument } from "../../page";
-import { formatColor } from "../../specs/colors";
+import { formatColorAs } from "../../specs/color-format";
 import type { Spec } from "../../specs/spec";
 import { copiedLength, type LengthCopy, type LengthDisplay, shownLength } from "../../specs/units";
 
@@ -26,5 +26,6 @@ export const fieldLength = (value: string): string =>
 /** What a click on that length copies: with its unit, or bare, as the page configured. */
 export const copied = (value: string): string => copiedLength(value, lengthCopy());
 
-/** A spec's value as text: colours as hex, lengths in the chosen unit. */
-export const shownSpec = (spec: Spec): string => (spec.color ? formatColor(spec.value) : shown(spec.value));
+/** A spec's value as text: colours in the chosen format, lengths in the chosen unit. */
+export const shownSpec = (spec: Spec): string =>
+  spec.color ? formatColorAs(spec.value, options.colorFormat) : shown(spec.value);

@@ -33,6 +33,18 @@ describe("inspect mode (Alt)", () => {
     expect(document.body.style.cursor).toBe("");
   });
 
+  it("hears Alt while the focus is in the panel, where keys are kept from the page", () => {
+    inspector().pin(getElement(".text"));
+    const tab = ui(".tab")!;
+    tab.dispatchEvent(new KeyboardEvent("keydown", { key: "Alt", bubbles: true, composed: true }));
+    hover(getElement(".card"));
+    expect(document.body.style.cursor).toBe("crosshair");
+    expect(all(".overlay > div").length).toBeGreaterThan(0);
+
+    tab.dispatchEvent(new KeyboardEvent("keyup", { key: "Alt", bubbles: true, composed: true }));
+    expect(document.body.style.cursor).toBe("");
+  });
+
   it("draws the hovered element's box model", () => {
     holdAlt();
     hover(getElement(".card"));

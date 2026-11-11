@@ -1,6 +1,7 @@
 /**
  * The page's design tokens, listed under a field of the Specs tab while the
- * user types a value: a swatch for a colour, the token's name, its value. A
+ * user types a value: a swatch for a colour, a square drawn with the shadow
+ * for a shadow, the curve for a timing function, the token's name, its value. A
  * click, or the arrow keys and Enter, writes `var(--token)` in place of the
  * text. The tokens that hold the field's value come first, then those whose
  * name contains what was typed; at most eight are shown.
@@ -11,8 +12,9 @@
  */
 import { h } from "../../dom";
 import { type Fit, findFit, rankTokens, type TokenChoice } from "../../specs/suggest";
-import { findFieldTokens, type LengthReading, makeHolds } from "./field-tokens";
+import { findFieldTokens } from "./field-tokens";
 import { placeList } from "./list-placement";
+import { type LengthReading, makeHolds } from "./token-holds";
 import { fillItems, markActive } from "./token-items";
 
 export type TokenList = {

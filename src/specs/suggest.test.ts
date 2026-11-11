@@ -18,6 +18,15 @@ describe("findFit", () => {
       expect(findFit(prop)).toBe("length");
   });
 
+  it("takes shadows, times, timing functions and whole transitions", () => {
+    expect(findFit("box-shadow")).toBe("shadow");
+    expect(findFit("text-shadow")).toBe("shadow");
+    expect(findFit("transition-duration")).toBe("time");
+    expect(findFit("transition-delay")).toBe("time");
+    expect(findFit("transition-timing-function")).toBe("easing");
+    expect(findFit("transition")).toBe("transition");
+  });
+
   it("offers nothing for the rest", () => {
     for (const prop of [
       "display",

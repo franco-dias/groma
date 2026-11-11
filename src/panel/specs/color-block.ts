@@ -7,34 +7,14 @@
 import { config } from "../../config";
 import { h } from "../../dom";
 import { options } from "../../options";
-import { formatColor, isColorValue } from "../../specs/colors";
-import type { Spec } from "../../specs/spec";
 import { tokenModes, tokenPath } from "../../specs/tokens";
 import { copyOnClickMarking } from "../copy";
-import { createBadges, createModes, createRoleSlot, matchTokens, type TokenMatch } from "./color-parts";
-import { editable } from "./editable-field";
-import { addBlock, createSwatch } from "./specs-block";
+import { createLine, type ColorRole, type ColorRow } from "./color-line";
+import { createFormatSwitch } from "./color-format-switch";
+import { createContrastLines } from "./contrast-line";
+import { createModes, matchTokens, type TokenMatch } from "./color-parts";
+import { addBlock } from "./specs-block";
 import { findSpec, type SpecsContext } from "./specs-context";
-
-/** A colour of an element, what it is for, and the CSS property a double-click on it edits. */
-type ColorRole = { spec: Spec; role: string; prop?: string };
-
-/** The row of a colour, what its tokens say, and the element it describes. */
-type ColorRow = { row: HTMLElement; match: TokenMatch; context: SpecsContext };
-
-/** The line of the swatch, the value, the badges and the role. */
-function createLine(color: ColorRole, { row, match, context }: ColorRow): HTMLElement {
-  const { spec, role, prop } = color;
-  const [hex, alpha = "100%"] = formatColor(spec.value).split(" ");
-  const line = h("div", "token-line");
-  line.appendChild(createSwatch(spec.value));
-  const value = line.appendChild(copyOnClickMarking(h("span", "value", hex), { text: hex, row }));
-  // The field holds the hex; a translucent colour keeps its alpha as rgba().
-  if (prop) editable(value, { context, prop, value: alpha === "100%" ? hex : spec.value });
-  if (isColorValue(hex)) line.appendChild(h("span", "alpha", alpha));
-  line.append(...createBadges(match), h("span", "spacer"), createRoleSlot(role));
-  return line;
-}
 
 function createTokenLines(
   { declared, similar, isMissing }: TokenMatch,
@@ -63,6 +43,7 @@ function createColorRow(color: ColorRole, context: SpecsContext): HTMLElement {
   const match = matchTokens(color.spec, context);
   row.classList.toggle("is-missing", match.isMissing);
   row.appendChild(createLine(color, { row, match, context }));
+  if (color.role === "Text") row.append(...createContrastLines(context));
   row.append(...createTokenLines(match, { row, match, context }));
   return row;
 }
@@ -86,7 +67,7 @@ export function renderColors(context: SpecsContext): void {
     rows.push(createColorRow({ spec: picked, role: "Picked" }, context));
   }
   if (!rows.length) return;
-  addBlock(context, { title: "Colors" })
+  addBlock(context, { title: "Colors", action: createFormatSwitch(context.body) })
     .appendChild(h("div", "token-rows"))
     .append(...rows);
 }

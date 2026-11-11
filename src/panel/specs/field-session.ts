@@ -50,8 +50,8 @@ export function startEditing(session: FieldSession): void {
   node.classList.add("is-editing");
   node.focus();
   selectContents(node);
-  // One track of a grid is not a property of its own: it takes no token.
-  if (!session.field.whole) session.tokens = openTokens(session);
+  // A property with no kind of token (a grid's tracks) gets no list.
+  session.tokens = openTokens(session);
 }
 
 export function stopEditing(session: FieldSession): void {
