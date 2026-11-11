@@ -121,7 +121,8 @@
 @keyframes try-press { 0%, 100% { transform:none } 45% { transform:translateY(1px); box-shadow:inset 0 0 0 var(--color-black-25) } }
 @media (prefers-reduced-motion: reduce) { .try-hint, .try-hint kbd { transition:none; animation:none !important } }
 .npm-touch { display:none !important; }
-@media not all and (any-pointer: fine) { .try-it { display:none !important; } .npm-touch { display:inline-flex !important; } }
+.sub-touch { display:none; }
+@media not all and (any-pointer: fine) { .try-it { display:none !important; } .npm-touch { display:inline-flex !important; } .sub-fine { display:none; } .sub-touch { display:inline; } }
 </style></head>
 <body>
 <x-dc>
@@ -1322,7 +1323,7 @@ kbd.ac { color:var(--color-accent-soft); }
         <h2 id="keys-title" class="h2">Hold <span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span> and look</h2>
         <span class="dim" aria-hidden="true"><span>{{ d.keys }}</span></span>
       </span>
-      <p class="sub">Rather not hold a key? The pill at the bottom right keeps inspect mode on.</p>
+      <p class="sub"><span class="sub-fine">Rather not hold a key? The pill at the bottom right keeps inspect mode on.</span><span class="sub-touch">Groma needs a keyboard and a mouse or trackpad, so open this page on a computer to try it.</span></p>
     </div>
     <div class="keys">
       <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "hover"], "action": "Inspect"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>hover</kbd></div><div class="key-d"><b>Inspect.</b> The box model, plus a chip with the element's name and size.</div></div>
