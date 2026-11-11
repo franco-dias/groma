@@ -10,19 +10,10 @@ lists what is planned, in order. Move an item to the changelog when it ships.
 0.7 shipped the first part: edit in the Specs tab, the Edits tab with undo,
 and "Copy edits" for a coding agent. 0.8 made editing closer to Figma's: drag
 a number to change it, token suggestions while typing, and text edited right
-on the page ([CHANGELOG.md](../CHANGELOG.md)).
-
-## 0.9: Inspect parity
-
-- Effects: shadows, blurs, filters, gradients.
-- On a grid: the track lines drawn on the page, and `justify-content` and
-  `align-content`.
-- Colour format switch (hex, rgb, hsl) and contrast ratio.
-- "Copy as CSS" for the element's declared styles.
-- Assets: copy an SVG, download an image, show its natural size.
-- States: the `:hover`, `:focus` and `:disabled` rules that apply to the
-  element, read from the stylesheets.
-- Keyboard navigation to parent, child and sibling.
+on the page. 0.9 closed the gap to Figma's inspect panel: colour formats and
+contrast, Copy CSS, effects, states, assets, theme variables for shadows and
+transitions, keyboard navigation and grid track lines
+([CHANGELOG.md](../CHANGELOG.md)).
 
 ## 1.0: Agent bridge
 
@@ -40,7 +31,7 @@ on the page ([CHANGELOG.md](../CHANGELOG.md)).
   times its size because they bundle a UI library.
 - A ceiling for `dist/groma.js`: 60 KB gzipped at 1.0. Groma runs in
   development and staging builds, so the number is about staying an order of
-  magnitude lighter than such tools, not about every byte. 0.8.0 is 48.3 KB.
+  magnitude lighter than such tools, not about every byte. 0.9.0 is 57.3 KB.
 - The changelog says what each release added to the size, so a feature that
   costs several KB is a decision someone saw.
 

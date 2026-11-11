@@ -75,10 +75,12 @@ function inspect(target: unknown): void {
 }
 
 function watchAlt(): void {
-  onPage("keydown", (event) => {
+  // In the capture phase: the panel keeps the keys typed in it from the page,
+  // and Alt must be heard with the focus there too.
+  onPageCapture("keydown", (event) => {
     if (event.key === "Alt") holdAlt();
   });
-  onPage("keyup", (event) => {
+  onPageCapture("keyup", (event) => {
     if (event.key === "Alt") releaseAlt();
   });
   // The Alt keyup never arrives when the window loses focus first.

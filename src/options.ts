@@ -1,5 +1,7 @@
 /** What the user has switched on in the panel. Modules read these when they render. */
 
+import type { ColorFormat } from "./specs/color-format";
+
 export type Unit = "px" | "rem";
 
 /** "push": the panel takes its width out of the page. "float": it covers the page. */
@@ -8,6 +10,7 @@ export type PanelMode = "push" | "float";
 type Options = {
   panelMode: PanelMode;
   unit: Unit;
+  colorFormat: ColorFormat;
   gridStep: number;
   highlightPinned: boolean;
   hideDefaults: boolean;
@@ -21,6 +24,8 @@ export const options: Options = {
   panelMode: "push",
   /** How the Specs tab shows and copies lengths. */
   unit: "px",
+  /** How the Specs tab shows and copies colours. */
+  colorFormat: "hex",
   /** Artboard pixels between grid lines; 0 turns the grid off. */
   gridStep: 0,
   /** Outline the pinned element on the page. */

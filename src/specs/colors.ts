@@ -82,19 +82,6 @@ export function tokensWithValue(computedStyle: CSSStyleDeclaration, value: strin
     .toSorted(byNameLength);
 }
 
-/** "rgb(27, 26, 23)" -> "#1B1A17". A translucent colour keeps its alpha as a percentage. */
-export function formatColor(value: string): string {
-  const parts = /^rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)$/.exec(value);
-  if (!parts) return value;
-  const hex = parts
-    .slice(1, 4)
-    .map((channel) => Number(channel).toString(16).padStart(2, "0"))
-    .join("")
-    .toUpperCase();
-  const alpha = parts[4] === undefined ? "" : ` ${Math.round(Number(parts[4]) * 100)}%`;
-  return "#" + hex + alpha;
-}
-
 /** True when a CSS value starts like a colour, to decide whether to show a swatch. */
 export const isColorValue = (value: string): boolean =>
   /^(#|rgb|rgba|hsl|hsla|oklch|color\()/.test(value.trim());

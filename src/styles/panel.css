@@ -464,3 +464,8 @@
   font: 400 11px/16px var(--ins-font-sans);
   text-wrap: pretty;
 }
+
+/* The panel takes the focus when it is clicked, so the arrow keys can move the pin; no ring for that. */
+.panel:focus {
+  outline: none;
+}
