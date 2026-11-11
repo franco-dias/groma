@@ -131,7 +131,7 @@ It works on a file opened from disk and on a served page, in Chrome and
 other Chromium browsers. Groma is on npm, so you can also load it from a CDN with no copy step:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@0.6.3/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@0.7.0/dist/groma.js"></script>
 ```
 
 ## Learn more

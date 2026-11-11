@@ -67,10 +67,10 @@ Pin the version, so a later release cannot change a page that already
 works:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@0.6.3/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@0.7.0/dist/groma.js"></script>
 ```
 
-unpkg serves the same file at `https://unpkg.com/gromajs@0.6.3/dist/groma.js`.
+unpkg serves the same file at `https://unpkg.com/gromajs@0.7.0/dist/groma.js`.
 
 ## Use it on an app
 

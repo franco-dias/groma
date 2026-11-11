@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 0.7.0 (2026-11-11)
 
 - Changed: saved edits are no longer put back on the page by themselves, on
   load or when an element is pinned. On a page that renders late only some of

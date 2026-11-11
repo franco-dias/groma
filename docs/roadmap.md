@@ -7,25 +7,8 @@ place and hand the changes to a coding agent.
 What each shipped feature does is in [features.md](features.md). This file
 lists what is planned, in order. Move an item to the changelog when it ships.
 
-## 0.7: Copy changes for an agent
-
-The loop that does not exist yet: edit the page, then hand over what changed.
-
-- **Page-wide change list.** Every edited element with before → after per
-  property, a reset per item, and a before/after toggle for the whole page.
-- **Copy changes.** One Markdown block an agent can act on. Per element: the
-  selector, the component's name, its source path when the page gives one, a
-  snippet of its text, and each property's before → after. Also the page's
-  address and the viewport size.
-- **Token names in the export.** When a new value matches a token, the export
-  says so (`16px`, matches `--space-4`), so the agent uses the token and not
-  a raw value.
-- **Notes.** A plain-text instruction attached to an element ("make this
-  sticky"), with no edit needed. It travels in the same export.
-- **Undo and redo.**
-- **Edit values in the Specs tab**, not only in All CSS: a double-click on a
-  value turns it into a field. Moved here from 0.8, because it is what makes
-  editing quick enough for the rest to matter.
+0.7 shipped the first part: edit in the Specs tab, the Edits tab with undo,
+and "Copy edits" for a coding agent ([CHANGELOG.md](../CHANGELOG.md)).
 
 ## 0.8: Edit like Figma
 
@@ -54,8 +37,9 @@ The loop that does not exist yet: edit the page, then hand over what changed.
 
 ## Staying light
 
-- A size budget for `dist/groma.js`, checked by the build: 40 KB gzipped
-  (0.6.3 is 31 KB).
+- A size budget for `dist/groma.js`: 40 KB gzipped. 0.7.0 is 39.6 KB, so
+  the next features need the budget raised or something trimmed first. The
+  build does not check it yet.
 - No dependencies in `dist/`, as today.
 
 ## What stays out
