@@ -7,7 +7,7 @@
 import { h } from "../../dom";
 import { edit, type EditRequest, nudgeEdit, removeEdit } from "../../edits/changes";
 import { rerender } from "../../selection";
-import { nudgeValue, stepFor } from "../../specs/units";
+import { nudgeValue, stepFor, stepKindOf } from "../../specs/steps";
 import { type CssRow, createRowShell } from "./css-rows";
 
 /** The element a row edits, and where its edits are saved. */
@@ -48,7 +48,9 @@ function commit(editor: RowEditor, value: string): void {
 function nudgeNumber(editor: RowEditor, event: KeyboardEvent): void {
   const { valueElement, state } = editor;
   const direction = event.key === "ArrowUp" ? 1 : -1;
-  const next = nudgeValue(valueElement.textContent ?? "", { direction, step: stepFor(event) });
+  const text = valueElement.textContent ?? "";
+  const kind = stepKindOf(editor.row.name, text);
+  const next = nudgeValue(text, { direction, step: stepFor(event, kind), kind });
   if (next === undefined) return;
   event.preventDefault();
   valueElement.textContent = next;

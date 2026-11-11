@@ -25,14 +25,27 @@ pointer is a crosshair.
   its board. It sits above the element, or below when there is no room.
 - Click pins the element. The whole press (pointer and mouse down, up,
   click) is kept from the page.
+- While inspect mode is locked on, a double-click on an element that holds
+  only text (no child elements, not a form control) pins it and lets the user
+  type in it on the page. Enter (always: no line breaks) or a click elsewhere
+  applies; Esc puts the text back. The edit goes through `edit()` with
+  `CONTENT`, so it is saved, listed in the Edits tab, undone and copied like a
+  content edit made in the All CSS tab. Editing sets `contenteditable` and
+  `spellcheck` on the element, and puts each back exactly (absent stays
+  absent) on every way out: apply, cancel, the page removing the element,
+  another element being pinned, the lock being switched off. Typed keys do
+  not reach the inspector's or the page's shortcuts, and no hover is drawn
+  meanwhile. Not while Alt is only held, and not with the lock off. It works
+  in canvas mode.
 - Releasing Alt clears the overlay. So does the window losing focus,
   because the Alt keyup never arrives in that case.
 - The inspector never inspects its own UI.
 - Hovering the same element again does not redraw.
 - The box model scales with CSS transforms (a zoomed board).
 
-Code: `src/overlay/hover.ts`, `box-model.ts`, `tooltip.ts`, `layer.ts`.
-Tests: `tests/hover.test.ts`.
+Code: `src/overlay/hover.ts`, `box-model.ts`, `tooltip.ts`, `layer.ts`,
+`text-edit.ts`, `lend-attributes.ts`.
+Tests: `tests/hover.test.ts`, `tests/text-edit.test.ts`.
 
 ## 2. Measuring
 
@@ -177,8 +190,8 @@ it (see "Editing a value" below).
     off when one is left; + adds a track like the last one.
   - Then each track's size, as the page declares it (`repeat(3, 1fr)` is
     three sizes). A click copies it and a double-click edits it like any
-    value; a bare number means pixels, and an emptied field removes the
-    track.
+    value; a bare number means the unit the tab shows (pixels, or rem), and
+    an emptied field removes the track.
   - Before each size, a drawing says whether the track is fixed, hugs
     (`auto`, or a content size) or fills (a share of the space, `fr`). A
     click opens the menu of the three: hug writes `auto`, fill writes `1fr`,
@@ -189,7 +202,8 @@ it (see "Editing a value" below).
     lines, `subgrid`, a variable) stays one text value to edit, beside the
     number of tracks the browser laid out ("3 laid out"). So does a declared
     list that the browser did not lay out: a different number of columns, or
-    a pixel size that is not the track's.
+    a pixel size that is not the track's (for example from a `@container`
+    rule, which is not evaluated).
   - Rows are shown only when the page declares them; rows a grid adds by
     itself are not counted.
   - A grid with no declared columns shows no Columns row.
@@ -271,8 +285,66 @@ click still copies.
 - Enter or leaving the field applies; Esc cancels typing. Arrow keys change a
   number by 1 (Shift: 10, Alt: 0.1), applied live, as in the All CSS tab; a
   run of them is one step to undo. Emptying the field removes the edit.
-- A bare number is taken as pixels where the property wants a length (`24`
-  for a gap, `12 16` for the sides of a box), and stays a number where it is
+- **Opacity and other fractions.** A plain number that CSS keeps between 0
+  and 1 (`opacity`, `fill-opacity`, `stroke-opacity`, `flood-opacity`,
+  `stop-opacity`, `shape-image-threshold`) steps by 0.01, by 0.1 with Shift and
+  by 0.001 with Alt, for the arrow keys and the drag alike, and never leaves 0
+  to 1 (`stepKindOf` in `src/specs/steps.ts`). The All CSS tab's arrow keys
+  follow the same steps.
+- **Esc during a drag** cancels it: the value goes back to the one at the
+  press (the earlier edit, or none), the drag leaves no edit and no step to
+  undo, and the click that ends it still does not copy. That Esc is kept from
+  the launcher and the page. A new press after it starts a new drag.
+- **In rem mode** the field holds the length in rem (`0.5rem`, not `8px`), a
+  bare number typed is rem, and the saved value is the rem one (`1.5rem`; the
+  Edits tab shows `8px → 1.5rem`). A unit that was typed is kept. Arrow keys
+  and the drag step by 0.25, by 1 with Shift and by 0.0625 with Alt (one pixel
+  of a 16px root). Which step is used follows the text of the value: a length
+  in rem steps in rem; a plain number (weight, line height, grid placement)
+  and a length in px keep 1 / 10 / 0.1. The rem shown has up to three
+  decimals, as the cells have, so a value that is not a multiple of a
+  thousandth of a rem (13px is 0.8125rem) opens rounded.
+  Code: `src/specs/steps.ts`.
+- **Drag to scrub.** A value that is one number (`isOneNumber`: width, height,
+  gap, radius, opacity, each side of the box, font size, line height,
+  tracking, the size of a grid track, a numeric placement) changes when the
+  user presses on it and drags sideways, without opening the field: 1 per
+  pixel, 10 with Shift, 0.1 with Alt (the arrow keys' steps; a modifier
+  pressed mid-drag changes the step from there without a jump). It starts
+  after the pointer has moved 3 pixels; a press that moves less is still a
+  click, and a double-click still opens the field. The pointer is captured,
+  so the drag goes on outside the panel, with the `ew-resize` cursor. The
+  value is the one at the press plus the distance, so it does not drift; the
+  text changes in place and the tab redraws after the drag. The click that
+  ends a drag does not copy. One drag is one step to undo, however long it
+  lasts, and a drag that comes back to where it started leaves no edit
+  (`beginScrub` / `endScrub` in `edits/history.ts`). A result the browser
+  rejects (a negative width or padding) is not applied; a margin may go
+  negative. The tooltip says "drag to change" only on values that can be
+  dragged. Colours, keywords, lists (`12px 16px`) and the names "margin" and
+  "padding" are not dragged.
+- **Token suggestions.** While a value is a field, a list under it offers the
+  page's tokens (CSS variables the element sees; only those with the page's
+  token prefixes when it set some). A colour property (`color`,
+  `background-color`, `border-color`, `fill`, `stroke`) lists tokens whose
+  value is a colour; a length (sizes, gap, radius, the sides of the box, font
+  size, line height, letter spacing, stroke width) lists tokens whose value is
+  a length (`px`, `rem`, `calc()`…). Other properties, a grid track, and a page
+  with no such token get no list. Tokens that hold the field's value come
+  first (a colour in any spelling; a length compared in pixels, a bare number
+  being pixels), then those whose name contains the typed text, ignoring case
+  (`--sp` and `space` both find `--space-4`); each group by length of name.
+  At most 8, none while the field only holds what it opened with and no token
+  holds it. A click (which does not blur the field) or Enter on the
+  highlighted item writes `var(--token)` and closes the field. Arrow keys
+  still nudge a number; on text they walk the list. The first Esc closes a
+  list that has a highlight; the next cancels the field. The list sits in the
+  tab's scroll area, under the field or above it when there is no room, cut
+  to fit and scrolling when neither side has room. Names are cut with an
+  ellipsis, never a sideways scroll. Out of scope: All CSS fields, the colour
+  picker. Code: `src/panel/token-list/`, `src/specs/suggest.ts`.
+- A bare number is taken as pixels (rem, in rem mode) where the property
+  wants a length (`24` for a gap, `12 16` for the sides of a box), and stays a number where it is
   a value of its own (opacity, weight). A value the browser rejects is
   dropped.
 - The edit is the same as one from the All CSS tab: it goes through `edit()`
@@ -282,7 +354,9 @@ click still copies.
   The double-click itself still copies the value once, as its first click.
 
 Code: `src/panel/specs/` (`editable-field.ts`), `src/specs/*`. Tests:
-`tests/specs.test.ts`, `tests/specs-edit.test.ts`, unit tests in `src/specs/`.
+`tests/specs.test.ts`, `tests/specs-edit.test.ts`, `tests/specs-scrub.test.ts`,
+`tests/specs-grid.test.ts`, `tests/specs-tokens.test.ts`, unit tests in
+`src/specs/`.
 
 ## 6. Component
 
@@ -334,6 +408,12 @@ Text, Fill, Stroke, Picked).
 - **No token**: no token has that colour. The row is flagged.
 - Non-colour values declared with a token list it under the layout cells.
 
+- Declared values are read from the rules that apply now: a rule inside a
+  `@media` or `@supports` block that does not apply to the page (or to the
+  canvas frame) is skipped, so a mobile-only width does not win on a desktop
+  page. Token themes and modes still read every rule, since a dark theme sits
+  in a block that does not apply now. `@container` is not evaluated.
+
 Code: `src/specs/tokens.ts`, `colors.ts`, `src/page-styles.ts`.
 Tests: `tests/specs.test.ts`.
 
@@ -369,7 +449,8 @@ editable.
   typing.
 - Reset, or clearing the value, puts back the inline value the page had
   before the first edit.
-- Arrow keys change a number by 1 (Shift: 10, Alt: 0.1), applied live.
+- Arrow keys change a number by 1 (Shift: 10, Alt: 0.1), applied live;
+  opacity by 0.01 / 0.1 / 0.001, within 0 to 1.
 - The list keeps its scroll position after an edit, and focus follows to
   the row the user was moving to.
 - Tag, id, classes and rect rows are read-only.
@@ -382,8 +463,7 @@ editable.
   get some of them and not others, so the user decides.
   - When the page loads with edits saved on an earlier visit, a bar slides
     in under the tabs and says how many are not on the page, on every tab,
-    with "Discard" and "Apply" buttons. It slides out once they are applied
-    or discarded.
+    with "Discard" and "Apply" buttons. It slides out once they are applied.
   - The bar is only about edits from an earlier visit. An edit made during
     this visit never brings it up, even if the page draws the element again
     and the edit is gone from it; switching "Show original" on and off puts
@@ -394,6 +474,13 @@ editable.
     original page.
   - "Discard" removes the saved edits the bar counts and keeps those that
     are on the page. It is one step, which undo brings back; notes stay.
+    The bar then stays and reads "N edits discarded" ("1 edit discarded")
+    with one button, "Undo", which takes that step back and so puts the
+    edits on the page again; the bar then slides out. The notice also ends,
+    and the bar slides out, at the user's next edit, at an undo made
+    elsewhere (the Edits tab's bar, Ctrl/⌘ + Z) and when an element is
+    pinned. While shut the bar is out of reach of the keyboard and screen
+    readers. Code: `src/panel/edits/apply-bar.ts`, `discard-notice.ts`.
   - An edit whose element is not on the page is not counted: there is
     nothing to put it on. It is listed as "Not on the page now".
   - The edits stay listed in the Edits tab and can be copied whether they
@@ -582,6 +669,10 @@ hand it to whoever changes the source: a coding agent, or a person.
 - A click on a group's name pins that element. A group whose element the
   page no longer has says so, and cannot be pinned.
 - **↩ on a line** removes that edit and puts back the page's own value.
+- An edit that gives a property the value it had before its first edit
+  (`flex-direction` row → column → row) is not listed: it removes the edit,
+  as ↩ does. Values are compared as written (`red` is not `rgb(255, 0, 0)`).
+  Undo and redo walk each step through such a removal.
 - The list needs no pinned element: the tab also shows while the panel is
   open with nothing pinned.
 - **Notes.** With an element pinned, the top of the tab has a note field for
@@ -592,7 +683,8 @@ hand it to whoever changes the source: a coding agent, or a person.
 - **Undo and redo**: the two buttons in the bar, and Ctrl/⌘ + Z and
   Shift + Ctrl/⌘ + Z while the focus is in the panel and not in a field (a
   field undoes its own typing). They cover style edits, content edits, notes
-  and resets. A run of arrow-key nudges on one value is one step. The
+  and resets. A run of arrow-key nudges on one value is one step, and so is
+  a drag in the Specs tab (feature 5). The
   history is kept in memory: a reload keeps the edits and forgets the steps.
 - The bar's actions carry their names beside the icons: "Undo", "Redo" and
   "Show original". Below 360px of panel width the names drop and the icons

@@ -313,6 +313,20 @@ const bar = (): HTMLElement => ui(".apply-bar")!;
 
 const barShown = (): boolean => getComputedStyle(bar()).visibility === "visible";
 
+/**
+ * Two edits saved on an earlier visit, discarded from the bar. The page
+ * remembers which values it has seen, so every test passes a `seed` that no
+ * other test uses.
+ */
+function discardTwo(seed: number): void {
+  localStorage.setItem(
+    "__groma_overrides:" + location.pathname,
+    JSON.stringify({ "#fixture .title": { "padding-top": `${seed}px`, "margin-top": `${seed + 1}px` } }),
+  );
+  inspector().pin(getElement(".text"));
+  action("discard-edits").click();
+}
+
 // Saved edits used to be put back when an element was pinned (and when the
 // page loaded). They no longer are: the panel says which edits of an earlier
 // visit are not on the page and the user applies them, so the test for the
@@ -351,7 +365,9 @@ describe("edits saved on an earlier visit", () => {
     expect(getComputedStyle(getElement(".title")).paddingTop).toBe("12px");
     expect(barShown()).toBe(true);
     expect(texts(".apply-text")).toEqual(["3 saved edits are not on the page"]);
-    expect(texts(".apply-bar button")).toEqual(["Discard", "Apply"]);
+    // The bar also holds the Undo of a discard, which is out of sight until then.
+    expect(texts(".apply-bar button").slice(0, 2)).toEqual(["Discard", "Apply"]);
+    expect(getComputedStyle(ui('[data-action="undo-discard"]')!).display).toBe("none");
     for (const tab of ["specs", "css", "layers", "edits"]) {
       openTab(tab);
       expect(barShown()).toBe(true);
@@ -375,7 +391,8 @@ describe("edits saved on an earlier visit", () => {
     expect(barShown()).toBe(true);
 
     action("discard-edits").click();
-    expect(barShown()).toBe(false);
+    // Changed with 0.8: the bar stays after Discard, to offer the way back (see "after Discard").
+    expect(barShown()).toBe(true);
     openTab("edits");
     expect(rows()).toEqual(["colorrgb(0, 0, 0) → blue↩"]);
     expect(getComputedStyle(getElement(".text")).color).toBe("rgb(0, 0, 255)");
@@ -384,6 +401,78 @@ describe("edits saved on an earlier visit", () => {
     action("undo").click();
     expect(rows()).toHaveLength(3);
     expect(getComputedStyle(getElement(".title")).paddingTop).toBe("23px");
+  });
+
+  describe("after Discard", () => {
+    it("says how many were discarded, with one button to take it back", () => {
+      discardTwo(41);
+
+      expect(barShown()).toBe(true);
+      expect(texts(".apply-text")).toEqual(["2 edits discarded"]);
+      expect(all(".apply-bar button").filter((button) => button.offsetParent !== null)).toHaveLength(1);
+      expect(texts(".apply-bar button").filter(Boolean)).toContain("Undo");
+    });
+
+    it("says 1 edit for one", () => {
+      savedBefore({ "#fixture .title": { "padding-bottom": "33px" } });
+      inspector().pin(getElement(".text"));
+      action("discard-edits").click();
+
+      expect(texts(".apply-text")).toEqual(["1 edit discarded"]);
+    });
+
+    it("puts the edits back on the page with Undo, and the bar goes", () => {
+      discardTwo(43);
+      action("undo-discard").click();
+
+      expect(getComputedStyle(getElement(".title")).paddingTop).toBe("43px");
+      expect(getComputedStyle(getElement(".title")).marginTop).toBe("44px");
+      expect(barShown()).toBe(false);
+      expect(bar().classList.contains("is-off")).toBe(true);
+    });
+
+    it("ends when another element is pinned", () => {
+      discardTwo(45);
+      expect(barShown()).toBe(true);
+      inspector().pin(getElement(".title"));
+
+      expect(barShown()).toBe(false);
+    });
+
+    it("ends at the next edit", () => {
+      discardTwo(47);
+      expect(barShown()).toBe(true);
+      editStyle(".text", { property: "color", value: "blue" });
+
+      expect(barShown()).toBe(false);
+    });
+
+    it("ends at an undo from the Edits tab, which takes the discard back", () => {
+      discardTwo(49);
+      expect(barShown()).toBe(true);
+      openTab("edits");
+      action("undo").click();
+
+      expect(barShown()).toBe(false);
+      expect(getComputedStyle(getElement(".title")).paddingTop).toBe("49px");
+    });
+
+    it("keeps its buttons from the keyboard once it is shut", () => {
+      discardTwo(51);
+      action("undo-discard").click();
+
+      expect(getComputedStyle(bar()).visibility).toBe("hidden");
+    });
+
+    it("fits a panel 320px wide with no sideways scroll", () => {
+      ui(".panel")!.style.width = "320px";
+      discardTwo(53);
+      const inner = ui(".apply-inner")!;
+
+      expect(ui(".panel")!.offsetWidth).toBe(320);
+      expect(inner.scrollWidth).toBeLessThanOrEqual(inner.clientWidth);
+      expect(inner.getBoundingClientRect().height).toBeLessThan(60);
+    });
   });
 
   it("stays away while the user looks at the original page", () => {

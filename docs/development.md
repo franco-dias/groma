@@ -74,12 +74,12 @@ Start at [src/main.ts](../src/main.ts): it only starts the features.
 | `src/root.ts`           | The shadow root that isolates the inspector from the page's CSS                                                                                      |
 | `src/page.ts`           | The page being inspected: this document, or the canvas frame's. Its document, its listeners and where its elements are on screen                     |
 | `src/canvas/`           | Canvas mode: the page in a frame to resize and zoom; `view.ts` holds the arithmetic                                                                  |
-| `src/overlay/`          | Inspect mode: hover boxes, distances, name chip, layer menu                                                                                          |
+| `src/overlay/`          | Inspect mode: hover boxes, distances, name chip, layer menu, text editing in place                                                                   |
 | `src/outlines.ts`       | Outline and name tag of the pinned element, hover outline, grid                                                                                      |
 | `src/launcher.ts`       | The launcher pill and the inspect lock                                                                                                               |
 | `src/panel/`            | The side panel, its markup (`panel.html`) and the tabs: `specs/`, `css/`, `edits/` and `changes/` hold the tabs that are several files               |
 | `src/config.ts`         | The settings a page can give the inspector                                                                                                           |
-| `src/specs/`            | What the Specs tab knows: sections and their rows, tokens, colours, units, sizing, tracks, motion; logic with no page in it                          |
+| `src/specs/`            | What the Specs tab knows: sections and their rows, tokens, colours, units, steps, sizing, tracks, motion; logic with no page in it                   |
 | `src/specs/components/` | One reader per way a page can name its components                                                                                                    |
 | `src/edits/`            | The user's edits: selectors, storage, apply and replay, `changes.ts` to make one, `history.ts` for undo, the text "Copy edits" writes (`handoff.ts`) |
 | `src/export-diff.ts`    | Comparing two Claude Design exports                                                                                                                  |
@@ -97,7 +97,8 @@ a folder with an entry file and its modules) and one entry in
 `src/panel/specs/specs-tab.ts` assembles one module per block (`layout-block.ts`,
 `box-block.ts`, `color-block.ts`, `typography-block.ts`, `motion-block.ts`,
 `component-block.ts`, `compare-block.ts`), the element header, the action bar
-and the editable value (`editable-field.ts`).
+and the editable value (`editable-field.ts`, with `value-scrub.ts` for dragging
+a number).
 
 If you are going to change the code, read [AGENTS.md](../AGENTS.md) first. It
 holds the rules that keep the inspector safe to run on pages it does not

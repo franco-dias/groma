@@ -3,7 +3,7 @@
  *
  * A step is one change of one value. Steps made together (one choice of the
  * user that sets several properties) are undone together, and a run of small
- * steps on one value (arrow keys) is one step.
+ * steps on one value (arrow keys, a drag) is one step.
  */
 import { applyValue, findEdited } from "./edit-values";
 
@@ -16,6 +16,8 @@ type Step = {
   nudgedAt: number;
   /** Steps made together share a number and are undone together; 0 for a step on its own. */
   group: number;
+  /** The drag that made it, so the rest of that drag joins it; 0 for any other step. */
+  scrub: number;
 };
 
 /** A change of one value, with what it was. */
@@ -32,6 +34,27 @@ const undone: Step[] = [];
 let group = 0;
 let groups = 0;
 
+let scrub = 0;
+let scrubs = 0;
+
+let version = 0;
+
+/** A number that changes with every edit, undo and redo, so a caller can tell that the history moved on. */
+export const historyVersion = (): number => version;
+
+/**
+ * Starts a drag on a value: until `endScrub`, every edit of the same
+ * property joins one step to undo, however long the drag lasts or pauses.
+ * A drag that comes back to where it started leaves no step.
+ */
+export function beginScrub(): void {
+  scrub = ++scrubs;
+}
+
+export function endScrub(): void {
+  scrub = 0;
+}
+
 /**
  * Makes the edits of `make` one step to undo: one choice of the user that
  * sets several properties (a width that fills its parent).
@@ -45,9 +68,10 @@ export function together(make: () => void): void {
   }
 }
 
-/** A nudge joins the last step of the same value when it follows closely. */
+/** A drag joins by its own number; a nudge by the time since the last one. */
 function joins(last: Step, change: Change & { nudgedAt: number }): boolean {
   if (last.selector !== change.selector || last.prop !== change.prop) return false;
+  if (scrub) return last.scrub === scrub;
   return change.nudgedAt > 0 && change.nudgedAt - last.nudgedAt < MERGE_MS;
 }
 
@@ -56,10 +80,11 @@ function joins(last: Step, change: Change & { nudgedAt: number }): boolean {
  * for any other edit.
  */
 export function recordChange(change: Change, nudgedAt: number): void {
+  version++;
   undone.length = 0;
   const last = done.at(-1);
   if (!last || !joins(last, { ...change, nudgedAt })) {
-    done.push({ ...change, nudgedAt, group });
+    done.push({ ...change, nudgedAt, group, scrub });
     return;
   }
   last.to = change.to;
@@ -72,6 +97,7 @@ export const canRedo = (): boolean => undone.length > 0;
 
 /** Moves the last step of `from` to `to`, with the steps made together with it. */
 function move({ from, to }: { from: Step[]; to: Step[] }, valueOf: (step: Step) => string | undefined): void {
+  version++;
   let step = from.pop();
   while (step) {
     const { selector, prop } = step;
