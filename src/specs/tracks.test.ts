@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { countTracks, formatTracks, parseTracks, trackIntent, trackSize, tracksMatch } from "./tracks";
+import {
+  countTracks,
+  formatTracks,
+  parseTracks,
+  trackIntent,
+  gridPlacement,
+  trackSize,
+  tracksMatch,
+  tracksMatchAtLeast,
+} from "./tracks";
 
 describe("parseTracks", () => {
   it("gives one size per track", () => {
@@ -17,13 +26,13 @@ describe("parseTracks", () => {
   });
 
   it("turns down a list that is not one size per track", () => {
-    expect(parseTracks("")).toBeNull();
-    expect(parseTracks("none")).toBeNull();
-    expect(parseTracks("repeat(auto-fill, minmax(200px, 1fr))")).toBeNull();
-    expect(parseTracks("[full-start] 1fr [full-end]")).toBeNull();
-    expect(parseTracks("subgrid")).toBeNull();
-    expect(parseTracks("var(--columns)")).toBeNull();
-    expect(parseTracks("inherit")).toBeNull();
+    expect(parseTracks("")).toBeUndefined();
+    expect(parseTracks("none")).toBeUndefined();
+    expect(parseTracks("repeat(auto-fill, minmax(200px, 1fr))")).toBeUndefined();
+    expect(parseTracks("[full-start] 1fr [full-end]")).toBeUndefined();
+    expect(parseTracks("subgrid")).toBeUndefined();
+    expect(parseTracks("var(--columns)")).toBeUndefined();
+    expect(parseTracks("inherit")).toBeUndefined();
   });
 });
 
@@ -67,21 +76,34 @@ describe("a track's sizing intent", () => {
 
 describe("tracksMatch", () => {
   it("takes a list with the number of tracks the browser laid out", () => {
-    expect(tracksMatch(["1fr", "1fr"], ["100px", "100px"], false)).toBe(true);
+    expect(tracksMatch(["1fr", "1fr"], ["100px", "100px"])).toBe(true);
     // The declaration of another breakpoint.
-    expect(tracksMatch(["1fr"], ["100px", "100px"], false)).toBe(false);
+    expect(tracksMatch(["1fr"], ["100px", "100px"])).toBe(false);
   });
 
   it("lets a grid add rows of its own", () => {
-    expect(tracksMatch(["40px"], ["40px", "80px"], true)).toBe(true);
-    expect(tracksMatch(["40px", "1fr", "1fr"], ["40px", "80px"], true)).toBe(false);
+    expect(tracksMatchAtLeast(["40px"], ["40px", "80px"])).toBe(true);
+    expect(tracksMatchAtLeast(["40px", "1fr", "1fr"], ["40px", "80px"])).toBe(false);
   });
 
   it("takes a pixel size that layout snapped to a fraction of a pixel", () => {
-    expect(tracksMatch(["102.656px", "1fr"], ["102.641px", "200px"], false)).toBe(true);
+    expect(tracksMatch(["102.656px", "1fr"], ["102.641px", "200px"])).toBe(true);
   });
 
   it("turns down a pixel size the browser did not use", () => {
-    expect(tracksMatch(["200px", "1fr"], ["120px", "80px"], false)).toBe(false);
+    expect(tracksMatch(["200px", "1fr"], ["120px", "80px"])).toBe(false);
+  });
+});
+
+describe("gridPlacement", () => {
+  it("keeps what places a grid item", () => {
+    expect(gridPlacement("span 2")).toBe("span 2");
+    expect(gridPlacement("1 / 3")).toBe("1 / 3");
+    expect(gridPlacement("2 / auto")).toBe("2");
+  });
+
+  it("is empty when the grid decides", () => {
+    expect(gridPlacement("auto")).toBe("");
+    expect(gridPlacement("auto / auto")).toBe("");
   });
 });

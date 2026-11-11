@@ -1,6 +1,6 @@
 /** Transitions and animations of an element, one item per property. */
 
-export interface MotionItem {
+export type MotionItem = {
   /** The transitioned property, or the animation's name. */
   property: string;
   duration: string;
@@ -8,7 +8,7 @@ export interface MotionItem {
   easing: string;
   /** The same timing function as cubic-bezier numbers, for drawing its curve. */
   curve: number[];
-}
+};
 
 const KEYWORD_CURVES: Record<string, number[]> = {
   linear: [0, 0, 1, 1],
@@ -27,16 +27,19 @@ export function easingCurve(easing: string): number[] {
 /** Splits a CSS list on the commas that are not inside parentheses. */
 const listItems = (value: string): string[] => value.split(/,\s*(?![^(]*\))/);
 
-/** Pairs up the parallel lists CSS keeps for properties, durations and easings. */
-function zip(properties: string, durations: string, easings: string): MotionItem[] {
+/** The parallel lists CSS keeps for properties, durations and easings. */
+type MotionLists = { properties: string; durations: string; easings: string };
+
+/** Pairs up the parallel lists; a shorter list repeats. */
+function pairUp({ properties, durations, easings }: MotionLists): MotionItem[] {
   const durationList = listItems(durations);
   const easingList = listItems(easings);
   return listItems(properties)
-    .map((property, i) => {
-      const easing = easingList[i % easingList.length];
+    .map((property, index) => {
+      const easing = easingList[index % easingList.length];
       return {
         property,
-        duration: durationList[i % durationList.length],
+        duration: durationList[index % durationList.length],
         easing,
         curve: easingCurve(easing),
       };
@@ -44,11 +47,17 @@ function zip(properties: string, durations: string, easings: string): MotionItem
     .filter((item) => /[1-9]/.test(item.duration));
 }
 
-export function motionItems(cs: CSSStyleDeclaration): MotionItem[] {
-  const transitions = zip(cs.transitionProperty, cs.transitionDuration, cs.transitionTimingFunction);
-  const animations =
-    cs.animationName === "none"
-      ? []
-      : zip(cs.animationName, cs.animationDuration, cs.animationTimingFunction);
+export function motionItems(computedStyle: CSSStyleDeclaration): MotionItem[] {
+  const transitions = pairUp({
+    properties: computedStyle.transitionProperty,
+    durations: computedStyle.transitionDuration,
+    easings: computedStyle.transitionTimingFunction,
+  });
+  if (computedStyle.animationName === "none") return transitions;
+  const animations = pairUp({
+    properties: computedStyle.animationName,
+    durations: computedStyle.animationDuration,
+    easings: computedStyle.animationTimingFunction,
+  });
   return [...transitions, ...animations];
 }

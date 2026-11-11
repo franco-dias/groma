@@ -12,13 +12,29 @@ and "Copy edits" for a coding agent ([CHANGELOG.md](../CHANGELOG.md)).
 
 ## 0.8: Edit like Figma
 
-- Drag a number to scrub it.
-- Suggest the page's tokens while typing a value, and when picking a colour.
-- Double-click text on the page to edit it in place.
+In this order:
+
+1. **Read declared values correctly.** The style lookup takes the last
+   declaration in the stylesheets, even inside a media query that does not
+   apply now. It is the known limit behind wrong grid columns and wrong token
+   names, and token suggestions build on it.
+2. **Drag a number to scrub it**: sizes, gap, radius, the sides of the box,
+   font size, grid tracks. One drag is one step to undo.
+3. **Suggest the page's tokens while typing a value**: a short list under the
+   field, by the kind of value (colours for a colour, lengths for a spacing).
+   Choosing one writes `var(--token)`.
+4. **Double-click text on the page to edit it in place**, while inspect mode
+   is locked on.
+5. **Left over from 0.7:**
+   - in rem mode the fields still hold pixels;
+   - an edit that ends where it started stays listed (`row → row`);
+   - after "Discard", nothing on screen offers the way back.
 
 ## 0.9: Inspect parity
 
 - Effects: shadows, blurs, filters, gradients.
+- On a grid: the track lines drawn on the page, and `justify-content` and
+  `align-content`.
 - Colour format switch (hex, rgb, hsl) and contrast ratio.
 - "Copy as CSS" for the element's declared styles.
 - Assets: copy an SVG, download an image, show its natural size.
@@ -37,10 +53,14 @@ and "Copy edits" for a coding agent ([CHANGELOG.md](../CHANGELOG.md)).
 
 ## Staying light
 
-- A size budget for `dist/groma.js`: 40 KB gzipped. 0.7.0 is 39.6 KB, so
-  the next features need the budget raised or something trimmed first. The
-  build does not check it yet.
-- No dependencies in `dist/`, as today.
+- No dependencies in `dist/`, no framework, one file. These rules are what
+  keep the script small: in-page tools with a panel are usually several
+  times its size because they bundle a UI library.
+- A ceiling for `dist/groma.js`: 60 KB gzipped at 1.0. Groma runs in
+  development and staging builds, so the number is about staying an order of
+  magnitude lighter than such tools, not about every byte. 0.7.1 is 43.8 KB.
+- The changelog says what each release added to the size, so a feature that
+  costs several KB is a decision someone saw.
 
 ## What stays out
 

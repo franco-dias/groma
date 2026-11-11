@@ -9,33 +9,44 @@ function split(list: string): string[] {
   const parts: string[] = [];
   let depth = 0;
   let part = "";
-  for (const char of list.trim()) {
-    if ("([".includes(char)) depth++;
-    if (")]".includes(char)) depth--;
-    if (char === " " && depth === 0) {
-      if (part) parts.push(part);
-      part = "";
-    } else part += char;
-  }
+  const addChar = (char: string): void => {
+    depth += bracketDepthChange(char);
+    if (char !== " " || depth > 0) {
+      part += char;
+      return;
+    }
+    if (part) parts.push(part);
+    part = "";
+  };
+  [...list.trim()].forEach(addChar);
   if (part) parts.push(part);
   return parts;
+}
+
+function bracketDepthChange(char: string): number {
+  if ("([".includes(char)) return 1;
+  return ")]".includes(char) ? -1 : 0;
 }
 
 /** `repeat(3, 1fr 2fr)`, with a plain number of times. */
 const REPEAT = /^repeat\(\s*(\d+)\s*,(.*)\)$/;
 
+const UNSUPPORTED_LIST = /\[|auto-fi|subgrid|masonry|var\(|^(none|inherit|initial|unset|revert(-layer)?)$/;
+
 /**
  * The size of each track of a declared `grid-template-columns` or `-rows`,
- * with `repeat(3, 1fr)` written out. Null for a list that is not one size per
- * track: `none`, named lines, `auto-fill`, `subgrid`, a variable.
+ * with `repeat(3, 1fr)` written out. Undefined for a list that is not one size
+ * per track: `none`, named lines, `auto-fill`, `subgrid`, a variable.
  */
-export function parseTracks(declared: string): string[] | null {
-  if (!declared || /\[|auto-fi|subgrid|masonry|var\(|^(none|inherit|initial|unset|revert(-layer)?)$/.test(declared)) return null;
-  const tracks = split(declared).flatMap((part) => {
-    const [, times, inner] = REPEAT.exec(part) ?? [];
-    return times ? Array.from({ length: Number(times) }, () => split(inner)).flat() : [part];
-  });
-  return tracks.length ? tracks : null;
+export function parseTracks(declared: string): string[] | undefined {
+  if (!declared || UNSUPPORTED_LIST.test(declared)) return undefined;
+  const tracks = split(declared).flatMap(expandRepeat);
+  return tracks.length ? tracks : undefined;
+}
+
+function expandRepeat(part: string): string[] {
+  const [, times, inner] = REPEAT.exec(part) ?? [];
+  return times ? Array.from({ length: Number(times) }, () => split(inner)).flat() : [part];
 }
 
 /** The track list for those sizes: `repeat(3, 1fr)` when they are all the same. */
@@ -58,21 +69,37 @@ export function trackIntent(track: string): Intent {
 }
 
 /** What each intent writes for a track; `used` is the track's size now, for "fixed". */
-export const trackSize = (intent: Intent, used: string): string =>
-  intent === "fill" ? "1fr" : intent === "hug" ? "auto" : used;
+export function trackSize(intent: Intent, used: string): string {
+  const sizes = { fill: "1fr", hug: "auto", fixed: used } satisfies Record<Intent, string>;
+  return sizes[intent];
+}
+
+/** Layout snaps a size to a fraction of a pixel: "102.656px" is laid out as 102.641. */
+function sizesMatch(tracks: string[], used: string[]): boolean {
+  return tracks.every(
+    (track, index) =>
+      !/^[\d.]+px$/.test(track) || Math.abs(parseFloat(track) - parseFloat(used[index])) < 0.5,
+  );
+}
 
 /**
  * Whether a declared list is the one the browser laid out: the same number
- * of tracks (`atLeast` for rows, where a grid adds its own), and the sizes in
- * pixels where the list gives them.
+ * of tracks, and the sizes in pixels where the list gives them.
  *
  * shortcut: the declared value is the last one in the stylesheets, even from
  * a media query that does not apply now; this turns down the common case (a
  * different number of columns per breakpoint), not every one. Upgrade when
  * the page's style lookup knows which media queries match.
  */
-export function tracksMatch(tracks: string[], used: string[], atLeast: boolean): boolean {
-  const count = atLeast ? used.length >= tracks.length : used.length === tracks.length;
-  // Layout snaps a size to a fraction of a pixel: "102.656px" is laid out as 102.641.
-  return count && tracks.every((track, i) => !/^[\d.]+px$/.test(track) || Math.abs(parseFloat(track) - parseFloat(used[i])) < 0.5);
+export function tracksMatch(tracks: string[], used: string[]): boolean {
+  return used.length === tracks.length && sizesMatch(tracks, used);
 }
+
+/** Like `tracksMatch` for rows, where a grid adds rows of its own: at least that many. */
+export function tracksMatchAtLeast(tracks: string[], used: string[]): boolean {
+  return used.length >= tracks.length && sizesMatch(tracks, used);
+}
+
+/** "span 2" or "1 / 3": the columns or rows a grid item takes; "" when the grid decides. */
+export const gridPlacement = (value: string): string =>
+  value.replace(/^auto( \/ auto)?$/, "").replace(/ \/ auto$/, "");

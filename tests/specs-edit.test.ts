@@ -1,5 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { clipboard, el, inspector, openTab, page, pressKey, reset, texts, ui, wait } from "./helpers";
+import {
+  clipboard,
+  getElement,
+  inspector,
+  openTab,
+  page,
+  pressKey,
+  pressShortcut,
+  reset,
+  texts,
+  ui,
+  wait,
+} from "./helpers";
 
 /** The value in the Specs tab that edits a CSS property. */
 const value = (property: string): HTMLElement => ui(`.body[data-for="specs"] [data-edits="${property}"]`)!;
@@ -31,7 +43,7 @@ beforeEach(() => {
       margin-top: 4px; color: rgb(0, 128, 0); background-color: rgba(0, 0, 0, 0.5); border-radius: 4px;
       font-size: 14px; opacity: 0.8">Card</div>
   `);
-  card = el(".card");
+  card = getElement(".card");
   inspector().pin(card);
 });
 
@@ -164,7 +176,7 @@ describe("editing a value in the Specs tab", () => {
     const gap = value("gap");
     doubleClick(gap);
     pressKey(gap, "ArrowUp");
-    pressKey(gap, "ArrowUp", { shiftKey: true });
+    pressShortcut(gap, { key: "ArrowUp", shiftKey: true });
     expect(getComputedStyle(card).gap).toBe("19px");
     expect(gap.textContent).toBe("19px");
     gap.dispatchEvent(new FocusEvent("blur"));
@@ -198,7 +210,9 @@ describe("editing a value in the Specs tab", () => {
   it("leaves values made of several properties to copy only", () => {
     const labels = texts(".cell .label, .wide .label");
     expect(labels).toContain("Display");
-    const editableLabels = Array.from(document.querySelector("groma-inspector")!.shadowRoot!.querySelectorAll(".cell, .wide"))
+    const editableLabels = Array.from(
+      document.querySelector("groma-inspector")!.shadowRoot!.querySelectorAll(".cell, .wide"),
+    )
       .filter((row) => row.querySelector("[data-edits]"))
       .map((row) => row.querySelector(".label")!.textContent);
     expect(editableLabels).toEqual(expect.arrayContaining(["Display", "Gap", "Radius", "Size", "Weight"]));
@@ -207,30 +221,40 @@ describe("editing a value in the Specs tab", () => {
   });
 });
 
+const colour = (label: string): string => {
+  const row = Array.from(ui('.body[data-for="specs"]')!.querySelectorAll(".cell, .wide")).find(
+    (candidate) => candidate.querySelector(".label")!.textContent === label,
+  )!;
+  return getComputedStyle(row.querySelector(".value")!).color;
+};
+
 describe("telling editable values from the rest", () => {
   it("dims the values that only copy", () => {
-    const colour = (label: string): string => {
-      const row = Array.from(ui('.body[data-for="specs"]')!.querySelectorAll(".cell, .wide")).find(
-        (candidate) => candidate.querySelector(".label")!.textContent === label,
-      )!;
-      return getComputedStyle(row.querySelector(".value")!).color;
-    };
-    page(`<div class="card" style="display: flex; position: relative; top: 2px; border: 1px solid red">Card</div>`);
-    inspector().pin(el(".card"));
+    page(
+      `<div class="card" style="display: flex; position: relative; top: 2px; border: 1px solid red">Card</div>`,
+    );
+    inspector().pin(getElement(".card"));
 
     expect(colour("Border")).toBe(colour("Position"));
     expect(colour("Border")).not.toBe(colour("Display"));
   });
 });
 
+const control = (prop: string): HTMLElement => ui(`.flex-control[data-prop="${prop}"]`)!;
+
+const turn = (prop: string, choice: string): string =>
+  getComputedStyle(control(prop).querySelector(`[data-value="${choice}"] .icon`)!).transform;
+
+const press = (prop: string, choice: string): void =>
+  control(prop).querySelector<HTMLElement>(`[data-value="${choice}"]`)!.click();
+
+const checked = (prop: string): string[] =>
+  Array.from(
+    control(prop).querySelectorAll<HTMLElement>('[aria-checked="true"]'),
+    (node) => node.dataset.value!,
+  );
+
 describe("a flex container's direction and alignment", () => {
-  const control = (prop: string): HTMLElement => ui(`.flex-control[data-prop="${prop}"]`)!;
-  const checked = (prop: string): string[] =>
-    Array.from(control(prop).querySelectorAll<HTMLElement>('[aria-checked="true"]'), (node) => node.dataset.value!);
-  const press = (prop: string, choice: string): void =>
-    control(prop).querySelector<HTMLElement>(`[data-value="${choice}"]`)!.click();
-  const turn = (prop: string, choice: string): string =>
-    getComputedStyle(control(prop).querySelector(`[data-value="${choice}"] .icon`)!).transform;
   const TURNED = "matrix(0, 1, -1, 0, 0, 0)";
 
   it("shows them as buttons, with the current value checked and the defaults read as what they do", () => {
@@ -304,31 +328,33 @@ describe("a flex container's direction and alignment", () => {
 
   it("shows a value no button stands for as text to edit", () => {
     page(`<div class="card" style="display: flex; align-items: baseline">Card</div>`);
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(checked("align-items")).toEqual([]);
     expect(value("align-items").textContent).toBe("baseline");
   });
 
   it("is not there for an element that is not a flex container", () => {
     page(`<div class="card">Card</div>`);
-    inspector().pin(el(".card"));
+    inspector().pin(getElement(".card"));
     expect(ui(".flex-controls")).toBeNull();
   });
 });
 
-describe("fixed, hug and fill", () => {
-  const intents = (): string[] => texts(".intent");
-  /** Opens the menu of an axis and picks an intent. */
-  function choose(axis: "width" | "height", intent: string): void {
-    ui(`.intent.is-${axis}`)!.click();
-    ui(`.row-menu [data-value="${intent}"]`)!.click();
-  }
-  const pinChild = (html: string): HTMLElement => {
-    page(html);
-    inspector().pin(el(".child"));
-    return el(".child");
-  };
+const pinChild = (html: string): HTMLElement => {
+  page(html);
+  inspector().pin(getElement(".child"));
+  return getElement(".child");
+};
 
+/** Opens the menu of an axis and picks an intent. */
+function choose(axis: "width" | "height", intent: string): void {
+  ui(`.intent.is-${axis}`)!.click();
+  ui(`.row-menu [data-value="${intent}"]`)!.click();
+}
+
+const intents = (): string[] => texts(".intent");
+
+describe("fixed, hug and fill", () => {
   it("opens a menu on the intent, with the current one checked, and closes it on a click elsewhere", () => {
     pinChild(`<div style="width: 400px"><div class="child" style="width: 120px">Child</div></div>`);
     ui(".intent.is-width")!.click();
@@ -344,7 +370,9 @@ describe("fixed, hug and fill", () => {
   });
 
   it("sizes a child of a block with its width alone", () => {
-    const child = pinChild(`<div style="width: 400px"><div class="child" style="width: 120px">Child</div></div>`);
+    const child = pinChild(
+      `<div style="width: 400px"><div class="child" style="width: 120px">Child</div></div>`,
+    );
     choose("width", "fill");
     expect(child.style.width).toBe("100%");
     expect(child.offsetWidth).toBe(400);
@@ -401,25 +429,21 @@ describe("fixed, hug and fill", () => {
 
 afterEach(() => wait(0));
 
-describe("what the stress test on a real design found", () => {
-  const intents = (): string[] => texts(".intent");
-  function choose(axis: "width" | "height", intent: string): void {
-    ui(`.intent.is-${axis}`)!.click();
-    ui(`.row-menu [data-value="${intent}"]`)!.click();
-  }
-  const pinChild = (html: string): HTMLElement => {
-    page(html);
-    inspector().pin(el(".child"));
-    return el(".child");
-  };
+const stage = (style: string) =>
+  pinChild(`
+    <div style="position: relative; width: 300px; height: 200px">
+      <div class="child" style="position: absolute; ${style}">Child</div>
+    </div>
+  `);
 
+describe("what the stress test on a real design found", () => {
   it("makes no edit on an element the page has removed, and keeps working", () => {
     card.remove();
     retype("gap", "20px");
     expect(editRows()).toEqual([]);
 
     page(`<div class="other" style="display: flex; gap: 4px">Other</div>`);
-    inspector().pin(el(".other"));
+    inspector().pin(getElement(".other"));
     expect(value("gap").textContent).toBe("4");
   });
 
@@ -456,18 +480,12 @@ describe("what the stress test on a real design found", () => {
     expect(intents()[0]).toBe("fill");
     choose("width", "fill");
 
-    expect(el(".child").style.width).toBe("");
+    expect(getElement(".child").style.width).toBe("");
     expect(ui(".row-menu")).toBeNull();
     expect(editRows()).toEqual([]);
   });
 
   it("reads an absolute element by the sides it is pinned to", () => {
-    const stage = (style: string) =>
-      pinChild(`
-        <div style="position: relative; width: 300px; height: 200px">
-          <div class="child" style="position: absolute; ${style}">Child</div>
-        </div>
-      `);
     stage("top: 0; bottom: 0; left: 0");
     expect(intents()).toEqual(["hug", "fill"]);
 

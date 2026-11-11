@@ -6,6 +6,7 @@
  * the way a user does (Alt, hover, click) and read its UI from its shadow
  * root with `ui()` and `all()`.
  */
+// oxlint-disable-next-line import/no-unassigned-import -- importing it starts the inspector, as a script tag would
 import "../src/main";
 
 const FIXTURE_ID = "fixture";
@@ -32,8 +33,8 @@ export function page(html: string): HTMLElement {
 }
 
 /** An element of the test page; throws when it is missing. */
-export function el<T extends HTMLElement = HTMLElement>(selector: string): T {
-  const found = document.querySelector<T>(`#${FIXTURE_ID} ${selector}`);
+export function getElement<TElement extends HTMLElement = HTMLElement>(selector: string): TElement {
+  const found = document.querySelector<TElement>(`#${FIXTURE_ID} ${selector}`);
   if (!found) throw new Error(`No "${selector}" on the test page`);
   return found;
 }
@@ -41,12 +42,13 @@ export function el<T extends HTMLElement = HTMLElement>(selector: string): T {
 const root = (): ShadowRoot => document.querySelector("groma-inspector")!.shadowRoot!;
 
 /** One node of the inspector's UI, or null. */
-export const ui = <T extends HTMLElement = HTMLElement>(selector: string): T | null =>
-  root().querySelector<T>(selector);
+// oxlint-disable-next-line unicorn/no-null -- querySelector answers null, and the suites assert absence with toBeNull
+export const ui = <TElement extends HTMLElement = HTMLElement>(selector: string): TElement | null =>
+  root().querySelector<TElement>(selector);
 
 /** Every node of the inspector's UI that matches. */
-export const all = <T extends HTMLElement = HTMLElement>(selector: string): T[] =>
-  Array.from(root().querySelectorAll<T>(selector));
+export const all = <TElement extends HTMLElement = HTMLElement>(selector: string): TElement[] =>
+  Array.from(root().querySelectorAll<TElement>(selector));
 
 /** The text of every match, with whitespace collapsed. */
 export const texts = (selector: string): string[] =>
@@ -56,10 +58,8 @@ export const inspector = () => window.Groma!;
 
 // ── what a user does ───────────────────────────────────────────
 
-export const holdAlt = (): boolean =>
-  document.dispatchEvent(new KeyboardEvent("keydown", { key: "Alt" }));
-export const releaseAlt = (): boolean =>
-  document.dispatchEvent(new KeyboardEvent("keyup", { key: "Alt" }));
+export const holdAlt = (): boolean => document.dispatchEvent(new KeyboardEvent("keydown", { key: "Alt" }));
+export const releaseAlt = (): boolean => document.dispatchEvent(new KeyboardEvent("keyup", { key: "Alt" }));
 export const pressEscape = (): boolean =>
   document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
 
@@ -94,11 +94,17 @@ export function typeOver(field: HTMLElement, text: string): void {
   field.dispatchEvent(new FocusEvent("blur"));
 }
 
-export function pressKey(target: Element, key: string, modifiers: KeyboardEventInit = {}): void {
+function dispatchKey(target: Element, keyboard: KeyboardEventInit): void {
   target.dispatchEvent(
-    new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true, composed: true, ...modifiers }),
+    new KeyboardEvent("keydown", { bubbles: true, cancelable: true, composed: true, ...keyboard }),
   );
 }
+
+export const pressKey = (target: Element, key: string): void => dispatchKey(target, { key });
+
+/** A key with modifiers held, or a physical key (`code`). */
+export const pressShortcut = (target: Element, keyboard: KeyboardEventInit): void =>
+  dispatchKey(target, keyboard);
 
 // ── waiting and cleaning up ────────────────────────────────────
 
@@ -122,6 +128,23 @@ Object.defineProperty(navigator, "clipboard", {
 /** Opens a panel tab. */
 export const openTab = (tab: string): void => ui(`.tab[data-tab="${tab}"]`)!.click();
 
+/** The history of edits lives in memory, and so does an edit the browser refused to store: undo them all, as a reload would forget them. */
+function undoAllEdits(): void {
+  const undo = ui<HTMLButtonElement>('[data-action="undo"]')!;
+  while (!undo.disabled) undo.click();
+}
+
+/** Puts the panel's settings back to what a fresh page load shows, and closes it. */
+function restorePanel(): void {
+  undoAllEdits();
+  ui('[data-option="unit"] [data-value="px"]')!.click();
+  ui('[data-option="grid"] [data-value="0"]')!.click();
+  openTab("specs");
+  const push = ui('[data-action="push"]')!;
+  if (push.getAttribute("aria-checked") === "false") push.click();
+  ui(".close")!.click();
+}
+
 /** Leaves the inspector as a fresh page load would find it. Call it before each test. */
 export function reset(): void {
   host().style.setProperty(SLIDE, "0ms");
@@ -130,18 +153,7 @@ export function reset(): void {
   document.dispatchEvent(new KeyboardEvent("keyup", { code: "Space" }));
   pressEscape();
   ui(".rail")?.click();
-  if (ui(".panel")) {
-    // The history of edits lives in memory, and so does an edit the browser
-    // refused to store: undo them all, as a reload would forget them.
-    const undo = ui<HTMLButtonElement>('[data-action="undo"]')!;
-    while (!undo.disabled) undo.click();
-    ui('[data-option="unit"] [data-value="px"]')!.click();
-    ui('[data-option="grid"] [data-value="0"]')!.click();
-    openTab("specs");
-    const push = ui('[data-action="push"]')!;
-    if (push.getAttribute("aria-checked") === "false") push.click();
-    ui(".close")!.click();
-  }
+  if (ui(".panel")) restorePanel();
   inspector().configure();
   localStorage.clear();
   clipboard.text = "";

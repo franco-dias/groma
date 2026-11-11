@@ -9,17 +9,24 @@ const MAX_DEPTH = 5;
 
 const NOT_PROPS = new Set(["class", "style", "id"]);
 
-export const customElement: ComponentReader = (el) => {
-  let root: Element | null = el;
-  for (let depth = 0; root && depth <= MAX_DEPTH; root = root.parentElement, depth++) {
-    if (!root.localName.includes("-")) continue;
-    const props = Object.fromEntries(
-      Array.from(root.attributes)
-        .filter((attribute) => !NOT_PROPS.has(attribute.name))
-        // An attribute with no value is a boolean one: <my-card open>.
-        .map((attribute) => [attribute.name, attribute.value === "" ? true : attribute.value]),
-    );
-    return { name: root.localName, inside: root !== el, element: root, props };
-  }
-  return null;
+function propsOf(root: Element): Record<string, string | true> {
+  return Object.fromEntries(
+    Array.from(root.attributes)
+      .filter((attribute) => !NOT_PROPS.has(attribute.name))
+      // An attribute with no value is a boolean one: <my-card open>.
+      .map((attribute) => [attribute.name, attribute.value === "" ? true : attribute.value]),
+  );
+}
+
+function customElementAbove(element: Element, depth: number): Element | undefined {
+  if (depth > MAX_DEPTH) return undefined;
+  if (element.localName.includes("-")) return element;
+  const parent = element.parentElement;
+  return parent ? customElementAbove(parent, depth + 1) : undefined;
+}
+
+export const customElement: ComponentReader = (element) => {
+  const root = customElementAbove(element, 0);
+  if (!root) return undefined;
+  return { name: root.localName, inside: root !== element, element: root, props: propsOf(root) };
 };

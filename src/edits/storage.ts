@@ -9,7 +9,7 @@
 /** What could not be stored, as JSON, by key. */
 const unsaved = new Map<string, string>();
 
-export function readStore<T extends object>(key: string): Partial<T> {
+export function readStore<TStored extends object>(key: string): Partial<TStored> {
   try {
     return JSON.parse(unsaved.get(key) ?? localStorage.getItem(key) ?? "{}") ?? {};
   } catch {

@@ -24,7 +24,7 @@ describe("zoomAt", () => {
   it("keeps the point under the pointer where it is", () => {
     const view = { x: 100, y: 50, zoom: 1 };
     const pagePointBefore = { x: (300 - view.x) / view.zoom, y: (250 - view.y) / view.zoom };
-    const zoomed = zoomAt(view, 2, 300, 250);
+    const zoomed = zoomAt(view, { zoom: 2, around: { x: 300, y: 250 } });
     expect(zoomed.zoom).toBe(2);
     expect((300 - zoomed.x) / zoomed.zoom).toBe(pagePointBefore.x);
     expect((250 - zoomed.y) / zoomed.zoom).toBe(pagePointBefore.y);
@@ -32,8 +32,8 @@ describe("zoomAt", () => {
 
   it("stops at the zoom limits", () => {
     const view = { x: 0, y: 0, zoom: 1 };
-    expect(zoomAt(view, 100, 0, 0).zoom).toBe(MAX_ZOOM);
-    expect(zoomAt(view, 0, 0, 0).zoom).toBe(MIN_ZOOM);
+    expect(zoomAt(view, { zoom: 100, around: { x: 0, y: 0 } }).zoom).toBe(MAX_ZOOM);
+    expect(zoomAt(view, { zoom: 0, around: { x: 0, y: 0 } }).zoom).toBe(MIN_ZOOM);
   });
 });
 

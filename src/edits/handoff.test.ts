@@ -60,7 +60,9 @@ describe("the text Copy edits writes", () => {
   });
 
   it("keeps new content on one line, quoted", () => {
-    const text = lines([element({ values: [{ prop: "", before: "Title", after: 'Say "hi"\nnow', tokens: [] }] })]);
+    const text = lines([
+      element({ values: [{ prop: "", before: "Title", after: 'Say "hi"\nnow', tokens: [] }] }),
+    ]);
     expect(text).toContain('- Content: "Title" → "Say \\"hi\\"\\nnow"');
   });
 
@@ -96,7 +98,7 @@ describe("the text Copy edits writes", () => {
 
   it("says so when a value before or the element itself is not known", () => {
     const text = lines([
-      element({ onPage: false, values: [{ prop: "width", before: null, after: "40px", tokens: [] }] }),
+      element({ onPage: false, values: [{ prop: "width", before: undefined, after: "40px", tokens: [] }] }),
     ]);
     expect(text).toContain("- `width`: `40px` (the value before is not known)");
     expect(text).toContain("- The page did not have this element when the edits were copied.");

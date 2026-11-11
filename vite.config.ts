@@ -13,11 +13,12 @@ const leanMarkup = (): Plugin => ({
   transform(code, id) {
     // Vite has turned the file into `export default "<its text>"`.
     const text = /^export default (".*")\s*;?\s*$/s.exec(code)?.[1];
-    if (!id.endsWith(".html?raw") || !text) return null;
+    if (!id.endsWith(".html?raw") || !text) return undefined;
     const markup = (JSON.parse(text) as string)
       .replace(/<!--[\s\S]*?-->/g, "")
       .replace(/\s+/g, " ")
       .trim();
+    // oxlint-disable-next-line unicorn/no-null -- Rollup reads `map: null` as "no source map for this change"
     return { code: `export default ${JSON.stringify(markup)}`, map: null };
   },
 });

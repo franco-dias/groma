@@ -1,0 +1,4 @@
+{
+  "printWidth": 110,
+  "ignorePatterns": ["landing/**", "dist/**", "package-lock.json", "docs/images/**", "**/*.html"]
+}

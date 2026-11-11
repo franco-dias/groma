@@ -13,9 +13,9 @@ export const referenceTab: Tab = {
     const body = tabBody(panel, "reference");
     body.innerHTML = reference;
     // Name the modifier keys as this keyboard does.
-    for (const key of body.querySelectorAll<HTMLElement>("kbd[data-key]")) {
+    body.querySelectorAll<HTMLElement>("kbd[data-key]").forEach((key) => {
       key.textContent = KEYS[key.dataset.key ?? ""] ?? "";
-    }
+    });
   },
   // The reference does not depend on the pinned element.
   render() {},

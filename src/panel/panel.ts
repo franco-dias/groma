@@ -9,199 +9,98 @@
  * It either pushes the page aside by its own width (the default) or floats
  * over the page; the user switches in the » menu and the choice is remembered.
  */
-import { isCanvasOn, setCanvas } from "../canvas/canvas";
 import { h } from "../dom";
 import { elementName } from "../element-name";
-import { options } from "../options";
 import { onPage, onPageView } from "../page";
-import { restorePage, shiftPage } from "../page-shift";
 import { ALT_KEY } from "../platform";
-import { mount, setRootVariable } from "../root";
+import { mount } from "../root";
 import { onSelection, type SelectionChange, unpin } from "../selection";
-import { changesTab } from "./changes-tab";
-import { cssTab } from "./css-tab";
-import { editsTab } from "./edits-tab";
+import { changesTab } from "./changes/changes-tab";
+import { cssTab } from "./css/css-tab";
+import { closePanel, connectDock, expandPanel, isPanelOpen, openPanel, reportDock } from "./dock";
+import { editsTab } from "./edits/edits-tab";
 import { layersTab } from "./layers-tab";
-import { loadLayout, saveLayout, setTab } from "./layout";
+import { loadLayout, setTab } from "./layout";
+import { mountMoreMenu } from "./more-menu";
 import template from "./panel.html?raw";
 import { referenceTab } from "./reference-tab";
-import { specsTab } from "./specs-tab";
+import { resizeByDragging } from "./resize-handle";
+import { specsTab } from "./specs/specs-tab";
 import { part, type Tab } from "./tab";
 
 const TABS: Tab[] = [specsTab, cssTab, layersTab, editsTab, changesTab, referenceTab];
-const MIN_WIDTH = 320;
-const MAX_WIDTH = 560;
 
-let panel: HTMLElement | null = null;
+let panel: HTMLElement | undefined;
 
-/**
- * On a closed panel. The stylesheet slides the panel in and out around this
- * class; everything else treats the panel as closed from the moment it is set.
- */
-const CLOSED = "is-closed";
-const isOpen = (): boolean => panel !== null && !panel.classList.contains(CLOSED);
+/** Alt + Shift + G, by the key's place on the keyboard: Alt changes the letter it types. */
+const isPanelShortcut = (event: KeyboardEvent): boolean =>
+  event.altKey && event.shiftKey && event.code === "KeyG";
 
-/**
- * Tells the rest of the inspector how much of the right edge the panel takes,
- * and, in push mode, makes room for it in the page.
- */
-function reportDock(): void {
-  const width = isOpen() ? panel!.offsetWidth : 0;
-  setRootVariable("--ins-dock", `${width}px`);
-  cancelAnimationFrame(pushFrame);
-  pushPage();
+/** The shortcut opens the panel with nothing pinned; pressed again, it closes the panel. */
+function togglePanel(event: KeyboardEvent): void {
+  event.preventDefault();
+  if (!isPanelOpen()) {
+    showPanel(undefined, "pinned");
+    return;
+  }
+  // Unpinning closes the panel, with or without an element.
+  unpin();
 }
 
-/** How much of the panel is on screen right now: less than its width while it slides. */
-function widthOnScreen(): number {
-  if (!panel) return 0;
-  const style = getComputedStyle(panel);
-  if (style.display === "none") return 0;
-  return Math.max(0, panel.offsetWidth - new DOMMatrix(style.transform).m41);
-}
-
-let pushFrame = 0;
-
-/**
- * Push mode: the page gives way by as much of the panel as is on screen, so it
- * moves with the panel while the panel slides, frame by frame, and never ahead
- * of it or behind.
- */
-function pushPage(): void {
-  // On the canvas the page is in a frame beside the panel: nothing to push.
-  const pushes = options.panelMode === "push" && !isCanvasOn();
-  if (pushes) shiftPage(widthOnScreen());
-  else restorePage();
-  const sliding = pushes && panel !== null && panel.getAnimations().length > 0;
-  pushFrame = sliding ? requestAnimationFrame(pushPage) : 0;
-}
-
-function setCollapsed(el: HTMLElement, collapsed: boolean): void {
-  el.classList.toggle("is-collapsed", collapsed);
-  reportDock();
-}
-
-/** Dragging the panel's left edge changes its width. */
-function resizeByDragging(el: HTMLElement): void {
-  part(el, ".resize").addEventListener("mousedown", (down) => {
-    down.preventDefault();
-    const startWidth = el.offsetWidth;
-    const move = (e: MouseEvent) => {
-      const width = startWidth + down.clientX - e.clientX;
-      el.style.width = `${Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, width))}px`;
-      reportDock();
-    };
-    const stop = () => {
-      document.removeEventListener("mousemove", move);
-      document.removeEventListener("mouseup", stop);
-      saveLayout(el);
-    };
-    document.addEventListener("mousemove", move);
-    document.addEventListener("mouseup", stop);
+function mountTabBar(element: HTMLElement): void {
+  part(element, ".tabs").addEventListener("click", (event) => {
+    // Cast: a click on the tab bar comes from one of its elements.
+    const tab = (event.target as Element).closest<HTMLElement>(".tab")?.dataset.tab;
+    if (tab) setTab(element, tab);
   });
-}
-
-/** The » button opens a small menu: the Reference tab, the push/float and canvas switches and "Collapse panel". */
-function mountMoreMenu(el: HTMLElement): void {
-  const button = part(el, ".more-button");
-  const menu = part(el, ".more-menu");
-  const push = part(menu, '[data-action="push"]');
-  const onCanvas = part(menu, '[data-action="canvas"]');
-  const showSwitches = () => {
-    push.setAttribute("aria-checked", String(options.panelMode === "push"));
-    onCanvas.setAttribute("aria-checked", String(isCanvasOn()));
-  };
-  const setOpen = (open: boolean) => {
-    // The canvas can also be left from its own toolbar.
-    if (open) showSwitches();
-    menu.hidden = !open;
-    button.setAttribute("aria-expanded", String(open));
-  };
-  button.addEventListener("click", (e) => {
-    e.stopPropagation();
-    setOpen(menu.hidden);
-  });
-  // Any other click in the panel, or Esc, closes the menu.
-  el.addEventListener("click", () => setOpen(false));
-  el.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") setOpen(false);
-  });
-  part(menu, '[data-tab="reference"]').addEventListener("click", () => setTab(el, "reference"));
-  part(menu, ".collapse").addEventListener("click", () => setCollapsed(el, true));
-
-  push.addEventListener("click", () => {
-    options.panelMode = options.panelMode === "push" ? "float" : "push";
-    showSwitches();
-    saveLayout(el);
-    reportDock();
-  });
-  onCanvas.addEventListener("click", () => {
-    setCanvas(!isCanvasOn());
-    showSwitches();
-  });
-  showSwitches();
 }
 
 function createPanel(): HTMLElement {
-  const el = mount(h("div", "panel"));
-  el.innerHTML = template;
-  loadLayout(el);
+  const element = mount(h("div", "panel"));
+  element.innerHTML = template;
+  loadLayout(element);
 
   // Keys typed in the panel must not trigger the page's own shortcuts.
-  el.addEventListener("keydown", (e) => {
-    e.stopPropagation();
-    if (isPanelShortcut(e)) togglePanel(e);
+  element.addEventListener("keydown", (event) => {
+    event.stopPropagation();
+    if (isPanelShortcut(event)) togglePanel(event);
   });
-  part(el, ".empty kbd").textContent = ALT_KEY;
-  part(el, ".tabs").addEventListener("click", (e) => {
-    const tab = (e.target as Element).closest<HTMLElement>(".tab")?.dataset.tab;
-    if (tab) setTab(el, tab);
-  });
-  part(el, ".close").addEventListener("click", unpin);
-  mountMoreMenu(el);
-  part(el, ".rail").addEventListener("click", () => setCollapsed(el, false));
-  resizeByDragging(el);
+  part(element, ".empty kbd").textContent = ALT_KEY;
+  mountTabBar(element);
+  part(element, ".close").addEventListener("click", unpin);
+  mountMoreMenu(element);
+  part(element, ".rail").addEventListener("click", () => expandPanel(element));
+  resizeByDragging(element);
 
-  TABS.forEach((tab) => tab.mount(el));
-  return el;
+  TABS.forEach((tab) => tab.mount(element));
+  connectDock(element);
+  return element;
 }
 
-
-/** Shows the panel on `el`, or with nothing pinned. */
-function showPanel(el: Element | null, change: SelectionChange): void {
+/** Shows the panel on `element`, or with nothing pinned. */
+function showPanel(element: Element | undefined, change: SelectionChange): void {
   panel ??= createPanel();
-  panel.classList.remove(CLOSED);
-  panel.classList.toggle("is-empty", el === null);
-  part(panel, ".rail .name").textContent = el ? `Inspect · ${elementName(el)}` : "Inspect";
-  if (change === "pinned") setCollapsed(panel, false);
-  TABS.forEach((tab) => (el ? tab.render(el, change) : tab.renderUnpinned?.()));
+  openPanel();
+  panel.classList.toggle("is-empty", element === undefined);
+  part(panel, ".rail .name").textContent = element ? `Inspect · ${elementName(element)}` : "Inspect";
+  if (change === "pinned") expandPanel(panel);
+  TABS.forEach((tab) => (element ? tab.render(element, change) : tab.renderUnpinned?.()));
   reportDock();
 }
 
-/** Alt + Shift + G, by the key's place on the keyboard: Alt changes the letter it types. */
-const isPanelShortcut = (e: KeyboardEvent): boolean => e.altKey && e.shiftKey && e.code === "KeyG";
-
-/** The shortcut opens the panel with nothing pinned; pressed again, it closes the panel. */
-function togglePanel(e: KeyboardEvent): void {
-  e.preventDefault();
-  if (!isOpen()) showPanel(null, "pinned");
-  // Unpinning closes the panel, with or without an element.
-  else unpin();
-}
-
 export function startPanel(): void {
-  onSelection((el, change) => {
-    if (el) {
-      showPanel(el, change);
+  onSelection((element, change) => {
+    if (element) {
+      showPanel(element, change);
       return;
     }
     // Unpinned: the panel closes. Any other change (a setting, a new frame
     // size) leaves a panel that is open with nothing pinned as it is.
-    if (change === "pinned") panel?.classList.add(CLOSED);
+    if (change === "pinned") closePanel();
     reportDock();
   });
-  onPage("keydown", (e) => {
-    if (isPanelShortcut(e)) togglePanel(e);
+  onPage("keydown", (event) => {
+    if (isPanelShortcut(event)) togglePanel(event);
   });
   // The canvas opened or closed: the page is pushed only while it is off.
   onPageView(reportDock);

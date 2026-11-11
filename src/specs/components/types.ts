@@ -1,6 +1,6 @@
 /** What every way of finding a component produces. */
 
-export interface ComponentInfo {
+export type ComponentInfo = {
   name: string;
   /** Where the component's source lives, when the page says. */
   sourcePath?: string;
@@ -10,10 +10,10 @@ export interface ComponentInfo {
   element?: Element;
   /** The component's props. Text, numbers and booleans are shown. */
   props: Record<string, unknown>;
-}
+};
 
 /**
  * One way a page can say which component an element belongs to.
- * Returns null when it has nothing to say about `el`; it must never throw.
+ * Returns undefined when it has nothing to say about `element`; it must never throw.
  */
-export type ComponentReader = (el: Element) => ComponentInfo | null;
+export type ComponentReader = (element: Element) => ComponentInfo | undefined;
