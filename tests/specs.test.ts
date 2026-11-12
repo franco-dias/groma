@@ -130,9 +130,11 @@ describe("layout", () => {
     expect(cells()).toMatchObject({ Radius: "8", Border: "1 solid" });
   });
 
-  it("lists the token behind a value that is not a color", () => {
+  it("leaves the color token of a border to the Colors block, which names it there", () => {
     inspector().pin(getElement(".fixed"));
-    expect(tokenNotes()).toEqual({ Border: "--brand" });
+    // `border: 1px solid var(--brand)`: the Border cell shows "1 solid", which --brand does not set.
+    expect(tokenNotes()).toEqual({});
+    expect(colorRow("Border").querySelector(".css-var")!.textContent).toBe("--brand");
   });
 
   it("draws margin, padding and the content size as nested boxes", () => {

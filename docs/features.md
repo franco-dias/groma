@@ -656,7 +656,11 @@ of the line and add no width.
 - **Matches token**: the design wrote the color by hand, but a token has
   the same value.
 - **No token**: no token has that color. The row is flagged.
-- Non-color values declared with a token list it under the layout cells.
+- Non-color values declared with a token list it under the layout cells. A
+  color token in the same declaration (the color of a `border` shorthand) is
+  left to the Colors block, which names the token on screen: under the
+  Border cell, which shows only width and style, it named a color the cell
+  does not show, and on a selected element the color of the unselected one.
 
 - Declared values are read from the rules that apply now: a rule inside a
   `@media` or `@supports` block that does not apply to the page (or to the
