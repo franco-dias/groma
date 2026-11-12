@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 1.1.0 (2026-11-12)
 
 - Added: arrow keys in the Layers tab. After a click on a layer, ↑ and ↓
   pin the row above and below as the tree shows it, going on past the last
@@ -16,6 +16,7 @@ All notable changes to this package are recorded here. Versions follow
   Vite example for React and other apps (README and `docs/usage.md`), and
   why `/__groma/bridge.js` is the tag for an app while `npx gromajs page.html`
   holds the port.
+- Size: the gzipped script goes from 58.5 to 59.2 KB.
 
 ## 1.0.2 (2026-11-11)
 
