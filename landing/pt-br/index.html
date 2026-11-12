@@ -892,7 +892,7 @@ kbd.ac { color:var(--color-accent-soft); }
   <section class="wrap hero" aria-labelledby="hero-title" data-component="Hero" data-source="src/components/Hero.tsx" data-props='{"align": "center"}'>
     <span class="pill load" data-component="VersionPill" data-source="src/components/VersionPill.tsx" data-props='{"version": "1.0.2", "license": "MIT", "dot": true}'><i aria-hidden="true"></i><span>v<span data-version>1.0.2</span> · MIT · zero dependências</span></span>
     <h1 id="hero-title" class="h1 load d1"><span class="g">Inspecione qualquer página web </span><span class="g sweep">como um arquivo de design</span><span class="g">.</span></h1>
-    <p class="lead load d2">Um inspetor open source para páginas, apps e handoffs de design. Leia espaçamentos, tokens, distâncias e props de componentes direto na página, com um único script. Edite a página ali mesmo e entregue as mudanças para o seu agente de código.</p>
+    <p class="lead load d2">Leia espaçamentos, tokens, distâncias e props em qualquer página. Edite ali mesmo e passe as mudanças ao seu agente.</p>
     <div class="term load d3" data-component="CommandLine" data-source="src/components/CommandLine.tsx" data-props='{"command": "npx gromajs your-page.html", "copyable": true, "caret": true}'>
       <span class="ps" aria-hidden="true">$</span>
       <code>npx gromajs <span class="arg">your-page.html</span></code>
@@ -1260,12 +1260,14 @@ kbd.ac { color:var(--color-accent-soft); }
         <h3>Edite na página</h3>
         <p>Dê dois cliques num valor do painel ou arraste um número, e a página muda na hora. Dois cliques num texto da página deixam você reescrever ali mesmo.</p>
         <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "css", "copyable": false}'><span class="code-t">padding-top: <span class="k3">12px</span> → <span class="k2">16px</span></span></div>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "text", "copyable": false}'><span class="code-t">text: <span class="k3">"Comprar"</span> → <span class="k2">"Adicionar"</span></span></div>
       </div>
       <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "02", "title": "Copie as edições"}'>
         <span class="num">02</span>
         <h3>Copie as edições</h3>
         <p>Um botão na aba Edits copia tudo como texto: cada elemento, como achá-lo e o que mudou, com o token que guarda o novo valor.</p>
         <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "markdown", "copyable": false}'><span class="code-t">- `padding-top`: `12px` → `16px`</span></div>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "markdown", "copyable": false}'><span class="code-t">- Content: "Comprar" → "Adicionar"</span></div>
       </div>
       <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "03", "title": "Ou deixe o agente buscar"}'>
         <span class="num">03</span>
