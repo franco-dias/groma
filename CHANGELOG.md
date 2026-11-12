@@ -3,12 +3,20 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 1.1.0 (2026-11-12)
 
+- Added: arrow keys in the Layers tab. After a click on a layer, ↑ and ↓
+  pin the row above and below as the tree shows it, going on past the last
+  child; → opens a closed layer or moves into an open one; ← closes an open
+  layer or moves to its parent. The pinned element is scrolled into view, as
+  with Alt and an arrow.
+- Changed: pinning a layer from the Layers tab, by a click or a key, keeps
+  the tree as it was shown. It used to fold back to the path to the new pin.
 - Docs: how to add Groma and the bridge script to an app's dev build, with a
   Vite example for React and other apps (README and `docs/usage.md`), and
   why `/__groma/bridge.js` is the tag for an app while `npx gromajs page.html`
   holds the port.
+- Size: the gzipped script goes from 58.5 to 59.2 KB.
 
 ## 1.0.2 (2026-11-11)
 

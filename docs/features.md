@@ -83,7 +83,8 @@ to the first child, ← and → to the element before and after it.
 
 - Alt is the inspect key, so the keys work wherever the focus is: on the
   page or in the panel, with no click needed first and with or without the
-  inspect lock. A plain arrow key is always the page's (scrolling).
+  inspect lock. A plain arrow key is the page's (scrolling), except with the
+  focus in the Layers tree (feature 11).
 - They keep their own meaning in a field (an input of the page or the panel,
   a Specs value open as a field, where Alt and an arrow steps by 0.1), while
   a menu of the panel is open, while text is being edited on the page, and
@@ -736,12 +737,23 @@ Code: `src/panel/css/`, `src/edits/*`. Tests: `tests/edits.test.ts`.
 - The Layers tab shows the tree of the pinned element's board (or of the
   page), opened down to the pinned element. Hover outlines a layer; click
   pins it; the caret opens it.
+- A click on a layer puts the focus in the tree, and the arrow keys walk it:
+  ↑ and ↓ move the pin to the row above and below as the tree shows them, so
+  ↓ on a last child goes on to the next layer shown; → opens a closed layer
+  or moves into an open one; ← closes an open layer or moves to its parent.
+  The pinned element is scrolled into view on the page, as with Alt and an
+  arrow, and the keys are kept from the page. Modifier keys are not the
+  tree's: Alt and an arrow still walk the page.
+- The tree is drawn again for each pin. Pinning from the tree, by a click
+  or a key, keeps open every layer that was open, so the tree does not fold
+  under the user; a pin from the page opens the path to the new element and
+  keeps the layers opened before.
 - Alt + right-click lists every layer under the pointer, topmost first,
   with sizes. Choosing one pins it. Without Alt, the browser's own menu is
   left alone.
 
-Code: `src/panel/layers-tab.ts`, `src/overlay/layer-menu.ts`.
-Tests: `tests/layers.test.ts`.
+Code: `src/panel/layers/`, `src/overlay/layer-menu.ts`.
+Tests: `tests/layers.test.ts`, `tests/layers-keys.test.ts`.
 
 ## 12. Launcher
 

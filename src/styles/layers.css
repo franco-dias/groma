@@ -47,3 +47,14 @@
 .layer-name .classes {
   color: var(--ins-fg-muted);
 }
+
+/* The tree takes the focus for its arrow keys. The pinned row already shows
+   where they act, so the ring is drawn on it, and only for keyboard focus. */
+.tree:focus {
+  outline: none;
+}
+
+.tree:focus-visible .layer.is-current {
+  outline: 1px solid var(--ins-pin);
+  outline-offset: -1px;
+}
