@@ -448,6 +448,23 @@ describe("switching", () => {
     expect(inspector().pinnedElement()).toBe(getElement("#card"));
   });
 
+  it("puts the pin and the edits on a page that draws itself after it has loaded", async () => {
+    const latePage = `<!doctype html><body><script>
+      setTimeout(() => { document.body.innerHTML = '<div id="card">Card</div>'; }, 30);
+    </script>`;
+    const card = getElement("#card");
+    ui(".launcher")!.click();
+    doubleClick(card);
+    card.textContent = "Sold";
+    pressKey(card, "Enter");
+
+    // A copy of the page keeps this page's address, which the saved edits are filed under.
+    showCanvas({ source: "data:text/html,<p>Refused</p>", copy: () => latePage });
+
+    await until(() => framed("#card")?.textContent === "Sold");
+    expect(inspector().pinnedElement()).toBe(framed("#card"));
+  });
+
   it("shows its state in the » menu, which also turns it off", async () => {
     inspector().pin(getElement("#card"));
     ui(".more-button")!.click();

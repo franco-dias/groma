@@ -27,6 +27,7 @@ import { highlight, startOutlines } from "./outlines";
 import { startGridLines } from "./overlay/grid-lines";
 import { startHover } from "./overlay/hover";
 import { startLayerMenu } from "./overlay/layer-menu";
+import { startRestingRead } from "./overlay/resting-read";
 import { startPanel } from "./panel/panel";
 import { isGromaFrame } from "./page";
 import { findPinnedElement, pin } from "./selection";
@@ -61,6 +62,7 @@ function start(): void {
   startGridLines();
   startHover();
   startLayerMenu();
+  startRestingRead();
   startLauncher();
   startNavigation();
 

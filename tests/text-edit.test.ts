@@ -45,6 +45,7 @@ beforeEach(() => {
     <h2 class="title">Hello</h2>
     <p class="note" contenteditable="false" spellcheck="true">Note</p>
     <div class="box"><span>Inner</span> and more</div>
+    <button class="buy">Buy</button>
   `);
   title = getElement(".title");
   note = getElement(".note");
@@ -212,6 +213,38 @@ describe("double-clicking text while locked", () => {
     doubleClick(getElement(".box"));
 
     expect(getElement(".box").hasAttribute("contenteditable")).toBe(false);
+  });
+});
+
+/** The space bar going down and up in `element`, with the caret at the end of its text. */
+const pressSpace = (element: HTMLElement): KeyboardEvent[] => {
+  getSelection()!.collapseToEnd();
+  return ["keydown", "keyup"].map((type) => {
+    const event = new KeyboardEvent(type, { key: " ", bubbles: true, cancelable: true });
+    element.dispatchEvent(event);
+    return event;
+  });
+};
+
+describe("the space bar in a button's text", () => {
+  it("types a space, which the browser would not, and does not press the button", () => {
+    const buy = getElement(".buy");
+    lock();
+    doubleClick(buy);
+
+    const [down, up] = pressSpace(buy);
+
+    expect(buy.textContent).toBe("Buy ");
+    expect([down.defaultPrevented, up.defaultPrevented]).toEqual([true, true]);
+  });
+
+  it("is left to the browser in other text", () => {
+    lock();
+    doubleClick(title);
+
+    const [down, up] = pressSpace(title);
+
+    expect([down.defaultPrevented, up.defaultPrevented]).toEqual([false, false]);
   });
 });
 
