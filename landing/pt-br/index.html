@@ -99,7 +99,7 @@
   --color-white-28: rgba(255, 255, 255, 0.28);
   --color-white-30: rgba(255, 255, 255, 0.3);
 }
-</style><script>window.__gromaVersion = "0.6.1";</script><script>window.__resources = {"https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js": "../assets/react.production.min.js", "https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js": "../assets/react-dom.production.min.js"};</script>
+</style><script>window.__gromaVersion = "0.9.0";</script><script>window.__resources = {"https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js": "../assets/react.production.min.js", "https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js": "../assets/react-dom.production.min.js"};</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Groma · Inspecione qualquer página web como um arquivo de design</title><meta name="description" content="Um inspetor open source para páginas e apps web. Veja box model, specs, tokens, componentes e distâncias de cada elemento. Um script, sem dependências."><meta property="og:title" content="Groma · Inspecione qualquer página web como um arquivo de design"><meta property="og:description" content="Um inspetor open source para páginas e apps web. Veja box model, specs, tokens, componentes e distâncias de cada elemento. Um script, sem dependências."><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="canonical" href="https://gromajs.dev/pt-br/"><link rel="alternate" hreflang="en" href="https://gromajs.dev/"><link rel="alternate" hreflang="pt-BR" href="https://gromajs.dev/pt-br/"><link rel="alternate" hreflang="x-default" href="https://gromajs.dev/"><meta property="og:url" content="https://gromajs.dev/pt-br/"><meta property="og:locale" content="pt_BR"><meta property="og:image" content="https://gromajs.dev/media/groma-social.png"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="640"><meta property="og:image:alt" content="Groma numa página de produto: o painel lateral mostra o componente e as props de um botão, seu box model e o token de cada cor, com a distância até o próximo botão em vermelho."><meta name="twitter:image" content="https://gromajs.dev/media/groma-social.png">
@@ -889,9 +889,9 @@ kbd.ac { color:var(--color-accent-soft); }
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="spot" aria-hidden="true"></div>
   <section class="wrap hero" aria-labelledby="hero-title" data-component="Hero" data-source="src/components/Hero.tsx" data-props='{"align": "center"}'>
-    <span class="pill load" data-component="VersionPill" data-source="src/components/VersionPill.tsx" data-props='{"version": "0.6.1", "license": "MIT", "dot": true}'><i aria-hidden="true"></i><span>v<span data-version>0.6.1</span> · MIT · zero dependências</span></span>
+    <span class="pill load" data-component="VersionPill" data-source="src/components/VersionPill.tsx" data-props='{"version": "0.9.0", "license": "MIT", "dot": true}'><i aria-hidden="true"></i><span>v<span data-version>0.9.0</span> · MIT · zero dependências</span></span>
     <h1 id="hero-title" class="h1 load d1"><span class="g">Inspecione qualquer página web </span><span class="g sweep">como um arquivo de design</span><span class="g">.</span></h1>
-    <p class="lead load d2">Um inspetor open source para páginas, apps e handoffs de design. Leia espaçamentos, tokens, distâncias e props de componentes direto na página, com um único script.</p>
+    <p class="lead load d2">Um inspetor open source para páginas, apps e handoffs de design. Leia espaçamentos, tokens, distâncias e props de componentes direto na página, com um único script. Edite a página ali mesmo e entregue as mudanças para o seu agente de código.</p>
     <div class="term load d3" data-component="CommandLine" data-source="src/components/CommandLine.tsx" data-props='{"command": "npx gromajs your-page.html", "copyable": true, "caret": true}'>
       <span class="ps" aria-hidden="true">$</span>
       <code>npx gromajs <span class="arg">your-page.html</span></code>
@@ -917,7 +917,7 @@ kbd.ac { color:var(--color-accent-soft); }
       <div class="glow" aria-hidden="true"></div>
       <div class="frame" data-component="ProductFrame" data-source="src/components/ProductFrame.tsx" data-props='{"aspect": "16:10", "beam": true, "glow": true}'>
         <span class="beam" aria-hidden="true"></span>
-        <!-- MOTION GRAPHIC GOES HERE --><video class="mg-video" autoplay muted loop playsinline preload="auto" poster="../media/groma-motion-poster.jpg" aria-label="O Groma numa página de produto: um clique fixa um elemento e o painel mostra o componente e as props, o token de cada cor e a distância até outro elemento; depois a página é ampliada e movida num canvas." style="display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:inherit" data-component="MotionGraphic" data-source="src/components/MotionGraphic.tsx" data-props='{"autoplay": true, "loop": true, "muted": true}'><source src="../media/groma-motion.webm" type="video/webm"><source src="../media/groma-motion.mp4" type="video/mp4"></video><style>.frame .mg{display:none}</style>
+        <!-- MOTION GRAPHIC GOES HERE --><video class="mg-video" autoplay muted loop playsinline preload="auto" poster="../media/groma-motion-poster.jpg" aria-label="O Groma numa página de preços: passar o mouse mostra o box model de um elemento, um clique fixa o elemento e o painel mostra tamanho, espaçamento, tokens de cor e props do componente, a distância até outro card é medida, um gap é arrastado para mudar a página, a edição é copiada para um agente de código, e a página é redimensionada num canvas até o layout se reorganizar." style="display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:inherit" data-component="MotionGraphic" data-source="src/components/MotionGraphic.tsx" data-props='{"autoplay": true, "loop": true, "muted": true}'><source src="../media/groma-motion.webm" type="video/webm"><source src="../media/groma-motion.mp4" type="video/mp4"></video><style>.frame .mg{display:none}</style>
         <div class="mg" role="img" aria-label="Groma inspecting a page: a selected card shows its box model and a name chip, a red line marks the distance to the next element, and the side panel lists its specs, token and component.">
           <div class="mg-bar"><i></i><i></i><i></i><div class="mg-url">file:// <b>your-page.html</b></div></div>
           <div class="mg-body">
@@ -972,7 +972,7 @@ kbd.ac { color:var(--color-accent-soft); }
   <div class="wrap facts-in">
     <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "1", "label": "script", "countUp": true}'><b>{{ f1 }}</b><span>script</span></div>
     <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "0", "label": "dependencies", "countUp": true}'><b>{{ f2 }}</b><span>dependências</span></div>
-    <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "30 KB", "label": "gzipped", "countUp": true}'><b>{{ f3 }}<small>KB</small></b><span>com gzip</span></div>
+    <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "58 KB", "label": "gzipped", "countUp": true}'><b>{{ f3 }}<small>KB</small></b><span>com gzip</span></div>
     <div class="fact" data-component="Fact" data-source="src/components/Fact.tsx" data-props='{"value": "MIT", "label": "license", "countUp": true}'><b>MIT</b><span>licença</span></div>
   </div>
 </section>
@@ -1153,7 +1153,7 @@ kbd.ac { color:var(--color-accent-soft); }
         </div>
         <div class="bmeta">
           <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m12 3 4 4-4 4-4-4z"></path><path d="m12 13 4 4-4 4-4-4z"></path><path d="m7 8 4 4-4 4-4-4z"></path><path d="m17 8 4 4-4 4-4-4z"></path></svg>Componentes</h3>
-          <p>Veja a qual componente um elemento pertence e as props que o design passou para ele.</p>
+          <p>Veja a qual componente um elemento pertence e as props que o design passou para ele. Lê builds de desenvolvimento em React, Vue, Svelte e Angular.</p>
         </div>
       </article>
 
@@ -1192,7 +1192,7 @@ kbd.ac { color:var(--color-accent-soft); }
         </div>
         <div class="bmeta">
           <h3><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m14 6 4 4"></path></svg>Editar</h3>
-          <p>Edite qualquer valor calculado para testar uma mudança na hora. Enter salva e Esc cancela.</p>
+          <p>Dê dois cliques num valor ou arraste um número para mudar a página na hora. Os tokens que servem aparecem enquanto você digita.</p>
         </div>
       </article>
 
@@ -1240,6 +1240,42 @@ kbd.ac { color:var(--color-accent-soft); }
   </div>
 </section>
 
+<!-- 6b · Coding agent -->
+<section class="sec" aria-labelledby="agent-title" ref="{{ refs.agent }}" data-rv="agent" data-component="Section" data-source="src/components/Section.tsx" data-props='{"id": "agent", "ruler": true, "coordinates": true}'>
+  <span class="ruler" aria-hidden="true"></span>
+  <span class="coord" aria-hidden="true">x {{ co.agent.x }} · y {{ co.agent.y }}</span>
+  <div class="wrap {{ c.agent }}">
+    <div class="sh" data-component="SectionHeader" data-source="src/components/SectionHeader.tsx" data-props='{"eyebrow": "Para o seu agente de código", "title": "Ajuste na página, deixe o agente escrever", "dimension": true}'>
+      <span class="eye">Para o seu agente de código</span>
+      <span class="hw" ref="{{ dref.agent }}">
+        <h2 id="agent-title" class="h2">Ajuste na página, deixe o agente escrever</h2>
+        <span class="dim" aria-hidden="true"><span>{{ d.agent }}</span></span>
+      </span>
+      <p class="sub">Mude tamanhos, espaçamentos, cores e textos direto na página. O Groma lista cada edição como antes → depois e entrega a lista para o seu agente de código. Ele descreve a mudança e deixa o código com o agente.</p>
+    </div>
+    <div class="ways">
+      <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "01", "title": "Edite na página"}'>
+        <span class="num">01</span>
+        <h3>Edite na página</h3>
+        <p>Dê dois cliques num valor do painel ou arraste um número, e a página muda na hora. Dois cliques num texto da página deixam você reescrever ali mesmo.</p>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "css", "copyable": false}'><span class="code-t">padding-top: <span class="k3">12px</span> → <span class="k2">16px</span></span></div>
+      </div>
+      <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "02", "title": "Copie as edições"}'>
+        <span class="num">02</span>
+        <h3>Copie as edições</h3>
+        <p>Um botão na aba Edits copia tudo como texto: cada elemento, como achá-lo e o que mudou, com o token que guarda o novo valor.</p>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "markdown", "copyable": false}'><span class="code-t">- `padding-top`: `12px` → `16px`</span></div>
+      </div>
+      <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "03", "title": "Ou deixe o agente buscar"}'>
+        <span class="num">03</span>
+        <h3>Ou deixe o agente buscar</h3>
+        <p>Adicione este comando ao seu agente como servidor MCP e ele lê as edições ao vivo, sem copiar e colar. Roda na sua máquina e só aceita páginas locais.</p>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "shell", "copyable": true}'><span class="code-t"><span class="k1">npx</span> gromajs <span class="k2">mcp</span></span><button type="button" class="{{ cpW4 }}" sc-camel-on-click="{{ copyW4 }}" aria-label="Copiar comando"><sc-if value="{{ w4Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w4Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- 7 · Three ways in -->
 <section class="sec" aria-labelledby="ways-title" ref="{{ refs.ways }}" data-rv="ways" data-component="Section" data-source="src/components/Section.tsx" data-props='{"id": "get-started", "ruler": true, "coordinates": true}'>
   <span class="ruler" aria-hidden="true"></span>
@@ -1263,7 +1299,7 @@ kbd.ac { color:var(--color-accent-soft); }
         <span class="num">02</span>
         <h3>Adicione o script</h3>
         <p>Coloque como primeira tag dentro do <code class="mono" style="font-size: 13px; color: var(--color-text-primary)">&lt;head&gt;</code>. Funciona num arquivo aberto do disco e numa página servida.</p>
-        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "html", "copyable": true}'><span class="code-t"><span class="k3">&lt;</span><span class="k1">script</span> src=<span class="k2">"https://cdn.jsdelivr.net/npm/gromajs@<span data-version>0.6.1</span>/dist/groma.js"</span><span class="k3">&gt;&lt;/</span><span class="k1">script</span><span class="k3">&gt;</span></span><button type="button" class="{{ cpW2 }}" sc-camel-on-click="{{ copyW2 }}" aria-label="Copiar a tag script"><sc-if value="{{ w2Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w2Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "html", "copyable": true}'><span class="code-t"><span class="k3">&lt;</span><span class="k1">script</span> src=<span class="k2">"https://cdn.jsdelivr.net/npm/gromajs@<span data-version>0.9.0</span>/dist/groma.js"</span><span class="k3">&gt;&lt;/</span><span class="k1">script</span><span class="k3">&gt;</span></span><button type="button" class="{{ cpW2 }}" sc-camel-on-click="{{ copyW2 }}" aria-label="Copiar a tag script"><sc-if value="{{ w2Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w2Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
       </div>
       <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "03", "title": "Configure"}'>
         <span class="num">03</span>
@@ -1303,10 +1339,10 @@ kbd.ac { color:var(--color-accent-soft); }
         <h3>Auditar um app que já existe</h3>
         <p>Descubra qual token e qual componente uma tela usa antes de mudar, e como ela fica em 375 px.</p>
       </article>
-      <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Testar um layout em qualquer largura", "icon": true}'>
-        <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M9 5v14"></path><path d="m14 10-2 2 2 2"></path><path d="m17 10 2 2-2 2"></path></svg></span>
-        <h3>Testar um layout em qualquer largura</h3>
-        <p>Coloque a página num canvas e arraste as bordas do frame para achar onde o layout quebra.</p>
+      <article class="gc use" data-component="UseCaseCard" data-source="src/components/UseCaseCard.tsx" data-props='{"title": "Refinar uma página com o seu agente de código", "icon": true}'>
+        <span class="use-ic" aria-hidden="true"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m14 6 4 4"></path></svg></span>
+        <h3>Refinar uma página com o seu agente de código</h3>
+        <p>Ajuste espaçamentos, cores e textos até ficar certo, depois entregue a lista de edições para o agente que escreve o código.</p>
       </article>
     </div>
   </div>
@@ -1329,6 +1365,8 @@ kbd.ac { color:var(--color-accent-soft); }
       <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "passar o mouse"], "action": "Inspecionar"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>passar o mouse</kbd></div><div class="key-d"><b>Inspecionar.</b> O box model e uma etiqueta com o nome e o tamanho do elemento.</div></div>
       <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "clique"], "action": "Fixar"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>clique</kbd></div><div class="key-d"><b>Fixar.</b> Abre o painel lateral nele. Passe o mouse em outro elemento para medir.</div></div>
       <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "clique direito"], "action": "Camadas"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>clique direito</kbd></div><div class="key-d"><b>Camadas.</b> Um menu com todas as camadas sob o ponteiro.</div></div>
+      <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "↑ ↓ ← →"], "action": "Navegar"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>↑ ↓ ← →</kbd></div><div class="key-d"><b>Navegar.</b> Move a seleção para o pai, o primeiro filho e os elementos ao lado.</div></div>
+      <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["dois cliques"], "action": "Editar"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'>dois cliques</kbd></div><div class="key-d"><b>Editar.</b> Num valor do painel, ou num texto da página com o modo de inspeção travado.</div></div>
       <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Alt", "Shift", "G"], "action": "Painel"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'><span class="k-mac">⌥ Option</span><span class="k-pc">Alt</span></kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>Shift</kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>G</kbd></div><div class="key-d"><b>Painel.</b> Abre ou fecha o painel lateral.</div></div>
       <div class="key-r" data-component="Shortcut" data-source="src/components/Shortcut.tsx" data-props='{"keys": ["Espaço", "arrastar"], "action": "Mover"}'><div class="kc"><kbd class="ac" data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": true}'>Espaço</kbd><i>+</i><kbd data-component="Keycap" data-source="src/components/Keycap.tsx" data-props='{"accent": false}'>arrastar</kbd></div><div class="key-d"><b>Mover.</b> Arrasta o canvas.</div></div>
     </div>
@@ -1432,9 +1470,9 @@ class Component extends DCLogic {
       };
     };
     this.refs = {};
-    ['hero', 'facts', 'why', 'feat', 'ways', 'uses', 'keys', 'close', 'split', 'meas', 'stage'].forEach(function (k) { self.refs[k] = mk(k); });
+    ['hero', 'facts', 'why', 'feat', 'agent', 'ways', 'uses', 'keys', 'close', 'split', 'meas', 'stage'].forEach(function (k) { self.refs[k] = mk(k); });
     this.dref = {};
-    ['why', 'feat', 'ways', 'uses', 'keys'].forEach(function (k) { self.dref[k] = mkDim(k); });
+    ['why', 'feat', 'agent', 'ways', 'uses', 'keys'].forEach(function (k) { self.dref[k] = mkDim(k); });
 
     this.onResize = function () { self.scheduleMeasure(); };
 
@@ -1475,6 +1513,7 @@ class Component extends DCLogic {
     this.copyClose = function () { self.copyText(CMD, 'close'); };
     this.copyW1 = function () { self.copyText(CMD, 'w1'); };
     this.copyW2 = function () { self.copyText('<script src="https://cdn.jsdelivr.net/npm/gromajs@' + window.__gromaVersion + '/dist/groma.js"></' + 'script>', 'w2'); };
+    this.copyW4 = function () { self.copyText('npx gromajs mcp', 'w4'); };
     this.copyW3 = function () { self.copyText('Groma.configure({ copyFormat: "sx" })', 'w3'); };
 
     /* split divider */
@@ -1596,7 +1635,7 @@ class Component extends DCLogic {
   componentDidMount() {
     window.addEventListener('resize', this.onResize);
     this.scheduleMeasure();
-    if (!this.io) { var self = this; ['facts', 'why', 'feat', 'ways', 'uses', 'keys', 'close'].forEach(function (k) { self.reveal(k); }); }
+    if (!this.io) { var self = this; ['facts', 'why', 'feat', 'agent', 'ways', 'uses', 'keys', 'close'].forEach(function (k) { self.reveal(k); }); }
   }
 
   componentWillUnmount() {
@@ -1625,7 +1664,7 @@ class Component extends DCLogic {
     });
     var coords = {};
     var sx = window.scrollX || 0, sy = window.scrollY || 0;
-    ['why', 'feat', 'ways', 'uses', 'keys'].forEach(function (k) {
+    ['why', 'feat', 'agent', 'ways', 'uses', 'keys'].forEach(function (k) {
       var el = self.els[k];
       if (el) {
         var r = el.getBoundingClientRect();
@@ -1674,7 +1713,7 @@ class Component extends DCLogic {
     var cls = function (k) { return 'rv' + (s.rv[k] ? ' in' : ''); };
     var dimLabel = function (k) { var w = s.dims[k] || 0; return 'W ' + Math.round(w * pr(k)); };
     var co = {};
-    ['why', 'feat', 'ways', 'uses', 'keys'].forEach(function (k) { co[k] = s.coords[k] || { x: 0, y: 0 }; });
+    ['why', 'feat', 'agent', 'ways', 'uses', 'keys'].forEach(function (k) { co[k] = s.coords[k] || { x: 0, y: 0 }; });
     var ic = {};
     ['av', 'tt', 'tx', 'tg', 'bt'].forEach(function (k) { ic[k] = 't' + (s.insp === k ? ' on' : ''); });
     var dark = s.tokHover ? !s.tokDark : s.tokDark;
@@ -1684,14 +1723,15 @@ class Component extends DCLogic {
     var cp = function (k) { return 'cp' + (s.copied === k ? ' ok' : ''); };
     return {
       refs: this.refs, dref: this.dref, onHeroMove: this.onHeroMove,
-      c: { why: cls('why'), feat: cls('feat'), ways: cls('ways'), uses: cls('uses'), keys: cls('keys'), close: cls('close') },
-      d: { why: dimLabel('why'), feat: dimLabel('feat'), ways: dimLabel('ways'), uses: dimLabel('uses'), keys: dimLabel('keys') },
+      c: { why: cls('why'), feat: cls('feat'), agent: cls('agent'), ways: cls('ways'), uses: cls('uses'), keys: cls('keys'), close: cls('close') },
+      d: { why: dimLabel('why'), feat: dimLabel('feat'), agent: dimLabel('agent'), ways: dimLabel('ways'), uses: dimLabel('uses'), keys: dimLabel('keys') },
       co: co,
-      f1: String(Math.round(1 * pr('facts'))), f2: '0', f3: String(Math.round(30 * pr('facts'))),
+      f1: String(Math.round(1 * pr('facts'))), f2: '0', f3: String(Math.round(58 * pr('facts'))),
       cpHero: cp('hero'), heroOk: s.copied === 'hero', heroIdle: s.copied !== 'hero', copyHero: this.copyHero,
       cpClose: cp('close'), closeOk: s.copied === 'close', closeIdle: s.copied !== 'close', copyClose: this.copyClose,
       cpW1: cp('w1'), w1Ok: s.copied === 'w1', w1Idle: s.copied !== 'w1', copyW1: this.copyW1,
       cpW2: cp('w2'), w2Ok: s.copied === 'w2', w2Idle: s.copied !== 'w2', copyW2: this.copyW2,
+      cpW4: cp('w4'), w4Ok: s.copied === 'w4', w4Idle: s.copied !== 'w4', copyW4: this.copyW4,
       cpW3: cp('w3'), w3Ok: s.copied === 'w3', w3Idle: s.copied !== 'w3', copyW3: this.copyW3,
       wall: this.wall,
       splitPct: s.split.toFixed(2), splitRound: Math.round(s.split), splitRest: 100 - Math.round(s.split),
