@@ -3,6 +3,14 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 1.1.1 (2026-11-12)
+
+- Added: Esc unpins the element and closes the panel, as the last thing Esc
+  undoes. Text being typed on the page, a drag, a comparison, the inspect
+  lock and an open menu still take the first Esc. An Esc typed in a field, or
+  one the page cancelled for its own dialog, keeps the pin.
+- Size: the gzipped script goes from 59.2 to 59.4 KB.
+
 ## 1.1.0 (2026-11-12)
 
 - Added: arrow keys in the Layers tab. After a click on a layer, ↑ and ↓

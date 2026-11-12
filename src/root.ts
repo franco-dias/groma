@@ -113,6 +113,13 @@ export function setRootVariable(name: string, value: string): void {
  * True for the inspector's own UI. Events that start inside the shadow root
  * reach the page's listeners with the host element as their target.
  */
+/** The inspector's own node that matches `selector`, if it is mounted. */
+export const findOwn = (selector: string): Element | undefined =>
+  inspector?.shadow.querySelector(selector) ?? undefined;
+
+/** The inspector's own node that has the focus, if any. */
+export const findOwnFocus = (): Element | undefined => inspector?.shadow.activeElement ?? undefined;
+
 export function isOwn(node: unknown): boolean {
   return node instanceof Element && node.localName === HOST_TAG;
 }

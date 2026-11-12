@@ -162,6 +162,13 @@ the page aside or floats over it (see below).
   pinning another element expands it.
 - The left edge resizes the panel between 320 and 560px.
 - Close unpins the element; the outline and the grid go away.
+- Esc unpins too, as the last thing it undoes. Text being typed on the
+  page, a drag of a value, a comparison, the inspect lock and an open menu
+  each take an Esc first, so the pin goes only with an Esc that nothing else
+  used. An Esc typed in a field of the page, or sent while a field of the
+  panel has the focus, is the field's, and an Esc the page cancelled (its
+  own dialog closing) keeps the pin (`src/escape-unpin.ts`,
+  `tests/escape-unpin.test.ts`).
 - Width, open tab, unit and push/float mode are remembered per origin
   (`localStorage["__groma_panel"]`).
 - Keys typed in the panel do not reach the page's own shortcuts.

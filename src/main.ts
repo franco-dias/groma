@@ -20,6 +20,7 @@ import { startCanvas } from "./canvas/canvas";
 import { type Config, configure, configureFromScriptTag } from "./config";
 import { edits, onEdits } from "./edits/agent-api";
 import { replayOverrides } from "./edits/replay";
+import { startEscapeUnpin } from "./escape-unpin";
 import { startLauncher } from "./launcher";
 import { pinFromLink } from "./link";
 import { startNavigation } from "./navigate-keys";
@@ -65,6 +66,7 @@ function start(): void {
   startRestingRead();
   startLauncher();
   startNavigation();
+  startEscapeUnpin();
 
   // Saved edits are not put back here: the user does that from the panel,
   // which says when some are missing. A page can still call replayOverrides().
