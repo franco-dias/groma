@@ -3,6 +3,20 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 1.0.1 (2026-11-11)
+
+- Fixed: a space typed while editing a button's text on the page was dropped
+  ("Buy now" became "Buynow"), and each press of the space bar clicked the
+  button. The space is now typed and the button is not pressed.
+- Fixed: on the canvas, a page that draws itself after loading (a design
+  export that unpacks, an app that renders) lost the pinned element and did
+  not show the edits, and the panel closed. They are now put on the page when
+  its elements arrive, within ten seconds of the load.
+- Fixed: an element pinned with a click kept showing its `:hover` colours,
+  because it was read with the pointer on it. The panel reads it again when
+  the pointer leaves it and its transitions have ended.
+- Size: the gzipped script goes from 58.1 to 58.5 KB.
+
 ## 1.0.0 (2026-11-11)
 
 - New: agent bridge. `Groma.edits()` returns the text "Copy edits" writes, and

@@ -1,13 +1,15 @@
-/** The page inside the canvas frame: how the frame is filled, and what happens each time it loads. */
-import { carryEdits } from "../edits/replay";
-import { frameLoaded, toWindowPoint } from "../page";
+/**
+ * The page inside the canvas frame: how the frame is filled, and what happens
+ * each time it loads. The user's edits and the pinned element are carried to
+ * it, also when the page draws itself after it has loaded.
+ */
+import { carryEdits, countEditedOnPage } from "../edits/replay";
+import { frameLoaded } from "../page";
 import { HOST_TAG } from "../root";
 import { findPinnedElement, pin, unpin } from "../selection";
 import { findCanvas, getCanvasPart } from "./canvas-state";
-import { pan } from "./pan";
-import { zoomOrMoveOnWheel } from "./wheel";
-
-const MIDDLE_BUTTON = 1;
+import { watchFramedGestures } from "./frame-gestures";
+import { stopWaiting, waitForMore } from "./late-page";
 
 /** True for a page opened from disk: the browser never lets us read a frame that loads its address. */
 export const isFromDisk = (): boolean => location.protocol === "file:";
@@ -62,37 +64,6 @@ export function frameAddress(frame: HTMLIFrameElement): string {
   }
 }
 
-/** Ctrl/⌘ + wheel zooms the canvas, not the browser, also over the page. */
-function watchFramedWheel(page: Document): void {
-  page.addEventListener(
-    "wheel",
-    (event) => {
-      if (!event.ctrlKey && !event.metaKey) return;
-      zoomOrMoveOnWheel(event, toWindowPoint({ x: event.clientX, y: event.clientY }, page));
-    },
-    { passive: false, capture: true },
-  );
-}
-
-/** A middle-button drag over the page moves the canvas. */
-function watchFramedMiddleButton(page: Document): void {
-  page.addEventListener(
-    "pointerdown",
-    (event) => {
-      if (event.button === MIDDLE_BUTTON) pan(event);
-    },
-    true,
-  );
-  // ...and must not start the browser's own middle-button scrolling.
-  page.addEventListener(
-    "mousedown",
-    (event) => {
-      if (event.button === MIDDLE_BUTTON) event.preventDefault();
-    },
-    true,
-  );
-}
-
 /**
  * Runs each time the frame has loaded a page: the first time, and again when
  * the user follows a link inside it. `repin` is the element to pin again on
@@ -101,6 +72,7 @@ function watchFramedMiddleButton(page: Document): void {
 export function onFrameLoad(repin: string | undefined): void {
   const canvas = findCanvas();
   if (!canvas) return;
+  stopWaiting();
   const address = frameAddress(canvas.frame);
   // The empty document a frame starts with: the page is still to come.
   if (address === "about:blank") return;
@@ -116,14 +88,34 @@ export function onFrameLoad(repin: string | undefined): void {
   if (readable) useLoadedPage(canvas.frame, { address, repin });
 }
 
+/** Where the edits and the pin go: the frame's page, and the selector of the element to pin again, if any. */
+type Carried = { page: Document; repin: string | undefined };
+
+/** Puts the edits on the frame's page and pins again, as far as the page has their elements. */
+function carryOver({ page, repin }: Carried): void {
+  // The frame has moved on to another page, or the canvas is closed.
+  if (findCanvas()?.frame.contentDocument !== page) return;
+  carryEdits();
+  if (!findPinnedElement()) pinBySelector(page, repin);
+}
+
+/** How many of the elements to carry to the page has. */
+const countArrived = ({ page, repin }: Carried): number =>
+  countEditedOnPage() + (repin && findBySelector(page, repin) ? 1 : 0);
+
+/** The selector to pin again: only the first page the frame shows is the one the pin came from. */
+function takeRepin(load: { address: string; repin: string | undefined }): string | undefined {
+  const canvas = findCanvas();
+  if (!canvas || canvas.firstAddress) return undefined;
+  canvas.firstAddress = load.address;
+  return load.repin;
+}
+
 function useLoadedPage(frame: HTMLIFrameElement, load: { address: string; repin: string | undefined }): void {
   // Cast: the page was readable, so the frame has its document.
   const page = frame.contentDocument as Document;
-  watchFramedWheel(page);
-  watchFramedMiddleButton(page);
-  carryEdits();
-  const canvas = findCanvas();
-  if (!canvas || canvas.firstAddress) return;
-  canvas.firstAddress = load.address;
-  pinBySelector(page, load.repin);
+  watchFramedGestures(page);
+  const carried = { page, repin: takeRepin(load) };
+  carryOver(carried);
+  waitForMore({ page, count: () => countArrived(carried), onMore: () => carryOver(carried) });
 }

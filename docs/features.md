@@ -36,7 +36,9 @@ pointer is a crosshair.
   another element being pinned, the lock being switched off. Typed keys do
   not reach the inspector's or the page's shortcuts, and no hover is drawn
   meanwhile. Not while Alt is only held, and not with the lock off. It works
-  in canvas mode.
+  in canvas mode. In a button (or the `summary` of a `details`) the browser
+  types no space and takes the space bar as a press of it: the inspector
+  types the space itself and keeps the key from pressing the button.
 - A switch at the foot of the panel, "Edit text inline (lock inspecting)",
   is there on every tab with the gesture beside it ("Double-click text on
   the page"), so the feature is found. Checking it locks inspect mode on,
@@ -51,9 +53,17 @@ pointer is a crosshair.
 - Hovering the same element again does not redraw.
 - The box model scales with CSS transforms (a zoomed board).
 
+- An element pinned with a click is read with the pointer on it, so the
+  panel first shows what its `:hover` rules give it. When the pointer leaves
+  the pinned element, and the transitions that started have ended, the panel
+  reads it again and shows the element at rest. Not while a value is open in
+  the panel or text is being edited on the page: reading again would take it
+  from the user.
+
 Code: `src/overlay/hover.ts`, `box-model.ts`, `tooltip.ts`, `layer.ts`,
-`text-edit.ts`, `lend-attributes.ts`.
-Tests: `tests/hover.test.ts`, `tests/text-edit.test.ts`.
+`text-edit.ts`, `lend-attributes.ts`, `resting-read.ts`.
+Tests: `tests/hover.test.ts`, `tests/text-edit.test.ts`,
+`tests/resting-read.test.ts`.
 
 ### Keyboard navigation
 
@@ -833,6 +843,11 @@ is off by default; the choice and the frame's size are remembered per origin
 - The pinned element stays pinned when the canvas opens or closes, if the
   other copy of the page has it too. After a resize the panel shows the
   element as the page laid it out at the new size.
+- A page that draws itself after the frame has loaded it (a design export
+  that unpacks, an app that renders) gets its edits and its pin when their
+  elements arrive: the frame's page is watched for up to ten seconds after
+  each load (`src/canvas/late-page.ts`). A page that takes longer shows on
+  the canvas without them.
 - The copy of the script inside the frame does not start. It only points
   `window.Groma` at the inspector outside, so a page that calls
   `Groma.replayOverrides()` still works.

@@ -67,10 +67,10 @@ Pin the version, so a later release cannot change a page that already
 works:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@1.0.0/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@1.0.1/dist/groma.js"></script>
 ```
 
-unpkg serves the same file at `https://unpkg.com/gromajs@1.0.0/dist/groma.js`.
+unpkg serves the same file at `https://unpkg.com/gromajs@1.0.1/dist/groma.js`.
 
 ## Use it on an app
 
@@ -333,7 +333,9 @@ for the file again each time the canvas opens. Opening the file with
   which the page's scripts run again; see
   [the canvas](#the-canvas-try-any-size). A reload on the canvas returns to
   the address in the address bar, not to a link followed inside the frame.
-  A link in the frame that leads to another site cannot be shown.
+  A link in the frame that leads to another site cannot be shown. A page
+  that takes more than ten seconds to draw itself in the frame shows there
+  without the edits and the pin.
 - Push mode moves only what is laid out in normal flow; see
   [the side panel](#the-side-panel-push-or-float).
 - Token lookup takes the last matching declaration in source order and
