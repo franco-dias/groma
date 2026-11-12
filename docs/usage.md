@@ -67,10 +67,10 @@ Pin the version, so a later release cannot change a page that already
 works:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@1.1.1/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@1.2.0/dist/groma.js"></script>
 ```
 
-unpkg serves the same file at `https://unpkg.com/gromajs@1.1.1/dist/groma.js`.
+unpkg serves the same file at `https://unpkg.com/gromajs@1.2.0/dist/groma.js`.
 
 ## Use it on an app
 
@@ -106,7 +106,7 @@ export default defineConfig({
       transformIndexHtml: () => [
         {
           tag: "script",
-          attrs: { src: "https://cdn.jsdelivr.net/npm/gromajs@1.1.1/dist/groma.js" },
+          attrs: { src: "https://cdn.jsdelivr.net/npm/gromajs@1.2.0/dist/groma.js" },
           injectTo: "head-prepend",
         },
         { tag: "script", attrs: { src: "http://localhost:4777/bridge.js" }, injectTo: "head" },

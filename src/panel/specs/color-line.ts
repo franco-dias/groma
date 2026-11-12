@@ -1,11 +1,11 @@
-/** The first line of a color's row in the Specs tab: swatch, value, alpha, badges and role. */
+/** The first line of a color's row in the Specs tab: what the color is for, then swatch, value, alpha and badges. */
 import { h } from "../../dom";
 import { options } from "../../options";
 import { colorParts } from "../../specs/color-format";
 import { isColorValue } from "../../specs/colors";
 import type { Spec } from "../../specs/spec";
 import { copyOnClickMarking } from "../copy";
-import { createBadges, createRoleSlot, type TokenMatch } from "./color-parts";
+import { createBadges, createCopySlot, type TokenMatch } from "./color-parts";
 import { editable } from "./editable-field";
 import { createSwatch } from "./specs-block";
 import type { SpecsContext } from "./specs-context";
@@ -26,10 +26,10 @@ export function createLine(color: ColorRole, { row, match, context }: ColorRow):
   const { spec, role, prop } = color;
   const { text, alpha } = colorParts(spec.value, options.colorFormat);
   const line = h("div", "token-line");
-  line.appendChild(createSwatch(spec.value));
+  line.append(h("span", "color-role", role), createSwatch(spec.value));
   const value = line.appendChild(copyOnClickMarking(h("span", "value", text), { text, row }));
   if (prop) editable(value, { context, prop, value: fieldValue(spec.value) });
   if (alpha && isColorValue(text)) line.appendChild(h("span", "alpha", alpha));
-  line.append(...createBadges(match), h("span", "spacer"), createRoleSlot(role));
+  line.append(...createBadges(match), h("span", "spacer"), createCopySlot());
   return line;
 }

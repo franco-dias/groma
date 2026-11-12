@@ -63,10 +63,12 @@ describe("Effects block", () => {
     expect(layout.textContent).not.toContain("Gradient");
   });
 
-  it("lists each shadow with its offsets, blur, spread, color and inset", () => {
+  it("lists each shadow with its kind, color, offsets, blur and spread", () => {
     pinStyle("box-shadow: 0 4px 12px 1px rgba(0, 0, 0, 0.2), inset 0 1px 0 #ffffff");
     expect(labels()).toEqual(["Shadow"]);
-    expect(lines("Shadow")).toEqual(["0 4 12 1 #000000 20%", "inset 0 1 0 0 #FFFFFF"]);
+    // The kind and color read first; the lengths are labeled on the line under them.
+    expect(lines("Shadow")).toEqual(["Drop shadow #000000 20%", "Inner shadow #FFFFFF"]);
+    expect(texts(".effects .shadow-parts")).toEqual(["x 0y 4blur 12spread 1", "x 0y 1blur 0spread 0"]);
     expect(
       all(".effects .effect-line .swatch").map((swatch) => swatch.style.getPropertyValue("--swatch")),
     ).toEqual(["rgba(0, 0, 0, 0.2)", "rgb(255, 255, 255)"]);
@@ -76,14 +78,16 @@ describe("Effects block", () => {
     pinStyle("box-shadow: 0 16px 8px 0 rgba(0, 0, 0, 0.5)");
     ui('[data-option="unit"] [data-value="rem"]')!.click();
     ui('.color-format [data-value="rgb"]')!.click();
-    expect(lines("Shadow")).toEqual(["0rem 1rem 0.5rem 0rem rgb(0 0 0 / 50%)"]);
+    expect(lines("Shadow")).toEqual(["Drop shadow rgb(0 0 0 / 50%)"]);
+    expect(texts(".effects .shadow-parts")).toEqual(["x 0remy 1remblur 0.5remspread 0rem"]);
   });
 
   it("lists text shadows under their own label, with no spread", () => {
     page(`<p class="card" style="margin: 0; text-shadow: 1px 2px 3px rgb(0, 0, 0)">Text</p>`);
     inspector().pin(getElement(".card"));
     expect(labels()).toEqual(["Text shadow"]);
-    expect(lines("Text shadow")).toEqual(["1 2 3 #000000"]);
+    expect(lines("Text shadow")).toEqual(["#000000"]);
+    expect(texts(".effects .shadow-parts")).toEqual(["x 1y 2blur 3"]);
   });
 
   it("lists each filter function and backdrop filter function as name and argument", () => {

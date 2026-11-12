@@ -12,7 +12,7 @@ import type { Fit } from "../../specs/suggest";
 import { copyOnClick } from "../copy";
 import { editable } from "./editable-field";
 import { createGroupTokenLines } from "./effect-tokens";
-import { createFilterRows, createShadowRows } from "./effect-rows";
+import { createBoxShadowRows, createFilterRows, createTextShadowRows } from "./effect-rows";
 import { createGradientRows } from "./gradient-rows";
 import { addBlock } from "./specs-block";
 import type { SpecsContext } from "./specs-context";
@@ -30,19 +30,19 @@ const GROUPS: Group[] = [
     label: "Shadow",
     prop: "box-shadow",
     fit: "shadow",
-    rows: (value, context) => createShadowRows(parseShadows(value), context),
+    rows: (value, context) => createBoxShadowRows(parseShadows(value), context),
   },
   {
     label: "Text shadow",
     prop: "text-shadow",
     fit: "shadow",
-    rows: (value, context) => createShadowRows(parseShadows(value), context),
+    rows: (value, context) => createTextShadowRows(parseShadows(value), context),
   },
-  { label: "Filter", prop: "filter", rows: (value) => createFilterRows(parseFilters(value)) },
+  { label: "Filter", prop: "filter", rows: (value) => createFilterRows(parseFilters(value), "filter") },
   {
     label: "Backdrop filter",
     prop: "backdrop-filter",
-    rows: (value) => createFilterRows(parseFilters(value)),
+    rows: (value) => createFilterRows(parseFilters(value), "backdrop-filter"),
   },
   {
     label: "Gradient",

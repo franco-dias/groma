@@ -1,12 +1,15 @@
 /**
  * The Colors block of the Specs tab: each color of an element with its
- * design token, in the order a developer reads it: the resolved value, the
- * theme path (what goes into `sx`), the CSS variable, then the value in each
- * theme. Every line copies on its own.
+ * design token, in the order a developer reads it: what the color is for
+ * (Background, Border, Text…), the resolved value, the theme path (what goes
+ * into `sx`), the CSS variable, then the value in each theme. A color with no
+ * opacity at all is left out, since nothing on screen has it. Every line
+ * copies on its own.
  */
 import { config } from "../../config";
 import { h } from "../../dom";
 import { options } from "../../options";
+import { colorParts } from "../../specs/color-format";
 import { tokenModes, tokenPath } from "../../specs/tokens";
 import { copyOnClickMarking } from "../copy";
 import { createLine, type ColorRole, type ColorRow } from "./color-line";
@@ -57,10 +60,13 @@ const COLOR_ROLES: [section: string, name: string, role: string, prop: string][]
   ["Icon", "stroke", "Stroke", "stroke"],
 ];
 
+/** A fully transparent color: a border kept only to hold its space, text painted by a gradient. */
+const isInvisible = (value: string): boolean => colorParts(value, "hex").alpha === "0%";
+
 export function renderColors(context: SpecsContext): void {
   const rows = COLOR_ROLES.flatMap(([section, name, role, prop]) => {
     const spec = findSpec(context, [section, name]);
-    return spec ? [createColorRow({ spec, role, prop }, context)] : [];
+    return spec && !isInvisible(spec.value) ? [createColorRow({ spec, role, prop }, context)] : [];
   });
   if (options.pickedColor) {
     const picked = { name: "picked", value: options.pickedColor, color: true };

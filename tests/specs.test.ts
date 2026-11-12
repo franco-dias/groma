@@ -40,7 +40,7 @@ const block = (title: string): HTMLElement | undefined =>
 
 /** The color row for a role ("Background", "Text"…). */
 const colorRow = (role: string): HTMLElement =>
-  all(".token-row").find((row) => row.querySelector(".role .name")?.textContent === role)!;
+  all(".token-row").find((row) => row.querySelector(".color-role")?.textContent === role)!;
 
 const rowTexts = (row: HTMLElement, selector: string): string[] =>
   Array.from(row.querySelectorAll(selector), (node) => (node.textContent ?? "").trim());

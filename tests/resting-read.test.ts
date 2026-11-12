@@ -3,7 +3,7 @@ import { all, frames, getElement, inspector, page, reset, ui } from "./helpers";
 
 const background = (): string =>
   all(".token-row")
-    .find((row) => row.querySelector(".role .name")?.textContent === "Background")!
+    .find((row) => row.querySelector(".color-role")?.textContent === "Background")!
     .querySelector(".token-line .value")!.textContent!;
 
 const widthField = (): HTMLElement => ui('.body[data-for="specs"] [data-edits="width"]')!;

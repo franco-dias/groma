@@ -374,6 +374,7 @@ button.crumb:hover {
 }
 
 .token-line {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--ins-s-3);
@@ -408,39 +409,63 @@ button.crumb:hover {
   border-color: transparent;
 }
 
-/* The role label, the "Copy" hint and the "Copied" mark share one slot. */
-.role {
+/* What the color is for, in the label column of the other blocks, a little wider for "Background". */
+.color-role {
+  flex: none;
+  width: var(--ins-color-label-w);
+}
+
+/* The muted labels and sentences these blocks add: a color's role, a shadow's length names,
+   what starts a transition, what a filter does. */
+.color-role,
+.part-label,
+.motion-trigger,
+.effect-note {
+  color: var(--ins-fg-muted);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+/* The lines under a color (contrast, tokens, themes) sit under its value, not under its label.
+   The token list of an open field keeps the row's full width. */
+.token-row > :not(.token-line, .token-list) {
+  margin-left: calc(var(--ins-color-label-w) + var(--ins-s-3));
+}
+
+/* The "Copy" hint and the "Copied" mark share one slot, shown on hover and after a copy.
+   It lies over the end of the line, so it adds no width: the row fits a 320px panel. */
+.copy-slot {
+  position: absolute;
+  inset: 0 0 0 auto;
   display: grid;
+  align-items: center;
   justify-items: end;
+  padding-left: var(--ins-s-6);
+  background: linear-gradient(to right, transparent, var(--ins-bg-hover) var(--ins-s-6));
+  visibility: hidden;
   white-space: nowrap;
   color: var(--ins-fg-muted);
   font: 400 11px/16px var(--ins-font-sans);
 }
 
-.role > * {
+.copy-slot > * {
   grid-area: 1 / 1;
   display: flex;
   align-items: center;
   gap: var(--ins-s-1);
-}
-
-.role .copy-hint,
-.role .copied {
   visibility: hidden;
 }
 
-.token-row:hover .role .name,
-.token-row.is-copied .role .name,
-.token-row.is-copied .role .copy-hint {
-  visibility: hidden;
+.token-row:hover .copy-slot,
+.token-row.is-copied .copy-slot {
+  visibility: visible;
 }
 
-.token-row:hover:not(.is-copied) .role .copy-hint {
+.token-row:hover:not(.is-copied) .copy-slot .copy-hint {
   visibility: visible;
   color: var(--ins-fg);
 }
 
-.token-row.is-copied .role .copied {
+.token-row.is-copied .copy-slot .copied {
   visibility: visible;
   color: var(--ins-ok);
   font-weight: 500;
@@ -1017,6 +1042,30 @@ button.crumb:hover {
 .effect-stop .hint,
 .effect-token .hint {
   color: var(--ins-fg-muted);
+}
+
+/* A box shadow's kind reads like a label; its lengths are labeled on the line under it. */
+.shadow-kind {
+  color: var(--ins-fg);
+  font: 400 11px/16px var(--ins-font-sans);
+}
+
+.shadow-parts {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--ins-s-4);
+  padding-left: var(--ins-s-4);
+  font: 400 12px/16px var(--ins-font-mono);
+}
+
+/* What starts a transition, under its row. */
+.motion-trigger {
+  padding-left: var(--ins-s-7);
+}
+
+/* What a filter function does, in a sentence. */
+.effect-note {
+  padding-left: var(--ins-s-4);
 }
 
 .effect-token,
