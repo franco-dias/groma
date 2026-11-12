@@ -9,6 +9,7 @@
  * the page, and the pinned element is scrolled into view if it is off
  * screen, which is the one change to the page.
  */
+import { isField } from "./key-target";
 import { type Move, findNeighbour } from "./navigate";
 import { isTextEditing } from "./overlay/text-edit";
 import { isElement, onPageCapture } from "./page";
@@ -31,13 +32,6 @@ function whereTyped(event: KeyboardEvent): Typed {
   const path = event.composedPath();
   return { target: path[0], panel: isOwn(event.target) ? path.find(isPanel) : undefined };
 }
-
-/** An input, or a value being edited: arrow keys are its own. */
-const isField = (target: unknown): boolean =>
-  isElement(target) &&
-  // Cast: only HTML elements say whether they are editable; the rest are not.
-  ((target as HTMLElement).isContentEditable === true ||
-    ["input", "textarea", "select"].includes(target.localName));
 
 /** The » menu or a row's menu is open: its keys are its own. */
 const isMenuOpen = (panel: HTMLElement | undefined): boolean =>

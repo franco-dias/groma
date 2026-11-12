@@ -27,7 +27,7 @@ Nothing is planned after 1.0 yet.
   times its size because they bundle a UI library.
 - A ceiling for `dist/groma.js`: 60 KB gzipped. Groma runs in
   development and staging builds, so the number is about staying an order of
-  magnitude lighter than such tools, not about every byte. 1.1.0 is 59.2 KB.
+  magnitude lighter than such tools, not about every byte. 1.1.1 is 59.4 KB.
 - The changelog says what each release added to the size, so a feature that
   costs several KB is a decision someone saw.
 
