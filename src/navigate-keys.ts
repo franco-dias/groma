@@ -4,7 +4,8 @@
  * after it, going on past the first and last sibling (navigate.ts). Alt is
  * the inspect key, so the keys work wherever the focus is, on the page or in
  * the panel, except in a field or an open menu, where they are its own. A
- * plain arrow key is always the page's. When they act the key is kept from
+ * plain arrow key is the page's, except in the Layers tree, which walks itself
+ * (panel/layers/tree-keys.ts). When they act the key is kept from
  * the page, and the pinned element is scrolled into view if it is off
  * screen, which is the one change to the page.
  */

@@ -19,7 +19,7 @@ import { changesTab } from "./changes/changes-tab";
 import { cssTab } from "./css/css-tab";
 import { closePanel, connectDock, expandPanel, isPanelOpen, openPanel, reportDock } from "./dock";
 import { editsTab } from "./edits/edits-tab";
-import { layersTab } from "./layers-tab";
+import { layersTab } from "./layers/layers-tab";
 import { loadLayout, setTab } from "./layout";
 import { mountMoreMenu } from "./more-menu";
 import template from "./panel.html?raw";
