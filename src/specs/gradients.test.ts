@@ -45,12 +45,12 @@ describe("parseGradients", () => {
     ]);
   });
 
-  it("splits colours with commas from the stops around them", () => {
+  it("splits colors with commas from the stops around them", () => {
     const [gradient] = parseGradients("linear-gradient(rgba(0, 0, 0, 0.5) 0%, rgb(1, 2, 3) 50%)");
     expect(gradient.stops.map(({ color }) => color)).toEqual(["rgba(0, 0, 0, 0.5)", "rgb(1, 2, 3)"]);
   });
 
-  it("leaves out a colour hint", () => {
+  it("leaves out a color hint", () => {
     const [gradient] = parseGradients("linear-gradient(red, 30%, blue)");
     expect(gradient.stops.map(({ color }) => color)).toEqual(["red", "blue"]);
   });

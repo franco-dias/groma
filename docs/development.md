@@ -32,7 +32,7 @@ npm run serve
 
 `serve` opens a demo page ([index.html](../index.html)) that loads the source
 directly and reloads on every change. The demo has two cards, a light and a
-dark theme scope, tokens, and one colour with no token.
+dark theme scope, tokens, and one color with no token.
 
 | Script                           | What it does                                                                                                                                    |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -49,7 +49,7 @@ dark theme scope, tokens, and one colour with no token.
 There are two kinds, and `npm test` runs both.
 
 - **Unit tests** sit next to the code (`src/**/*.test.ts`) and cover the
-  logic that needs no page: units, colours, theme paths, motion, the export
+  logic that needs no page: units, colors, theme paths, motion, the export
   comparison.
 - **Browser tests** live in `tests/` and cover what the inspector does on a
   page: inspect mode, measuring, the panel and each tab, tokens, edits and
@@ -81,12 +81,12 @@ Start at [src/main.ts](../src/main.ts): it only starts the features.
 | `src/launcher.ts`                               | The launcher pill and the inspect lock                                                                                                                                                                                                                                                           |
 | `src/panel/`                                    | The side panel, its markup (`panel.html`), the switch at its foot (`text-edit-switch.ts`) and the tabs: `specs/`, `css/`, `edits/` and `changes/` hold the tabs that are several files                                                                                                           |
 | `src/config.ts`                                 | The settings a page can give the inspector                                                                                                                                                                                                                                                       |
-| `src/specs/`                                    | What the Specs tab knows: sections and their rows, tokens, colours and their formats, contrast, units, steps, sizing, tracks, motion, effects and gradients; logic with no page in it                                                                                                            |
+| `src/specs/`                                    | What the Specs tab knows: sections and their rows, tokens, colors and their formats, contrast, units, steps, sizing, tracks, motion, effects and gradients; logic with no page in it                                                                                                             |
 | `src/specs/components/`                         | One reader per way a page can name its components                                                                                                                                                                                                                                                |
 | `src/edits/`                                    | The user's edits: selectors, storage, apply and replay, `changes.ts` to make one, `history.ts` for undo, the text "Copy edits" writes (`handoff.ts`)                                                                                                                                             |
 | `src/export-diff.ts`                            | Comparing two Claude Design exports                                                                                                                                                                                                                                                              |
 | `src/icons.ts`                                  | The icons, as SVG drawings                                                                                                                                                                                                                                                                       |
-| `src/styles/`                                   | The stylesheets, one per area; `tokens.css` holds every colour and size                                                                                                                                                                                                                          |
+| `src/styles/`                                   | The stylesheets, one per area; `tokens.css` holds every color and size                                                                                                                                                                                                                           |
 | `scripts/`                                      | `inspect.mjs`, the `gromajs` command (it ships in the package as its `bin`): `serve-page.mjs` opens a file with the inspector; `bridge*.mjs` and `bridge-client.js` are the bridge for agents; `mcp*.mjs` the MCP server. Node built-ins only; every file is listed in `files` of `package.json` |
 | `tests/`                                        | Browser tests, one file per feature                                                                                                                                                                                                                                                              |
 | `docs/features.md`                              | Every feature and the rules it follows                                                                                                                                                                                                                                                           |

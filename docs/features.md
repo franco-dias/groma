@@ -190,7 +190,7 @@ Tests: `tests/panel.test.ts`, `tests/page-shift.test.ts`,
 - The grid (off, 4 or 8 board pixels) covers the pinned element's board,
   whichever element of the board is pinned, and scales with it.
 - The grid shows on light and dark boards alike: its lines are a mask over
-  a backdrop filter, not a colour. (A blend mode does not work: the
+  a backdrop filter, not a color. (A blend mode does not work: the
   inspector's host is its own stacking context.)
 - The grid is cut to the part of the board the page shows, so it never
   spills over the page's own chrome; its lines still start at the board's
@@ -335,20 +335,20 @@ it (see "Editing a value" below).
 - **Effects**: after the Box, only when the element has one. Each group is a
   label and its rows:
   - **Shadow** and **Text shadow** (`box-shadow`, `text-shadow`): one row per
-    shadow, in order: a swatch of its colour, `inset` when it is one,
+    shadow, in order: a swatch of its color, `inset` when it is one,
     `x y blur spread` in the tab's unit (a text shadow has no spread), and
-    the colour in the chosen format.
+    the color in the chosen format.
   - **Filter** and **Backdrop filter**: one row per function, name and
     argument (`blur 4px`, `brightness 1.1`).
   - **Gradient** (`background-image`): one row per layer that is a gradient,
     a strip painted with the gradient itself, its kind and direction or shape
     (`linear 135deg`, `radial circle`, `conic`), and its stops as swatch,
-    colour and position (a stop with two positions keeps both). A layer that
+    color and position (a stop with two positions keeps both). A layer that
     is `url(...)` is not an effect.
   - A click on a row copies that one shadow, function or gradient as a CSS
     value; a click on the label copies the whole property's value; a
     double-click on the label edits the whole property as text.
-  - A shadow colour or gradient stop that equals one of the page's colour
+  - A shadow color or gradient stop that equals one of the page's color
     tokens reads "matches token --name". A shadow that equals a shadow token
     reads the same under the group; when the element declares the property
     with a token (`box-shadow: var(--shadow-md)`) the token's name is shown,
@@ -386,7 +386,7 @@ it (see "Editing a value" below).
   inside a `.card`. A selector with two states (`:hover:focus`) is listed
   under each. Only rules that apply now (`@media` and `@supports` as in the
   Specs tab). Per state: its name, then `property  value` rows, a swatch for a
-  colour; a click copies `property: value`. Later rules win per property
+  color; a click copies `property: value`. Later rules win per property
   inside a state. A declaration that gives the value the element already has
   (a `var()` is read first) is left out. Read only. Shortcuts: a state inside
   `:is()`, `:where()` or `:not()` is found as text and leaves the function
@@ -420,19 +420,19 @@ click still copies.
 
 - Editable: width and height (each half of the size), box-sizing, display,
   gap, radius, opacity, stroke width, columns, the whole of a shadow, filter
-  or gradient property (the label in the Effects block), each side of margin and padding and the four at once, each colour (background, border,
+  or gradient property (the label in the Effects block), each side of margin and padding and the four at once, each color (background, border,
   text, fill, stroke), and family, weight, size, line height, tracking,
   transform, align and decoration of the text.
 - Not editable, because they are made of several properties or are derived:
   the position on the board, the border (widths and style), "position", the
-  content size in the box, a picked colour. In the Layout and Typography
+  content size in the box, a picked color. In the Layout and Typography
   blocks such a value is dimmed, and a value that can be edited is tinted
   under the pointer, so the two read apart before any click.
 - In the size, the × between width and height stands back, so they read as
   two values.
 - The field holds the CSS value of the property, with its unit (`8px` where
   the tab shows `8`; the whole family list; `rgba(…)` for a translucent
-  colour). For the size it holds the CSS `width` or `height`, which on an
+  color). For the size it holds the CSS `width` or `height`, which on an
   element sized by its content box is smaller than the size shown. On such
   an element the tooltip of the two fields says so; the Box block names the
   `box-sizing` on every element.
@@ -475,24 +475,24 @@ click still copies.
   (`beginScrub` / `endScrub` in `edits/history.ts`). A result the browser
   rejects (a negative width or padding) is not applied; a margin may go
   negative. The tooltip says "drag to change" only on values that can be
-  dragged. Colours, keywords, lists (`12px 16px`) and the names "margin" and
+  dragged. Colors, keywords, lists (`12px 16px`) and the names "margin" and
   "padding" are not dragged.
 - **Token suggestions.** While a value is a field, a list under it offers the
   page's tokens (CSS variables the element sees; only those with the page's
-  token prefixes when it set some). A colour property (`color`,
+  token prefixes when it set some). A color property (`color`,
   `background-color`, `border-color`, `fill`, `stroke`) lists tokens whose
-  value is a colour; a length (sizes, gap, radius, the sides of the box, font
+  value is a color; a length (sizes, gap, radius, the sides of the box, font
   size, line height, letter spacing, stroke width) lists tokens whose value is
   a length (`px`, `rem`, `calc()`…). A shadow (`box-shadow`, `text-shadow`, and
   the Effects block's labels) lists tokens whose value is one or more shadows
-  with a colour, each drawn on a small square; a duration or a delay
+  with a color, each drawn on a small square; a duration or a delay
   (`transition-duration`, `transition-delay`) lists tokens that are a single
   time (`150ms`, `0.2s`); `transition-timing-function` lists timing functions
   (`ease`, `cubic-bezier()`, `steps()`, `linear()`), each with its curve; the
   whole `transition` lists tokens that contain a time and more than a time
   (`all 150ms ease`). Other properties, a grid track, and a page with no such
   token get no list. Tokens that hold the field's value come
-  first (a colour in any spelling; a length compared in pixels, a bare number
+  first (a color in any spelling; a length compared in pixels, a bare number
   being pixels; a shadow, a time, a timing function or a transition compared
   by what it does: `150ms` is `0.15s`, `ease` is its `cubic-bezier()`), then those whose name contains the typed text, ignoring case
   (`--sp` and `space` both find `--space-4`); each group by length of name.
@@ -503,7 +503,7 @@ click still copies.
   list that has a highlight; the next cancels the field. The list sits in the
   tab's scroll area, under the field or above it when there is no room, cut
   to fit and scrolling when neither side has room. Names are cut with an
-  ellipsis, never a sideways scroll. Out of scope: All CSS fields, the colour
+  ellipsis, never a sideways scroll. Out of scope: All CSS fields, the color
   picker. Code: `src/panel/token-list/`, `src/specs/suggest.ts`.
 - A bare number is taken as pixels (rem, in rem mode) where the property
   wants a length (`24` for a gap, `12 16` for the sides of a box), and stays a number where it is
@@ -511,7 +511,7 @@ click still copies.
   dropped.
 - The edit is the same as one from the All CSS tab: it goes through `edit()`
   (feature 10), is saved, shows in the Edits tab and in "Copy edits", and can
-  be undone. An edited value is shown in the edit colour.
+  be undone. An edited value is shown in the edit color.
 - While a value is a field, a click in it places the caret and does not copy.
   The double-click itself still copies the value once, as its first click.
 
@@ -590,26 +590,26 @@ declares as CSS declarations, one per line, under a comment with its name
 Code: `src/panel/specs/copy-css.ts`, `src/specs/declarations.ts`.
 Tests: `tests/specs-copy-css.test.ts`, `src/specs/declarations.test.ts`.
 
-## 7. Colours and tokens
+## 7. Colors and tokens
 
-Each colour is a row: swatch, value, its role (Background, Border, Text,
+Each color is a row: swatch, value, its role (Background, Border, Text,
 Fill, Stroke, Picked).
 
 - **Format**: a HEX | RGB | HSL switch in the block's head sets how every
-  colour of the Specs tab is shown (the rows, a comparison) and what a click
+  color of the Specs tab is shown (the rows, a comparison) and what a click
   copies: `#2F6BFF` (with the alpha beside it, not copied), `rgb(47 107 255)`
   or `hsl(223 100% 59%)`, and `rgb(47 107 255 / 50%)` when translucent. HSL is
   rounded to whole numbers. The choice is remembered per site with the
   panel's other settings (`colorFormat` in `__groma_panel`). The field a
   double-click opens, the token names and the token modes keep the page's own
   spelling.
-- **Contrast**: the Text row has a line with the ratio of the text colour
+- **Contrast**: the Text row has a line with the ratio of the text color
   against the background behind it (`4.52 : 1`) and the WCAG level it meets
   (`AAA`, `AA`, `Fails AA`). Normal text needs 4.5 for AA and 7 for AAA;
   large text (24px, or 18.66px at weight 700) needs 3 and 4.5. The
-  background is the nearest ancestor-or-self colour that is not transparent;
+  background is the nearest ancestor-or-self color that is not transparent;
   translucent layers are composited down to an opaque one, the page's canvas
-  counts as white, and so does the text colour's own alpha. Over a background
+  counts as white, and so does the text color's own alpha. Over a background
   image or gradient the line reads "over an image" with no number.
   `opacity`, blend modes and elements painted behind the text without being
   its ancestors are ignored (`shortcut:` in `src/specs/contrast.ts`).
@@ -619,12 +619,12 @@ Fill, Stroke, Picked).
   then
   the CSS variable, then the token's value in every scope that sets it. The
   scope the element is in stands out.
-- Text and icon colours usually come from an ancestor; the lookup walks up
+- Text and icon colors usually come from an ancestor; the lookup walks up
   for inherited properties.
-- **Matches token**: the design wrote the colour by hand, but a token has
+- **Matches token**: the design wrote the color by hand, but a token has
   the same value.
-- **No token**: no token has that colour. The row is flagged.
-- Non-colour values declared with a token list it under the layout cells.
+- **No token**: no token has that color. The row is flagged.
+- Non-color values declared with a token list it under the layout cells.
 
 - Declared values are read from the rules that apply now: a rule inside a
   `@media` or `@supports` block that does not apply to the page (or to the
@@ -892,8 +892,8 @@ hand it to whoever changes the source: a coding agent, or a person.
   so it is still there after a reload. An edit saved by a version before 0.7
   has no "before", and shows only its value. It is the value at the moment
   of the first edit, so it includes earlier edits it depends on: a text
-  colour inherited from a parent that was edited first reads as the parent's
-  new colour.
+  color inherited from a parent that was edited first reads as the parent's
+  new color.
 - A click on a group's name pins that element. A group whose element the
   page no longer has says so, and cannot be pinned.
 - **↩ on a line** removes that edit and puts back the page's own value.
@@ -934,7 +934,7 @@ hand it to whoever changes the source: a coding agent, or a person.
   and its note. It is off while there is nothing to copy.
 - **Token names.** When the new value of a style is held by one of the
   page's tokens (a CSS variable the element can see), the line names it:
-  `16px (matches --space-4)`. Colours match in any spelling; other values
+  `16px (matches --space-4)`. Colors match in any spelling; other values
   match as text. At most three tokens are named, shortest names first. A
   value that already says `var(…)` is left as it is. A value with no digit
   but zero (`none`, `auto`, `0px`) is never matched: tokens that hold those

@@ -99,7 +99,7 @@ function applyOnElement(element: Element, { prop, value }: { prop: string; value
 // not the "50%" the stylesheet says); read the declared value when
 // agents need the source's own spelling.
 // shortcut: it is the value at the moment of the first edit, so it
-// includes earlier edits it depends on (a colour inherited from an edited
+// includes earlier edits it depends on (a color inherited from an edited
 // parent); read it from the original page if that misleads readers.
 function valueOnPage(element: Element, prop: string): string {
   return prop === CONTENT ? getContent(element) : getComputedStyle(element).getPropertyValue(prop).trim();

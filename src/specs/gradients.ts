@@ -18,7 +18,7 @@ export type Gradient = {
 const GRADIENT = /^(repeating-)?(linear|radial|conic)-gradient\((.*)\)$/is;
 /** What a gradient says when it says nothing about its direction or shape. */
 const DEFAULT_CONFIG: Record<string, string> = { linear: "180deg", radial: "ellipse", conic: "" };
-/** A first item that sets direction or shape, where a colour stop would have a colour first. */
+/** A first item that sets direction or shape, where a color stop would have a color first. */
 const CONFIG = /^([+-]?[\d.]|to\s|circle|ellipse|closest-|farthest-|at\s|from\s)/i;
 const POSITION = /^[+-]?(\d+\.?\d*|\.\d+)[a-z%]*$|^calc\(/i;
 

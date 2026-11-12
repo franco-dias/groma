@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { findFit, isLengthValue, lengthInPixels, rankTokens } from "./suggest";
 
 describe("findFit", () => {
-  it("takes colours for a colour property and lengths for a size", () => {
+  it("takes colors for a color property and lengths for a size", () => {
     expect(findFit("background-color")).toBe("color");
     expect(findFit("stroke")).toBe("color");
     for (const prop of [
@@ -47,7 +47,7 @@ describe("isLengthValue", () => {
       expect(isLengthValue(value)).toBe(true);
   });
 
-  it("turns down colours, keywords and bare numbers", () => {
+  it("turns down colors, keywords and bare numbers", () => {
     for (const value of [
       "#fff",
       "rgb(0, 0, 0)",

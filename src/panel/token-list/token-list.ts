@@ -1,6 +1,6 @@
 /**
  * The page's design tokens, listed under a field of the Specs tab while the
- * user types a value: a swatch for a colour, a square drawn with the shadow
+ * user types a value: a swatch for a color, a square drawn with the shadow
  * for a shadow, the curve for a timing function, the token's name, its value. A
  * click, or the arrow keys and Enter, writes `var(--token)` in place of the
  * text. The tokens that hold the field's value come first, then those whose

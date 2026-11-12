@@ -3,9 +3,9 @@
  *
  * From top to bottom: the element header (where it is, what it is, its
  * classes), then one block per subject: asset, comparison, component, layout, box,
- * effects, colours, typography, states, motion. A click on any value, token or name copies
+ * effects, colors, typography, states, motion. A click on any value, token or name copies
  * it. A double-click on a value that is one CSS property (a size, a side of
- * the box, a colour, a font size) turns it into a field: the edit is made on
+ * the box, a color, a font size) turns it into a field: the edit is made on
  * the page like one from the All CSS tab, and is listed in the Edits tab.
  * Values that cannot be edited are dimmed. Beside the size, each axis says
  * whether it is fixed, hugs its content or fills its parent; a click on the
@@ -15,7 +15,7 @@
  * and rows one by one, to count, resize and add.
  *
  * The action bar above switches the unit, shows a grid, compares with
- * another element, copies a link to the element and picks a colour.
+ * another element, copies a link to the element and picks a color.
  */
 import { part, type Tab, tabBody } from "../tab";
 import { mountActionBar, updateActionBar } from "./action-bar";

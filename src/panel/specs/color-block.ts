@@ -1,5 +1,5 @@
 /**
- * The Colors block of the Specs tab: each colour of an element with its
+ * The Colors block of the Specs tab: each color of an element with its
  * design token, in the order a developer reads it: the resolved value, the
  * theme path (what goes into `sx`), the CSS variable, then the value in each
  * theme. Every line copies on its own.
@@ -30,7 +30,7 @@ function createTokenLines(
       ...(modes.length ? [createModes(modes, context.computedStyle.getPropertyValue(token).trim())] : []),
     ];
   });
-  // A colour the design wrote by hand that happens to equal a token.
+  // A color the design wrote by hand that happens to equal a token.
   const similarLines = similar
     .slice(0, 2)
     .map((token) => copies(h("div", "css-var is-secondary", token), token));
@@ -48,7 +48,7 @@ function createColorRow(color: ColorRole, context: SpecsContext): HTMLElement {
   return row;
 }
 
-/** Each colour of an element, with the CSS property a double-click on it edits. */
+/** Each color of an element, with the CSS property a double-click on it edits. */
 const COLOR_ROLES: [section: string, name: string, role: string, prop: string][] = [
   ["Shape", "background", "Background", "background-color"],
   ["Shape", "border color", "Border", "border-color"],

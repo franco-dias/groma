@@ -1,4 +1,4 @@
-/** Lengths and colours the way the Specs tab shows them and the way a click copies them. */
+/** Lengths and colors the way the Specs tab shows them and the way a click copies them. */
 import { config } from "../../config";
 import { options } from "../../options";
 import { pageDocument } from "../../page";
@@ -26,6 +26,6 @@ export const fieldLength = (value: string): string =>
 /** What a click on that length copies: with its unit, or bare, as the page configured. */
 export const copied = (value: string): string => copiedLength(value, lengthCopy());
 
-/** A spec's value as text: colours in the chosen format, lengths in the chosen unit. */
+/** A spec's value as text: colors in the chosen format, lengths in the chosen unit. */
 export const shownSpec = (spec: Spec): string =>
   spec.color ? formatColorAs(spec.value, options.colorFormat) : shown(spec.value);

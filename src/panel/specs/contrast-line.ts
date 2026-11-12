@@ -1,4 +1,4 @@
-/** The contrast line under the Text colour: the ratio against the background behind the text, and the WCAG level it meets. */
+/** The contrast line under the Text color: the ratio against the background behind the text, and the WCAG level it meets. */
 import { h } from "../../dom";
 import { contrastOf, formatRatio, type Contrast, type Layer } from "../../specs/contrast";
 import type { SpecsContext } from "./specs-context";
@@ -21,7 +21,7 @@ function createResult(contrast: Contrast): HTMLElement[] {
   return [h("span", "value", formatRatio(contrast.ratio)), badge];
 }
 
-/** The line; none when the text colour or a background is written in a form we cannot read. */
+/** The line; none when the text color or a background is written in a form we cannot read. */
 export function createContrastLines({ element, computedStyle }: SpecsContext): HTMLElement[] {
   const contrast = contrastOf({
     text: computedStyle.color,

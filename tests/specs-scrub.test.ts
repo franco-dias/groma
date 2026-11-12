@@ -245,7 +245,7 @@ describe("dragging a number in the Specs tab", () => {
     expect(value("display").title).toBe("Click to copy · double-click to edit");
   });
 
-  it("does not drag a colour or a keyword", async () => {
+  it("does not drag a color or a keyword", async () => {
     for (const property of ["color", "display"]) {
       const node = value(property);
       const before = node.textContent;

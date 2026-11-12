@@ -251,7 +251,7 @@ describe("Copy edits", () => {
     expect(text).toContain("Note: Make this sticky");
   });
 
-  it("names the token that holds a new value, for a length and for a colour in another spelling", async () => {
+  it("names the token that holds a new value, for a length and for a color in another spelling", async () => {
     editStyle(".title", { property: "padding-top", value: "16px" });
     typeOver(field("color"), "red");
     typeOver(field("margin-top"), "7px");

@@ -10,7 +10,7 @@ export type Spec = {
   name: string;
   /** Empty when there is nothing to show; such rows are skipped. */
   value: string;
-  /** The value is a colour: show a swatch and look for tokens with that colour. */
+  /** The value is a color: show a swatch and look for tokens with that color. */
   color?: boolean;
   /** CSS properties to look up design tokens for. */
   props?: string[];

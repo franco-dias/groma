@@ -1,4 +1,4 @@
-/** Under a block: the design tokens its non-colour values are declared with, as "Gap  --spacing-4" lines. */
+/** Under a block: the design tokens its non-color values are declared with, as "Gap  --spacing-4" lines. */
 import { config } from "../../config";
 import { h } from "../../dom";
 import type { Spec } from "../../specs/spec";

@@ -39,7 +39,7 @@ function createRow(board: ChangedBoard): { row: HTMLElement; caret: HTMLElement 
   return { row, caret };
 }
 
-/** The sign goes with the colour, so the meaning never rests on colour alone. */
+/** The sign goes with the color, so the meaning never rests on color alone. */
 function createLine(text: string, kind: "added" | "removed"): HTMLElement {
   const line = h("div", `change-line is-${kind}`);
   line.append(h("span", "sign", SIGNS[kind]), h("span", "text", text.slice(0, MAX_LINE_LENGTH)));

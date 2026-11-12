@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { all, clipboard, getElement, inspector, page, reset, texts, ui, wait } from "./helpers";
 
-/** The colour row for a role ("Background", "Text"…). */
+/** The color row for a role ("Background", "Text"…). */
 const colorRow = (role: string): HTMLElement =>
   all(".token-row").find((row) => row.querySelector(".role .name")?.textContent === role)!;
 
@@ -19,21 +19,21 @@ beforeEach(() => {
   inspector().pin(getElement(".card"));
 });
 
-describe("colour format", () => {
+describe("color format", () => {
   it("shows hex with a separate alpha to begin with", () => {
     expect(valueOf("Text")).toBe("#2F6BFF");
     expect(valueOf("Background")).toBe("#2F6BFF");
     expect(texts(".token-line .alpha")).toEqual(["50%", "100%"]);
   });
 
-  it("shows every colour as rgb, alpha inside the text", () => {
+  it("shows every color as rgb, alpha inside the text", () => {
     chooseFormat("rgb");
     expect(valueOf("Text")).toBe("rgb(47 107 255)");
     expect(valueOf("Background")).toBe("rgb(47 107 255 / 50%)");
     expect(texts(".token-line .alpha")).toEqual([]);
   });
 
-  it("shows every colour as hsl", () => {
+  it("shows every color as hsl", () => {
     chooseFormat("hsl");
     expect(valueOf("Text")).toBe("hsl(223 100% 59%)");
     expect(valueOf("Background")).toBe("hsl(223 100% 59% / 50%)");
@@ -50,7 +50,7 @@ describe("colour format", () => {
     expect(clipboard.text).toBe("rgb(47 107 255 / 50%)");
   });
 
-  it("changes the colours of a comparison too", () => {
+  it("changes the colors of a comparison too", () => {
     chooseFormat("hsl");
     ui('[data-action="compare"]')!.click();
     inspector().pin(getElement(".other"));
@@ -114,7 +114,7 @@ describe("contrast", () => {
     expect(contrast()).toEqual(["2.17 : 1", "Fails AA"]);
   });
 
-  it("takes the page's canvas as white when nothing has a colour", () => {
+  it("takes the page's canvas as white when nothing has a color", () => {
     pinText("color: rgb(0, 0, 0)");
     expect(contrast()).toEqual(["21 : 1", "AAA"]);
   });

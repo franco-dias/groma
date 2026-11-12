@@ -1,4 +1,4 @@
-/** The HEX | RGB | HSL switch in the head of the Colors block: how colours are shown and copied, remembered per site. */
+/** The HEX | RGB | HSL switch in the head of the Colors block: how colors are shown and copied, remembered per site. */
 import { h } from "../../dom";
 import { options } from "../../options";
 import { toColorFormat } from "../../specs/color-format";

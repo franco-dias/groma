@@ -1,5 +1,5 @@
 /**
- * Tokens under the Effects block's rows: the token that has a colour (a
+ * Tokens under the Effects block's rows: the token that has a color (a
  * shadow's, a gradient stop's) or a whole shadow value, as "matches token
  * --name", and the token a property is declared with.
  */
@@ -21,7 +21,7 @@ function createMatchLine(token: string): HTMLElement {
   return line;
 }
 
-/** The lines for the (up to two) tokens whose colour is `color`; none for a colour no token has. */
+/** The lines for the (up to two) tokens whose color is `color`; none for a color no token has. */
 export function createColorTokenLines(color: string, context: SpecsContext): HTMLElement[] {
   if (!isColor(color)) return [];
   return tokensWithColor(context.computedStyle, color).slice(0, 2).map(createMatchLine);

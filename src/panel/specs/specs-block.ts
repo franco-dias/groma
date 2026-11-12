@@ -1,4 +1,4 @@
-/** The pieces blocks of the Specs tab are made of: a titled section, and a colour swatch. */
+/** The pieces blocks of the Specs tab are made of: a titled section, and a color swatch. */
 import { h } from "../../dom";
 import type { SpecsContext } from "./specs-context";
 

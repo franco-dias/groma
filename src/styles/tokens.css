@@ -132,7 +132,7 @@ kbd {
   font: 400 11px/16px var(--ins-font-mono);
 }
 
-/* A colour chip; the checker shows through translucent colours. */
+/* A color chip; the checker shows through translucent colors. */
 .swatch {
   flex: none;
   width: 12px;

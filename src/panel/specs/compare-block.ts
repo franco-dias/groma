@@ -17,7 +17,7 @@ export function stopComparing(): void {
   rerender();
 }
 
-/** One side of a difference: a swatch for colours, then the value. */
+/** One side of a difference: a swatch for colors, then the value. */
 function createSide(spec: Spec | undefined, className: string): HTMLElement {
   const side = h("span", `side ${className}`);
   if (!spec?.value) {

@@ -74,7 +74,7 @@ describe("States block", () => {
     expect(rowsOf(":active")).toEqual(["opacity 0.5", "transform scale(0.98)"]);
   });
 
-  it("shows a swatch for a colour", () => {
+  it("shows a swatch for a color", () => {
     pinButton();
     const swatches = all(".states .effect-line .swatch").map((swatch) =>
       swatch.style.getPropertyValue("--swatch"),

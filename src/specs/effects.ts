@@ -1,8 +1,8 @@
 /**
  * Shadows and filters read apart, for the Effects block of the Specs tab: one
- * shadow per entry with its offsets, blur, spread and colour, one filter per
+ * shadow per entry with its offsets, blur, spread and color, one filter per
  * function with its argument. Works on computed values and on token values
- * alike, whatever the order of a shadow's parts (the browser puts the colour
+ * alike, whatever the order of a shadow's parts (the browser puts the color
  * first when it computes one).
  */
 import { splitTopLevel } from "./declarations";
@@ -14,9 +14,9 @@ export type Shadow = {
   blur: string;
   /** Absent for a text shadow, which has none. */
   spread?: string;
-  /** Empty when the shadow names no colour. */
+  /** Empty when the shadow names no color. */
   color: string;
-  /** The shadow as CSS, in the order x y blur spread colour, with inset first. */
+  /** The shadow as CSS, in the order x y blur spread color, with inset first. */
   text: string;
 };
 
@@ -64,7 +64,7 @@ export function parseFilters(value: string): FilterFunction[] {
   });
 }
 
-/** A value that is shadows, each with its colour: what a shadow token holds. A lone length or colour is not one. */
+/** A value that is shadows, each with its color: what a shadow token holds. A lone length or color is not one. */
 export function isShadowValue(value: string): boolean {
   const shadows = parseShadows(value);
   return shadows.length > 0 && shadows.every(({ color }) => color !== "");

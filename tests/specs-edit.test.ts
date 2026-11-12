@@ -128,7 +128,7 @@ describe("editing a value in the Specs tab", () => {
     expect(getComputedStyle(card).marginTop).toBe("10px");
   });
 
-  it("edits a colour, and offers a translucent one with its alpha", () => {
+  it("edits a color, and offers a translucent one with its alpha", () => {
     retype("color", "#ff0000");
     expect(getComputedStyle(card).color).toBe("rgb(255, 0, 0)");
 
@@ -221,7 +221,7 @@ describe("editing a value in the Specs tab", () => {
   });
 });
 
-const colour = (label: string): string => {
+const color = (label: string): string => {
   const row = Array.from(ui('.body[data-for="specs"]')!.querySelectorAll(".cell, .wide")).find(
     (candidate) => candidate.querySelector(".label")!.textContent === label,
   )!;
@@ -235,8 +235,8 @@ describe("telling editable values from the rest", () => {
     );
     inspector().pin(getElement(".card"));
 
-    expect(colour("Border")).toBe(colour("Position"));
-    expect(colour("Border")).not.toBe(colour("Display"));
+    expect(color("Border")).toBe(color("Position"));
+    expect(color("Border")).not.toBe(color("Display"));
   });
 });
 

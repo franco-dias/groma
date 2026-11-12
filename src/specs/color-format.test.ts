@@ -6,7 +6,7 @@ describe("formatColorAs", () => {
     { format: "hex", expected: "#2F6BFF" },
     { format: "rgb", expected: "rgb(47 107 255)" },
     { format: "hsl", expected: "hsl(223 100% 59%)" },
-  ] as const)("writes a colour as $format", ({ format, expected }) => {
+  ] as const)("writes a color as $format", ({ format, expected }) => {
     expect(formatColorAs("rgb(47, 107, 255)", format)).toBe(expected);
   });
 
@@ -30,7 +30,7 @@ describe("formatColorAs", () => {
     { value: "rgb(255, 0, 0)", expected: "hsl(0 100% 50%)" },
     { value: "rgb(0, 255, 0)", expected: "hsl(120 100% 50%)" },
     { value: "rgb(255, 0, 128)", expected: "hsl(330 100% 50%)" },
-  ])("puts $value on the colour wheel", ({ value, expected }) => {
+  ])("puts $value on the color wheel", ({ value, expected }) => {
     expect(formatColorAs(value, "hsl")).toBe(expected);
   });
 
@@ -43,7 +43,7 @@ describe("formatColorAs", () => {
     expect(formatColorAs("rgb(0 128 0 / 25%)", "hex")).toBe("#008000 25%");
   });
 
-  it("leaves a colour it cannot read as it is", () => {
+  it("leaves a color it cannot read as it is", () => {
     expect(formatColorAs("oklch(0.7 0.1 200)", "rgb")).toBe("oklch(0.7 0.1 200)");
   });
 });
@@ -59,7 +59,7 @@ describe("colorParts", () => {
     expect(colorParts("rgba(47, 107, 255, 0.5)", "hsl")).toEqual({ text: "hsl(223 100% 59% / 50%)" });
   });
 
-  it("has no alpha for a colour it cannot read", () => {
+  it("has no alpha for a color it cannot read", () => {
     expect(colorParts("oklch(0.7 0.1 200)", "hex")).toEqual({ text: "oklch(0.7 0.1 200)" });
   });
 });

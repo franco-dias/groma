@@ -1,4 +1,4 @@
-/** Colour helpers for the Specs tab. */
+/** Color helpers for the Specs tab. */
 
 let probe: CanvasRenderingContext2D | undefined;
 const normalized = new Map<string, string | undefined>();
@@ -11,10 +11,10 @@ function getColorProbe(): CanvasRenderingContext2D {
   return probe;
 }
 
-/** The colour as the canvas spells it, or undefined when `value` is not a colour. */
+/** The color as the canvas spells it, or undefined when `value` is not a color. */
 function readColor(value: string): string | undefined {
   const colorProbe = getColorProbe();
-  // An invalid colour leaves fillStyle untouched, so two different
+  // An invalid color leaves fillStyle untouched, so two different
   // starting points give two different answers.
   colorProbe.fillStyle = "#000";
   colorProbe.fillStyle = value;
@@ -25,8 +25,8 @@ function readColor(value: string): string | undefined {
 }
 
 /**
- * One spelling per colour, so "#fff", "white" and "rgb(255, 255, 255)"
- * compare equal. Undefined for text that is not a colour.
+ * One spelling per color, so "#fff", "white" and "rgb(255, 255, 255)"
+ * compare equal. Undefined for text that is not a color.
  */
 function normalizeColor(value: string): string | undefined {
   if (normalized.has(value)) return normalized.get(value);
@@ -35,10 +35,10 @@ function normalizeColor(value: string): string | undefined {
   return result;
 }
 
-/** True when `value` is a colour in any spelling. */
+/** True when `value` is a color in any spelling. */
 export const isColor = (value: string): boolean => normalizeColor(value) !== undefined;
 
-/** True when two texts are the same colour, whatever their spelling. */
+/** True when two texts are the same color, whatever their spelling. */
 export const sameColor = (first: string, second: string): boolean => {
   const normalizedFirst = normalizeColor(first);
   return normalizedFirst !== undefined && normalizedFirst === normalizeColor(second);
@@ -65,7 +65,7 @@ export function tokensWithColor(computedStyle: CSSStyleDeclaration, color: strin
 }
 
 /**
- * The CSS variables on an element that hold `value`: the same colour in any
+ * The CSS variables on an element that hold `value`: the same color in any
  * spelling, or the same text for any other value. Shortest names first.
  * shortcut: lengths are compared as text, so "1rem" does not match a token
  * that says "16px"; convert units if users miss those matches.
@@ -82,6 +82,6 @@ export function tokensWithValue(computedStyle: CSSStyleDeclaration, value: strin
     .toSorted(byNameLength);
 }
 
-/** True when a CSS value starts like a colour, to decide whether to show a swatch. */
+/** True when a CSS value starts like a color, to decide whether to show a swatch. */
 export const isColorValue = (value: string): boolean =>
   /^(#|rgb|rgba|hsl|hsla|oklch|color\()/.test(value.trim());

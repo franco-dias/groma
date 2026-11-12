@@ -20,7 +20,7 @@ All notable changes to this package are recorded here. Versions follow
   export that unpacks, an app that renders) lost the pinned element and did
   not show the edits, and the panel closed. They are now put on the page when
   its elements arrive, within ten seconds of the load.
-- Fixed: an element pinned with a click kept showing its `:hover` colours,
+- Fixed: an element pinned with a click kept showing its `:hover` colors,
   because it was read with the pointer on it. The panel reads it again when
   the pointer leaves it and its transitions have ended.
 - Size: the gzipped script goes from 58.1 to 58.5 KB.
@@ -51,11 +51,11 @@ All notable changes to this package are recorded here. Versions follow
 
 ## 0.9.0 (2026-11-11)
 
-- New: colour format. A HEX | RGB | HSL switch in the Colors block of the
-  Specs tab shows every colour, and copies it, as `#2F6BFF`,
+- New: color format. A HEX | RGB | HSL switch in the Colors block of the
+  Specs tab shows every color, and copies it, as `#2F6BFF`,
   `rgb(47 107 255)` or `hsl(223 100% 59%)` (`rgb(47 107 255 / 50%)` when
   translucent). Remembered per site.
-- New: contrast. The Text colour row shows the ratio against the background
+- New: contrast. The Text color row shows the ratio against the background
   behind the text (`4.52 : 1`) and the WCAG level it meets: AAA, AA or Fails
   AA. Over an image or gradient it says so and shows no number.
 - New: Copy CSS. A button in the Specs tab's element header copies the styles
@@ -98,10 +98,10 @@ All notable changes to this package are recorded here. Versions follow
   Animations stay read-only.
 - New: an Effects block in the Specs tab, after the Box. Each shadow, text
   shadow, filter, backdrop filter and gradient layer has a row of its own: a
-  shadow as swatch, offsets, blur, spread and colour; a filter as name and
+  shadow as swatch, offsets, blur, spread and color; a filter as name and
   argument; a gradient as a painted strip, its kind and angle, and its stops.
   A click copies the part, the label copies the whole property, and a
-  double-click on the label edits it. A colour that equals a token reads
+  double-click on the label edits it. A color that equals a token reads
   "matches token". Changed: the Layout block no longer shows Shadow and
   Gradient as raw text.
 - Size: the gzipped script goes from 48.3 to 57.3 KB.
@@ -110,7 +110,7 @@ All notable changes to this package are recorded here. Versions follow
 
 - Fixed: the Specs tab no longer reads a declaration from an `@media` or
   `@supports` block that does not apply now. A mobile-only width, grid
-  columns or colour token used to win over the desktop one. A grid whose
+  columns or color token used to win over the desktop one. A grid whose
   columns differ per breakpoint now shows the columns it has. `@container`
   rules are still read as if they applied.
 
@@ -144,7 +144,7 @@ All notable changes to this package are recorded here. Versions follow
   drag is one step to undo. A click still copies and a double-click still
   edits.
 - New: while you type a value in the Specs tab, the page's tokens that fit
-  (colours for a colour, lengths for a size) are listed under the field,
+  (colors for a color, lengths for a size) are listed under the field,
   filtered by what you typed. Choosing one writes `var(--token)`.
 - Size: the gzipped script goes from 43.8 to 48.3 KB.
 
@@ -173,7 +173,7 @@ All notable changes to this package are recorded here. Versions follow
   path, text and each edit as before → after. A new value that one of the
   page's tokens holds is marked with the token's name.
 - New: edit in the Specs tab. A double-click on a value that is one CSS
-  property (width, height, gap, radius, a side of margin or padding, a colour,
+  property (width, height, gap, radius, a side of margin or padding, a color,
   the font size and the rest of the typography) turns it into a field. Enter
   applies, Esc cancels, the arrow keys change a number, and a bare number
   means pixels. A single click still copies.
@@ -398,7 +398,7 @@ First packaged version.
   tabs.
 - Specs: component and props, sizing intent, artboard position, design
   tokens with MUI theme paths and per-theme values, px/rem, grid, compare,
-  copy link, colour picker.
+  copy link, color picker.
 - All CSS: editable values, saved per page and replayed on load.
 - The inspector's UI now lives in a shadow root, so page styles and
   inspector styles no longer affect each other.
