@@ -44,6 +44,11 @@ when you edit it:
   version older than the one in `window.__gromaVersion`, which the page was
   saved with.
 - **Touch screens** see the npm button where a mouse sees "Try it here".
+- **Formatting**: the two pages are formatted with oxfmt, like the rest of
+  the repo (`npm run format` and `npm run format:check` cover them). A code box
+  (`.code-t`) keeps its whitespace (`white-space: pre`), and the formatter
+  would wrap the text inside it onto a new line, so each one has
+  `<!-- oxfmt-ignore -->` right before it. Keep that comment on a new box.
 
 ## Deploy
 
