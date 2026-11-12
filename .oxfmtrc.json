@@ -1,4 +1,14 @@
 {
   "printWidth": 110,
-  "ignorePatterns": ["landing/**", "dist/**", "package-lock.json", "docs/images/**", "**/*.html"]
+  "ignorePatterns": [
+    "dist/**",
+    "package-lock.json",
+    "docs/images/**",
+    "landing/assets/**",
+    "landing/media/**",
+    "landing/README.md",
+    "landing/vercel.json",
+    "/index.html",
+    "src/**/*.html"
+  ]
 }
