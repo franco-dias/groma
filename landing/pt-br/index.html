@@ -766,7 +766,6 @@ button { cursor:pointer; }
 .way h3 { margin:4px 0 0; font-size:20px; font-weight:600; letter-spacing:-0.02em; }
 .way p { margin:0; font-size:14px; color:var(--color-text-secondary); }
 .code { margin-top:auto; display:flex; align-items:center; gap:8px; border-radius:10px; background:var(--color-page); border:1px solid var(--color-white-08); padding:8px 8px 8px 16px; font-family:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; line-height:1.6; color:var(--color-text-primary); min-height:52px; }
-.code + .code { margin-top:0; }
 .code-t { flex:1; min-width:0; overflow-x:auto; white-space:pre; padding:8px 0; scrollbar-width:thin; }
 .code .cp { height:36px; min-width:36px; padding:0 8px; }
 .k1 { color:var(--color-accent-soft); } .k2 { color:var(--color-cyan); } .k3 { color:var(--color-text-tertiary); }
@@ -1270,9 +1269,8 @@ kbd.ac { color:var(--color-accent-soft); }
       <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "03", "title": "Ou deixe o agente buscar"}'>
         <span class="num">03</span>
         <h3>Ou deixe o agente buscar</h3>
-        <p>Adicione este comando ao seu agente como servidor MCP e ele lê as edições ao vivo, sem copiar e colar. Num app com servidor de desenvolvimento próprio, adicione também o script da ponte ao build de desenvolvimento, ao lado do Groma. Roda na sua máquina e só aceita páginas locais.</p>
-        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "shell", "copyable": true}'><span class="code-t"><span class="k1">npx</span> gromajs <span class="k2">mcp</span></span><button type="button" class="{{ cpW4 }}" sc-camel-on-click="{{ copyW4 }}" aria-label="Copiar comando"><sc-if value="{{ w4Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w4Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
-        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "html", "copyable": true}'><span class="code-t"><span class="k3">&lt;</span><span class="k1">script</span> src=<span class="k2">"http://localhost:4777/bridge.js"</span><span class="k3">&gt;&lt;/</span><span class="k1">script</span><span class="k3">&gt;</span></span><button type="button" class="{{ cpW5 }}" sc-camel-on-click="{{ copyW5 }}" aria-label="Copiar tag de script"><sc-if value="{{ w5Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w5Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
+        <p>Adicione este comando ao seu agente como servidor MCP e ele lê suas edições ao vivo, sem copiar e colar. Num app, adicione também o script da ponte.</p>
+        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "shell", "copyable": true}'><span class="code-t"><span class="k1">npx</span> gromajs <span class="k2">mcp</span><br><span class="k3">&lt;</span><span class="k1">script</span> src=<span class="k2">"http://localhost:4777/bridge.js"</span><span class="k3">&gt;&lt;/</span><span class="k1">script</span><span class="k3">&gt;</span></span><button type="button" class="{{ cpW4 }}" sc-camel-on-click="{{ copyW4 }}" aria-label="Copiar comando"><sc-if value="{{ w4Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w4Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
       </div>
     </div>
   </div>
@@ -1516,7 +1514,6 @@ class Component extends DCLogic {
     this.copyW1 = function () { self.copyText(CMD, 'w1'); };
     this.copyW2 = function () { self.copyText('<script src="https://cdn.jsdelivr.net/npm/gromajs@' + window.__gromaVersion + '/dist/groma.js"></' + 'script>', 'w2'); };
     this.copyW4 = function () { self.copyText('npx gromajs mcp', 'w4'); };
-    this.copyW5 = function () { self.copyText('<script src="http://localhost:4777/bridge.js"></' + 'script>', 'w5'); };
     this.copyW3 = function () { self.copyText('Groma.configure({ copyFormat: "sx" })', 'w3'); };
 
     /* split divider */
@@ -1735,7 +1732,6 @@ class Component extends DCLogic {
       cpW1: cp('w1'), w1Ok: s.copied === 'w1', w1Idle: s.copied !== 'w1', copyW1: this.copyW1,
       cpW2: cp('w2'), w2Ok: s.copied === 'w2', w2Idle: s.copied !== 'w2', copyW2: this.copyW2,
       cpW4: cp('w4'), w4Ok: s.copied === 'w4', w4Idle: s.copied !== 'w4', copyW4: this.copyW4,
-      cpW5: cp('w5'), w5Ok: s.copied === 'w5', w5Idle: s.copied !== 'w5', copyW5: this.copyW5,
       cpW3: cp('w3'), w3Ok: s.copied === 'w3', w3Idle: s.copied !== 'w3', copyW3: this.copyW3,
       wall: this.wall,
       splitPct: s.split.toFixed(2), splitRound: Math.round(s.split), splitRest: 100 - Math.round(s.split),
