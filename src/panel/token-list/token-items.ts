@@ -7,7 +7,7 @@ import type { Fit, TokenChoice } from "../../specs/suggest";
 /** What a row does when clicked. */
 export type TokenRows = { shown: TokenChoice[]; fit: Fit; pick: (name: string) => void };
 
-/** A colour's swatch, a shadow drawn on a small square, a timing function's curve; nothing for the rest. */
+/** A color's swatch, a shadow drawn on a small square, a timing function's curve; nothing for the rest. */
 function createMark({ value }: TokenChoice, fit: Fit): Element[] {
   if (fit === "easing") return [easingGlyph(easingCurve(value))];
   if (fit !== "color" && fit !== "shadow") return [];

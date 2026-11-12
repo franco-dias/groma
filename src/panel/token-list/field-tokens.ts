@@ -5,7 +5,7 @@ import { isShadowValue } from "../../specs/effects";
 import { isEasingValue, isTimeValue, isTransitionValue } from "../../specs/motion-values";
 import { type Fit, isLengthValue } from "../../specs/suggest";
 
-/** What counts as a token of each kind: its value is a colour, a length, shadows, a time… */
+/** What counts as a token of each kind: its value is a color, a length, shadows, a time… */
 const IS_OF_KIND: Record<Fit, (value: string) => boolean> = {
   color: isColor,
   length: isLengthValue,

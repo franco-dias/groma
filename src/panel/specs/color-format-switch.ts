@@ -1,4 +1,4 @@
-/** The HEX | RGB | HSL switch in the head of the Colors block: how colours are shown and copied, remembered per site. */
+/** The HEX | RGB | HSL switch in the head of the Colors block: how colors are shown and copied, remembered per site. */
 import { h } from "../../dom";
 import { options } from "../../options";
 import { toColorFormat } from "../../specs/color-format";
@@ -18,7 +18,7 @@ function createSegment(format: string): HTMLElement {
 export function createFormatSwitch(body: HTMLElement): HTMLElement {
   const group = h("div", "segmented color-format");
   group.setAttribute("role", "radiogroup");
-  group.setAttribute("aria-label", "Colour format");
+  group.setAttribute("aria-label", "Color format");
   group.append(...FORMAT_LABELS.map(createSegment));
   mountSegments(group, {
     current: () => options.colorFormat,

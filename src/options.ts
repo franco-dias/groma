@@ -24,7 +24,7 @@ export const options: Options = {
   panelMode: "push",
   /** How the Specs tab shows and copies lengths. */
   unit: "px",
-  /** How the Specs tab shows and copies colours. */
+  /** How the Specs tab shows and copies colors. */
   colorFormat: "hex",
   /** Artboard pixels between grid lines; 0 turns the grid off. */
   gridStep: 0,
@@ -36,6 +36,6 @@ export const options: Options = {
   search: "",
   /** Specs tab: the element the pinned one is compared with. */
   compareWith: undefined,
-  /** Specs tab: the last colour taken with the eyedropper. */
+  /** Specs tab: the last color taken with the eyedropper. */
   pickedColor: "",
 };

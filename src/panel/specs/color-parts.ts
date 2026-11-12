@@ -1,4 +1,4 @@
-/** The parts of a colour's row in the Specs tab: what its tokens say, the badges, the role and the themes. */
+/** The parts of a color's row in the Specs tab: what its tokens say, the badges, the role and the themes. */
 import { h } from "../../dom";
 import { icon } from "../../icons";
 import { isColorValue, tokensWithColor } from "../../specs/colors";
@@ -8,7 +8,7 @@ import { copyOnClick } from "../copy";
 import { createSmallSwatch } from "./specs-block";
 import type { SpecsContext } from "./specs-context";
 
-/** What a colour's tokens say about it. */
+/** What a color's tokens say about it. */
 export type TokenMatch = { declared: string[]; similar: string[]; isMissing: boolean };
 
 /** The token's value in each theme; the theme the page is using stands out. */

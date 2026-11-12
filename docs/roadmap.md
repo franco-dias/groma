@@ -10,7 +10,7 @@ lists what is planned, in order. Move an item to the changelog when it ships.
 0.7 shipped the first part: edit in the Specs tab, the Edits tab with undo,
 and "Copy edits" for a coding agent. 0.8 made editing closer to Figma's: drag
 a number to change it, token suggestions while typing, and text edited right
-on the page. 0.9 closed the gap to Figma's inspect panel: colour formats and
+on the page. 0.9 closed the gap to Figma's inspect panel: color formats and
 contrast, Copy CSS, effects, states, assets, theme variables for shadows and
 transitions, keyboard navigation and grid track lines. 1.0 added the agent
 bridge (a local endpoint and an MCP server in the `gromajs` command, so an
@@ -27,7 +27,7 @@ Nothing is planned after 1.0 yet.
   times its size because they bundle a UI library.
 - A ceiling for `dist/groma.js`: 60 KB gzipped. Groma runs in
   development and staging builds, so the number is about staying an order of
-  magnitude lighter than such tools, not about every byte. 1.0.1 is 58.5 KB.
+  magnitude lighter than such tools, not about every byte. 1.0.2 is 58.5 KB.
 - The changelog says what each release added to the size, so a feature that
   costs several KB is a decision someone saw.
 

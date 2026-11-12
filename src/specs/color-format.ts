@@ -1,6 +1,6 @@
 /**
- * Writes a colour as hex, rgb or hsl, for the Colors block of the Specs tab
- * and for what a click on a colour copies.
+ * Writes a color as hex, rgb or hsl, for the Colors block of the Specs tab
+ * and for what a click on a color copies.
  */
 
 export type ColorFormat = "hex" | "rgb" | "hsl";
@@ -32,14 +32,14 @@ function readHex(value: string): Rgba | undefined {
   return { red, green, blue, alpha: 1 };
 }
 
-/** The channels of a colour written as hex or rgb, or undefined for any other spelling. */
+/** The channels of a color written as hex or rgb, or undefined for any other spelling. */
 export const readRgba = (value: string): Rgba | undefined => readRgb(value) ?? readHex(value);
 
 const percent = (alpha: number): string => `${Math.round(alpha * 100)}%`;
 
 type Unit = { red: number; green: number; blue: number };
 
-/** Degrees round the colour wheel; zero for a grey, which has no hue. */
+/** Degrees round the color wheel; zero for a grey, which has no hue. */
 function hueOf({ red, green, blue }: Unit): number {
   const max = Math.max(red, green, blue);
   const spread = max - Math.min(red, green, blue);
@@ -77,8 +77,8 @@ function writeAs(color: Rgba, format: ColorFormat): string {
 }
 
 /**
- * The colour as shown: `#2F6BFF` (with ` 50%` after it when translucent),
- * `rgb(47 107 255 / 50%)` or `hsl(223 100% 59% / 50%)`. A colour written
+ * The color as shown: `#2F6BFF` (with ` 50%` after it when translucent),
+ * `rgb(47 107 255 / 50%)` or `hsl(223 100% 59% / 50%)`. A color written
  * some other way (oklch) is returned as it is.
  */
 export function formatColorAs(value: string, format: ColorFormat): string {
@@ -87,9 +87,9 @@ export function formatColorAs(value: string, format: ColorFormat): string {
 }
 
 /**
- * The colour split for a row: the text that is shown and copied and, for hex,
+ * The color split for a row: the text that is shown and copied and, for hex,
  * its alpha as a separate part (`100%` when opaque). rgb and hsl carry their
- * alpha inside the text. A colour that cannot be read has the text only.
+ * alpha inside the text. A color that cannot be read has the text only.
  */
 export function colorParts(value: string, format: ColorFormat): { text: string; alpha?: string } {
   const color = readRgba(value);

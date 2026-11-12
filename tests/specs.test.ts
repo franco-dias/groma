@@ -22,7 +22,7 @@ const cells = (): Record<string, string> =>
       .map((cell) => [cell.querySelector(".label")!.textContent, cell.querySelector(".value")!.textContent]),
   );
 
-/** The tokens listed for non-colour values, as { Label: "token" }. */
+/** The tokens listed for non-color values, as { Label: "token" }. */
 const tokenNotes = (): Record<string, string> =>
   Object.fromEntries(
     all(".body[data-for='specs'] .wide")
@@ -38,7 +38,7 @@ const block = (title: string): HTMLElement | undefined =>
     (candidate) => candidate.querySelector("h3")?.textContent === title,
   );
 
-/** The colour row for a role ("Background", "Text"…). */
+/** The color row for a role ("Background", "Text"…). */
 const colorRow = (role: string): HTMLElement =>
   all(".token-row").find((row) => row.querySelector(".role .name")?.textContent === role)!;
 
@@ -130,7 +130,7 @@ describe("layout", () => {
     expect(cells()).toMatchObject({ Radius: "8", Border: "1 solid" });
   });
 
-  it("lists the token behind a value that is not a colour", () => {
+  it("lists the token behind a value that is not a color", () => {
     inspector().pin(getElement(".fixed"));
     expect(tokenNotes()).toEqual({ Border: "--brand" });
   });
@@ -211,8 +211,8 @@ describe("copying", () => {
   });
 });
 
-describe("colours and design tokens", () => {
-  it("shows the token a colour is declared with, and its value in each theme", () => {
+describe("colors and design tokens", () => {
+  it("shows the token a color is declared with, and its value in each theme", () => {
     inspector().pin(getElement(".fixed"));
     const background = colorRow("Background");
     expect(rowTexts(background, ".token-line .value")).toEqual(["#121212"]);
@@ -237,19 +237,19 @@ describe("colours and design tokens", () => {
     expect(rowTexts(text, ".css-var.is-secondary")).toEqual(["--mui-palette-text-primary"]);
   });
 
-  it("finds the token of an inherited text colour on an ancestor", () => {
+  it("finds the token of an inherited text color on an ancestor", () => {
     inspector().pin(getElement(".child"));
     expect(rowTexts(colorRow("Text"), ".css-var")).toEqual(["--mui-palette-text-primary"]);
   });
 
-  it("says when a hand-written colour equals a token", () => {
+  it("says when a hand-written color equals a token", () => {
     inspector().pin(getElement(".grow"));
     const text = colorRow("Text");
     expect(rowTexts(text, ".badge")).toEqual(["Matches token"]);
     expect(rowTexts(text, ".css-var")).toEqual(["--same"]);
   });
 
-  it("flags a colour that no token has", () => {
+  it("flags a color that no token has", () => {
     inspector().pin(getElement(".hug"));
     const text = colorRow("Text");
     expect(rowTexts(text, ".badge")).toEqual(["No token"]);
@@ -361,7 +361,7 @@ describe("grid", () => {
 const sizeOf = (): string => ui('.body[data-for="specs"] .size-row .value')!.textContent ?? "";
 
 describe("declared values under media queries", () => {
-  it("reads the width and the colour token from the rules that apply now", () => {
+  it("reads the width and the color token from the rules that apply now", () => {
     page(`
       <style>
         :root { --on-desktop: rgb(0, 128, 0); --on-phone: rgb(200, 0, 0); }

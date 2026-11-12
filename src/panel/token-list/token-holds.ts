@@ -1,4 +1,4 @@
-/** Whether a token holds what a field holds: the same colour, length, shadow, time, timing function or transition. */
+/** Whether a token holds what a field holds: the same color, length, shadow, time, timing function or transition. */
 import { sameColor } from "../../specs/colors";
 import { parseShadows, type Shadow } from "../../specs/effects";
 import { easingKey, timeInMilliseconds, transitionKey } from "../../specs/motion-values";

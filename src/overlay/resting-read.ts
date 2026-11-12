@@ -1,7 +1,7 @@
 /**
  * An element pinned with a click is read with the pointer on it, so the
- * panel shows what its `:hover` rules give it: the hover colour, not the
- * colour the element has at rest. When the pointer leaves the pinned element
+ * panel shows what its `:hover` rules give it: the hover color, not the
+ * color the element has at rest. When the pointer leaves the pinned element
  * and the transitions that started have ended, the panel reads it again.
  */
 import { isElement, onPageCapture } from "../page";

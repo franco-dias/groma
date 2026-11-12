@@ -1,7 +1,7 @@
 /**
  * The action bar above the Specs tab: switches the unit, shows a grid,
  * compares with another element, copies a link to the element and picks a
- * colour.
+ * color.
  */
 import { elementLink } from "../../link";
 import { options } from "../../options";

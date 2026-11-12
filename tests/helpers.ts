@@ -146,7 +146,7 @@ function restorePanel(): void {
   undoAllEdits();
   ui('[data-option="unit"] [data-value="px"]')!.click();
   ui('[data-option="grid"] [data-value="0"]')!.click();
-  // The switch is in the Colors block, which is there only while a colour is.
+  // The switch is in the Colors block, which is there only while a color is.
   ui('.color-format [data-value="hex"]')?.click();
   openTab("specs");
   const push = ui('[data-action="push"]')!;

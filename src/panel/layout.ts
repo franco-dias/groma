@@ -1,4 +1,4 @@
-/** Panel width, open tab, unit, colour format and mode: remembered for every page on this origin. */
+/** Panel width, open tab, unit, color format and mode: remembered for every page on this origin. */
 import { readStore, writeStore } from "../edits/storage";
 import { options } from "../options";
 import { toColorFormat } from "../specs/color-format";

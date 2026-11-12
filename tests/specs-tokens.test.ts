@@ -60,20 +60,20 @@ afterEach(() => {
 });
 
 describe("tokens under a field in the Specs tab", () => {
-  it("lists the tokens that hold the colour of a colour field as it opens", () => {
+  it("lists the tokens that hold the color of a color field as it opens", () => {
     open("background-color");
     expect(names()).toEqual(["--brand"]);
     expect(texts(".token-item")).toEqual(["--brand#009c5a"]);
     expect(ui(".token-item .swatch")).not.toBeNull();
   });
 
-  it("matches a colour in any spelling", () => {
+  it("matches a color in any spelling", () => {
     open("color");
     // --ink is rgb(), --ds-color-ink is a hex: both are the field's #1B1A17.
     expect(names().toSorted()).toEqual(["--ds-color-ink", "--ink"]);
   });
 
-  it("lists lengths for a length, and no colours", () => {
+  it("lists lengths for a length, and no colors", () => {
     open("gap");
     expect(names().toSorted()).toEqual(["--ds-space-4", "--space-4"]);
     expect(ui(".token-item .swatch")).toBeNull();
@@ -93,7 +93,7 @@ describe("tokens under a field in the Specs tab", () => {
     expect(names()).toEqual(["--radius-m"]);
   });
 
-  it("filters colours by name, and never offers a length for a colour", () => {
+  it("filters colors by name, and never offers a length for a color", () => {
     const field = open("background-color");
     type(field, "brand");
     expect(names()).toEqual(["--brand", "--brand-dark"]);
@@ -194,7 +194,7 @@ describe("tokens under a field in the Specs tab", () => {
     const field = open("background-color");
     type(field, "brand");
     pressKey(field, "Enter");
-    // "brand" is not a colour: the browser rejects it and the page keeps its own.
+    // "brand" is not a color: the browser rejects it and the page keeps its own.
     expect(getElement(".card").style.backgroundColor).not.toBe("var(--brand)");
     field.textContent = "#ff0000";
   });

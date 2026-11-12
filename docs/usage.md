@@ -56,7 +56,7 @@ Notes:
 
 - It works on a file opened from disk (`file://`) and on a served page.
 - Use Chrome or another Chromium browser. Others are untested, and the
-  colour picker only exists in Chromium.
+  color picker only exists in Chromium.
 - On a Claude Design export, boards render when they scroll into view;
   scroll to a board before inspecting it.
 - Edits you make are stored in that browser only. They do not change the
@@ -67,10 +67,10 @@ Pin the version, so a later release cannot change a page that already
 works:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@1.0.1/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@1.0.2/dist/groma.js"></script>
 ```
 
-unpkg serves the same file at `https://unpkg.com/gromajs@1.0.1/dist/groma.js`.
+unpkg serves the same file at `https://unpkg.com/gromajs@1.0.2/dist/groma.js`.
 
 ## Use it on an app
 
@@ -151,7 +151,7 @@ A page can talk to the inspector through `window.Groma`:
 ## Hand your edits to a coding agent
 
 Double-click a value in the Specs tab to change it (a size, a gap, a side of
-the box, a colour, a font size), or type over any property in the All CSS
+the box, a color, a font size), or type over any property in the All CSS
 tab, on as many elements as you like. For
 something a value cannot say ("make this sticky"), pin the element, open the
 Edits tab and write a note. The Edits tab lists it all as before → after;
@@ -185,11 +185,11 @@ Note: keep it in view while the page scrolls
 - "Before" is the computed value the page had: a width reads in pixels even
   when the stylesheet says `50%`.
 - "matches" names the page's tokens that hold the new value, so the agent
-  can use the token. Colours match in any spelling; a length matches only
+  can use the token. Colors match in any spelling; a length matches only
   when it is written the same way (`1rem` does not match a token of `16px`).
 - "Before" is the value when you first edited the property. If you changed a
   parent first, a child's "before" can already include that change (an
-  inherited text colour, for example).
+  inherited text color, for example).
 - On a page that sets `data-token-prefix`, only tokens with that prefix are
   named. Without it, any variable with the same value is: a radius token can
   be named for a gap. The text tells the agent to check.
@@ -372,13 +372,13 @@ for the file again each time the canvas opens. Opening the file with
   stylesheets, ignoring selector specificity. A state inside `:is()`, `:where()`
   or `:not()` is not understood, and a rule that is only reached through one
   is not listed.
-- The contrast ratio uses the background colours of the element and its
+- The contrast ratio uses the background colors of the element and its
   ancestors. `opacity`, blend modes, a pseudo-element or a sibling painted
-  behind the text, and colours written in a form other than hex or `rgb()`
+  behind the text, and colors written in a form other than hex or `rgb()`
   are not taken into account (the line is left out for the last).
 - The Changes tab compares lines without their order, so a line that only
   moved is not reported.
-- The colour picker needs a Chromium browser. It has no test: the browser
+- The color picker needs a Chromium browser. It has no test: the browser
   only opens it on a real click.
 - The tests run in Chrome only; Firefox and Safari are not covered.
 - Elements inside the page's own iframes and other shadow roots are not

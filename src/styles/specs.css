@@ -1,4 +1,4 @@
-/* The Specs tab: element header, component, layout, box, colours, typography, motion, compare. */
+/* The Specs tab: element header, component, layout, box, colors, typography, motion, compare. */
 
 /* ── element header ── */
 .element-header {
@@ -350,7 +350,7 @@ button.crumb:hover {
   right: 0;
 }
 
-/* ── colour and token rows ── */
+/* ── color and token rows ── */
 .token-rows {
   display: flex;
   flex-direction: column;
@@ -933,14 +933,14 @@ button.crumb:hover {
   color: var(--ins-fg-muted);
 }
 
-/* ── the colour format switch in the Colors block's head ── */
+/* ── the color format switch in the Colors block's head ── */
 .color-format .segment {
   height: 16px;
   padding: 0 var(--ins-s-3);
   font: 500 10px/16px var(--ins-font-sans);
 }
 
-/* ── contrast under the Text colour; its level badge looks like the token badges ── */
+/* ── contrast under the Text color; its level badge looks like the token badges ── */
 .contrast-line {
   display: flex;
   align-items: center;

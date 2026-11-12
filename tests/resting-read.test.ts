@@ -14,13 +14,13 @@ const leave = (from: Element, to: Element): boolean =>
 
 let card: HTMLElement;
 
-/** Pins the card as a click does, with the pointer on it: it has its hover colour. */
+/** Pins the card as a click does, with the pointer on it: it has its hover color. */
 function pinHovered(): void {
   card.classList.add("is-hovered");
   inspector().pin(card);
 }
 
-/** The pointer leaves the card, which goes back to its colour at rest. */
+/** The pointer leaves the card, which goes back to its color at rest. */
 function leaveCard(): void {
   card.classList.remove("is-hovered");
   leave(card, document.body);

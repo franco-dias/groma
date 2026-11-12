@@ -165,11 +165,11 @@ frame, not `document`. `src/page.ts` knows which one it is.
 
 ### Design
 
-- Colours, spacing, radii and fonts come from the variables in
-  `src/styles/tokens.css`. Do not write a colour or a spacing value
+- Colors, spacing, radii and fonts come from the variables in
+  `src/styles/tokens.css`. Do not write a color or a spacing value
   anywhere else.
 - Type sizes are 10, 11, 12 and 13px only; weights 400, 500, 600. Labels
-  are sans-serif, values monospace. Hierarchy comes from colour and
+  are sans-serif, values monospace. Hierarchy comes from color and
   spacing, not size.
 - The panel must work between 320 and 560px wide with no horizontal
   scroll.
@@ -181,7 +181,7 @@ frame, not `document`. `src/page.ts` knows which one it is.
   product departs from it on purpose in four places, which the owner knows;
   do not "fix" them:
   - the All CSS tab stays an editable list of computed properties;
-  - hover keeps the coloured box-model overlay, with the name chip;
+  - hover keeps the colored box-model overlay, with the name chip;
   - the collapsed panel is a rail that expands on click, with no tab
     sticking out of its edge;
   - a distance label that does not fit its line moves beside it,
@@ -265,7 +265,7 @@ Listed in [docs/usage.md](docs/usage.md). The ones most likely to bite:
 - Token lookup takes the last matching declaration and ignores selector
   specificity (`src/page-styles.ts`).
 - Sizing intent is inferred; grid children are treated as plain blocks.
-- The colour picker is Chromium-only and has no test.
+- The color picker is Chromium-only and has no test.
 - Tests run in Chrome only, with synthetic events.
 - Elements inside the page's own iframes and other shadow roots are not
   inspected.

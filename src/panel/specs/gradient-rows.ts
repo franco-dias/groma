@@ -8,7 +8,7 @@ import { createColorTokenLines } from "./effect-tokens";
 import { createSmallSwatch } from "./specs-block";
 import type { SpecsContext } from "./specs-context";
 
-/** A stop's colour in the chosen format, its position, and the token that has its colour. */
+/** A stop's color in the chosen format, its position, and the token that has its color. */
 function addStop({
   row,
   stop,

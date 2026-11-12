@@ -19,7 +19,7 @@ export type TokenQuery = { props: string[]; stylesOf: StyleLookup };
 
 /**
  * The tokens named in the declarations that set `props` on an element.
- * Text and icon colours usually come from an ancestor, so for inherited
+ * Text and icon colors usually come from an ancestor, so for inherited
  * properties the search walks up until some element declares one.
  */
 export function declaredTokens(element: Element, query: TokenQuery): string[] {

@@ -1,12 +1,12 @@
 /**
- * The contrast between a text colour and what is behind it, and the WCAG
- * level that ratio meets, for the Text colour row of the Specs tab.
+ * The contrast between a text color and what is behind it, and the WCAG
+ * level that ratio meets, for the Text color row of the Specs tab.
  */
 import { readRgba, type Rgba } from "./color-format";
 
 export type WcagLevel = "AAA" | "AA" | "Fails AA";
 
-/** The background of one element on the way up from the text: its colour, and whether an image or gradient covers it. */
+/** The background of one element on the way up from the text: its color, and whether an image or gradient covers it. */
 export type Layer = { color: string; hasImage: boolean };
 
 export type TextSize = { fontSize: number; fontWeight: number };
@@ -56,13 +56,13 @@ export function wcagLevel({ ratio, isLarge }: { ratio: number; isLarge: boolean 
 /** "4.52 : 1". The level is judged on the exact ratio, not on this text. */
 export const formatRatio = (ratio: number): string => `${Number(ratio.toFixed(2))} : 1`;
 
-/** The layers that show, nearest first: up to the first opaque colour or the first image. */
+/** The layers that show, nearest first: up to the first opaque color or the first image. */
 function visibleLayers(layers: Layer[]): Layer[] {
   const last = layers.findIndex(({ color, hasImage }) => hasImage || readRgba(color)?.alpha === 1);
   return last < 0 ? layers : layers.slice(0, last + 1);
 }
 
-/** What is behind the text, or undefined when a layer's colour cannot be read. */
+/** What is behind the text, or undefined when a layer's color cannot be read. */
 function backdropOf(layers: Layer[]): Rgba | undefined {
   const colors = layers.map(({ color }) => readRgba(color));
   if (colors.includes(undefined)) return undefined;

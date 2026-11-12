@@ -1,6 +1,6 @@
 /**
  * Which of the page's design tokens to offer under a field in the Specs tab:
- * the ones that fit the property (colours for a colour, lengths for a size),
+ * the ones that fit the property (colors for a color, lengths for a size),
  * those that hold what the field holds first, then those whose name contains
  * what the user has typed.
  */
@@ -28,7 +28,7 @@ const TIME_PROPS = new Set(["transition-duration", "transition-delay"]);
 const LENGTH_SIDES = /^(padding|margin)-(top|right|bottom|left)$/;
 
 /**
- * The kind of token a property takes: colours for `color`, lengths for a gap
+ * The kind of token a property takes: colors for `color`, lengths for a gap
  * or a side of the box, shadows for a shadow, times for a duration or a
  * delay, timing functions, whole transitions; none for the rest.
  */

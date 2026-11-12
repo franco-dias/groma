@@ -63,7 +63,7 @@ describe("Effects block", () => {
     expect(layout.textContent).not.toContain("Gradient");
   });
 
-  it("lists each shadow with its offsets, blur, spread, colour and inset", () => {
+  it("lists each shadow with its offsets, blur, spread, color and inset", () => {
     pinStyle("box-shadow: 0 4px 12px 1px rgba(0, 0, 0, 0.2), inset 0 1px 0 #ffffff");
     expect(labels()).toEqual(["Shadow"]);
     expect(lines("Shadow")).toEqual(["0 4 12 1 #000000 20%", "inset 0 1 0 0 #FFFFFF"]);
@@ -72,7 +72,7 @@ describe("Effects block", () => {
     ).toEqual(["rgba(0, 0, 0, 0.2)", "rgb(255, 255, 255)"]);
   });
 
-  it("writes lengths in rem and colours in the chosen format", () => {
+  it("writes lengths in rem and colors in the chosen format", () => {
     pinStyle("box-shadow: 0 16px 8px 0 rgba(0, 0, 0, 0.5)");
     ui('[data-option="unit"] [data-value="rem"]')!.click();
     ui('.color-format [data-value="rgb"]')!.click();
@@ -145,7 +145,7 @@ describe("Effects block", () => {
     expect(getComputedStyle(getElement(".card")).boxShadow).toBe("rgb(0, 0, 255) 0px 0px 0px 2px");
   });
 
-  it("says when a shadow colour or a gradient stop equals a token", () => {
+  it("says when a shadow color or a gradient stop equals a token", () => {
     pinStyle(
       "box-shadow: 0 2px 4px rgb(47, 107, 255); background-image: linear-gradient(rgb(47, 107, 255), rgb(1, 2, 3))",
     );

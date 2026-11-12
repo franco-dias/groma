@@ -25,7 +25,7 @@ describe("contrastOf", () => {
     expect(ratioOf("rgb(255, 255, 255)", [black])).toBeCloseTo(21, 5);
   });
 
-  it("composites the text colour's own alpha over the background", () => {
+  it("composites the text color's own alpha over the background", () => {
     expect(ratioOf("rgba(0, 0, 0, 0.5)")).toBeCloseTo(ratioOf("rgb(128, 128, 128)")!, 1);
   });
 
@@ -37,7 +37,7 @@ describe("contrastOf", () => {
     );
   });
 
-  it("takes white as the canvas when no layer has a colour", () => {
+  it("takes white as the canvas when no layer has a color", () => {
     expect(ratioOf("rgb(0, 0, 0)", [NONE, NONE])).toBeCloseTo(21, 5);
   });
 
@@ -53,12 +53,12 @@ describe("contrastOf", () => {
     });
   });
 
-  it("ignores an image hidden behind an opaque colour", () => {
+  it("ignores an image hidden behind an opaque color", () => {
     const hidden = { color: "rgba(0, 0, 0, 0)", hasImage: true };
     expect(ratioOf("rgb(0, 0, 0)", [WHITE, hidden])).toBeCloseTo(21, 5);
   });
 
-  it("answers nothing for a colour it cannot read", () => {
+  it("answers nothing for a color it cannot read", () => {
     expect(contrastOf({ text: "oklch(0.7 0.1 200)", layers: [WHITE], size: NORMAL })).toBeUndefined();
   });
 });

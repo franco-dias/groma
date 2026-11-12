@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   all,
   clipboard,
@@ -251,7 +251,7 @@ describe("Copy edits", () => {
     expect(text).toContain("Note: Make this sticky");
   });
 
-  it("names the token that holds a new value, for a length and for a colour in another spelling", async () => {
+  it("names the token that holds a new value, for a length and for a color in another spelling", async () => {
     editStyle(".title", { property: "padding-top", value: "16px" });
     typeOver(field("color"), "red");
     typeOver(field("margin-top"), "7px");
@@ -429,6 +429,38 @@ describe("edits saved on an earlier visit", () => {
       expect(getComputedStyle(getElement(".title")).marginTop).toBe("44px");
       expect(barShown()).toBe(false);
       expect(bar().classList.contains("is-off")).toBe(true);
+    });
+
+    it("is there for three seconds, then goes; the Edits tab's undo still brings the edits back", () => {
+      vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+      discardTwo(55);
+
+      vi.advanceTimersByTime(2900);
+      expect(barShown()).toBe(true);
+      vi.advanceTimersByTime(100);
+      vi.useRealTimers();
+
+      expect(barShown()).toBe(false);
+      openTab("edits");
+      action("undo").click();
+      expect(getComputedStyle(getElement(".title")).paddingTop).toBe("55px");
+    });
+
+    it("counts its three seconds from the latest discard", () => {
+      vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+      discardTwo(57);
+      vi.advanceTimersByTime(2000);
+      savedBefore({ "#fixture .title": { "padding-bottom": "58px" } });
+      inspector().pin(getElement(".text"));
+      action("discard-edits").click();
+
+      vi.advanceTimersByTime(2000);
+      const shownAfterTwo = barShown();
+      vi.advanceTimersByTime(1000);
+      vi.useRealTimers();
+
+      expect(shownAfterTwo).toBe(true);
+      expect(barShown()).toBe(false);
     });
 
     it("ends when another element is pinned", () => {
