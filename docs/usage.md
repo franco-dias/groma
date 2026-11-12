@@ -91,6 +91,34 @@ only; it does not open a live address.
 - **The canvas needs a page that allows framing.** For one that does not, it
   shows a copy of the open page.
 
+With Vite (a React app, or any other), a few lines in `vite.config.ts` add
+Groma to `vite dev` and leave it out of `vite build`. The second tag is for
+[the bridge](#let-an-agent-read-the-edits-live-the-bridge); drop it if you
+copy the edits by hand:
+
+```ts
+export default defineConfig({
+  plugins: [
+    react(),
+    {
+      name: "groma",
+      apply: "serve", // the dev server only
+      transformIndexHtml: () => [
+        {
+          tag: "script",
+          attrs: { src: "https://cdn.jsdelivr.net/npm/gromajs@1.0.2/dist/groma.js" },
+          injectTo: "head-prepend",
+        },
+        { tag: "script", attrs: { src: "http://localhost:4777/bridge.js" }, injectTo: "head" },
+      ],
+    },
+  ],
+});
+```
+
+On another dev server, add the same tags wherever its HTML is written, behind
+its own development-only check.
+
 A list of every shortcut is also inside the inspector: open the » menu in
 the panel's tab bar and choose "Shortcuts and tips".
 
@@ -208,15 +236,19 @@ through an MCP tool. The command does this; the script on the page only gains
 **A file opened with `npx gromajs page.html`** is already set up: the command
 serves the bridge on the same port and adds the bridge script beside Groma.
 
-**An app on its own dev server:** run the bridge, and add the tag it prints to
-the app's dev build, next to the Groma script:
-
-```bash
-npx gromajs bridge            # port 4777; --port=<number> to change it
-```
+**An app on its own dev server** (React, Vue, anything with a dev build): add
+the bridge script to the dev build, next to the Groma script (see
+[Use it on an app](#use-it-on-an-app) for both tags in a Vite app):
 
 ```html
 <script src="http://localhost:4777/bridge.js"></script>
+```
+
+The bridge itself is started by `gromajs mcp` when your agent starts it. To
+run it without an agent, for example to read `/__groma/edits.txt`:
+
+```bash
+npx gromajs bridge            # port 4777; --port=<number> to change it
 ```
 
 **Claude Code:**
@@ -274,6 +306,10 @@ Limits:
 - A page not served by the command carries the bridge tag only if you add it,
   and the bridge script is served over plain http from your machine: keep it
   out of what end users load.
+- While `npx gromajs page.html` holds the port, `/bridge.js` there is a file
+  of that page's folder, not the bridge script. An app that should report to
+  that server takes `http://localhost:4777/__groma/bridge.js`, which every
+  `gromajs` server answers.
 
 ## The side panel: push or float
 

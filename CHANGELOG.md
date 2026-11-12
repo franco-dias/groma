@@ -3,6 +3,13 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## Unreleased
+
+- Docs: how to add Groma and the bridge script to an app's dev build, with a
+  Vite example for React and other apps (README and `docs/usage.md`), and
+  why `/__groma/bridge.js` is the tag for an app while `npx gromajs page.html`
+  holds the port.
+
 ## 1.0.2 (2026-11-11)
 
 - Changed: after "Discard", the bar that says how many edits were discarded,

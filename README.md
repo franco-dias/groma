@@ -96,11 +96,24 @@ The format is in [docs/usage.md](docs/usage.md#hand-your-edits-to-a-coding-agent
 Edits are saved in your browser and never change the file.
 
 To skip the paste, the `gromajs` command can also hand the edits to your
-coding agent as you make them: add `npx gromajs mcp` to the agent as an MCP
-server, open the page with `npx gromajs page.html` (or add the bridge tag to
-your app's dev build), and ask the agent to apply the edits from Groma. It
-runs only on your machine; see
+coding agent as you make them. It runs only on your machine; see
 [the bridge](docs/usage.md#let-an-agent-read-the-edits-live-the-bridge).
+
+1. Add it to your agent as an MCP server. In Claude Code:
+
+   ```bash
+   claude mcp add groma -- npx gromajs mcp
+   ```
+
+2. Open the page with `npx gromajs page.html`. For an app on its own dev
+   server (React, Vue, anything else), add the bridge script to its dev
+   build, next to the Groma script:
+
+   ```html
+   <script src="http://localhost:4777/bridge.js"></script>
+   ```
+
+3. Edit in the panel, then ask the agent to apply the edits from Groma.
 
 ## Try it
 
@@ -145,6 +158,9 @@ other Chromium browsers. Groma is on npm, so you can also load it from a CDN wit
 ```html
 <script src="https://cdn.jsdelivr.net/npm/gromajs@1.0.2/dist/groma.js"></script>
 ```
+
+On an app, add it to the development build only; a Vite example is in
+[Use it on an app](docs/usage.md#use-it-on-an-app).
 
 ## Learn more
 
