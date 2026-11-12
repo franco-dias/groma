@@ -12,26 +12,22 @@ and "Copy edits" for a coding agent. 0.8 made editing closer to Figma's: drag
 a number to change it, token suggestions while typing, and text edited right
 on the page. 0.9 closed the gap to Figma's inspect panel: colour formats and
 contrast, Copy CSS, effects, states, assets, theme variables for shadows and
-transitions, keyboard navigation and grid track lines
-([CHANGELOG.md](../CHANGELOG.md)).
+transitions, keyboard navigation and grid track lines. 1.0 added the agent
+bridge (a local endpoint and an MCP server in the `gromajs` command, so an
+agent reads the live edits with no copy and paste), component readers for
+Vue, Svelte and Angular, and froze the contract in
+[contract.md](contract.md) ([CHANGELOG.md](../CHANGELOG.md)).
 
-## 1.0: Agent bridge
-
-- The `gromajs` command gains a local endpoint and an MCP server, so an agent
-  pulls the live changes with no copy and paste. This lives in the command,
-  so it adds nothing to the script on the page.
-- Component readers for Vue and Svelte, mainly for the source paths they
-  expose in development builds.
-- The export format and `window.Groma` are frozen as the 1.0 contract.
+Nothing is planned after 1.0 yet.
 
 ## Staying light
 
 - No dependencies in `dist/`, no framework, one file. These rules are what
   keep the script small: in-page tools with a panel are usually several
   times its size because they bundle a UI library.
-- A ceiling for `dist/groma.js`: 60 KB gzipped at 1.0. Groma runs in
+- A ceiling for `dist/groma.js`: 60 KB gzipped. Groma runs in
   development and staging builds, so the number is about staying an order of
-  magnitude lighter than such tools, not about every byte. 0.9.0 is 57.3 KB.
+  magnitude lighter than such tools, not about every byte. 1.0.0 is 58.1 KB.
 - The changelog says what each release added to the size, so a feature that
   costs several KB is a decision someone saw.
 
