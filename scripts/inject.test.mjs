@@ -27,3 +27,12 @@ describe("withInspector", () => {
     expect(withInspector("", { src: "/i.js", settings: { copy: 'a"b' } })).toContain('data-copy="a&quot;b"');
   });
 });
+
+describe("withInspector with the bridge client", () => {
+  it("puts the bridge's tag right after the inspector's, before the page's scripts", () => {
+    const html = "<head><script src=app.js></script></head>";
+    expect(withInspector(html, { src: "/i.js", bridge: "/__groma/bridge.js" })).toBe(
+      '<head><script src="/i.js"></script><script src="/__groma/bridge.js"></script><script src=app.js></script></head>',
+    );
+  });
+});

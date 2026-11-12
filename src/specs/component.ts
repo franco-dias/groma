@@ -5,15 +5,25 @@
  * `components/`. To support another framework, add a reader and list it
  * here; nothing else changes.
  */
+import { angularComponent } from "./components/angular";
 import { customElement } from "./components/custom-element";
 import { declaredComponent } from "./components/declared";
 import { reactComponent } from "./components/react";
+import { svelteComponent } from "./components/svelte";
 import type { ComponentInfo, ComponentReader } from "./components/types";
+import { vueComponent } from "./components/vue";
 
 export type { ComponentInfo };
 
 /** Most explicit first: what the page declares, then what a framework knows, then the markup itself. */
-const READERS: ComponentReader[] = [declaredComponent, reactComponent, customElement];
+const READERS: ComponentReader[] = [
+  declaredComponent,
+  reactComponent,
+  vueComponent,
+  svelteComponent,
+  angularComponent,
+  customElement,
+];
 
 /** The reader's answer, or nothing when it trips over a page's internals: that must not break the panel. */
 function readSafely(read: ComponentReader, element: Element): ComponentInfo | undefined {

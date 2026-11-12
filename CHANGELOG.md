@@ -3,6 +3,30 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 1.0.0 (2026-11-11)
+
+- New: agent bridge. `Groma.edits()` returns the text "Copy edits" writes, and
+  `Groma.onEdits(listener)` calls the listener each time it changes (an edit,
+  undo or redo, a discard, a note). The `gromajs` command serves a bridge on
+  the same port as the page (`gromajs <file.html>`), alone (`gromajs bridge`,
+  which prints the script tag for an app's dev build), and as an MCP server
+  over stdio (`gromajs mcp`, with the tools `get_edits` and `list_pages`), so a
+  coding agent reads the live edits with no copy and paste. The bridge
+  listens on 127.0.0.1, accepts edits only from local origins or ones named
+  with `--allow-origin`, and keeps them in memory only. All of it lives in the
+  command, not in `dist/groma.js`; see
+  [usage](docs/usage.md#let-an-agent-read-the-edits-live-the-bridge).
+- New: component readers for Vue (3 and 2), Svelte and Angular development
+  builds: name, and source file where the framework gives one (Vue, Svelte),
+  props where it gives them (Vue, Angular inputs).
+- New: [docs/contract.md](docs/contract.md) lists what is frozen from 1.0.
+  Tests now pin the seven methods of `window.Groma` and the whole text of
+  "Copy edits".
+- Size: the gzipped script goes from 57.3 to 58.1 KB (57,254 to 58,058
+  bytes): about 184 for the two API methods, 298 for the Vue reader, 72 for
+  Svelte and 270 for Angular, measured one at a time. The ceiling set for 1.0
+  is 60 KB.
+
 ## 0.9.0 (2026-11-11)
 
 - New: colour format. A HEX | RGB | HSL switch in the Colors block of the

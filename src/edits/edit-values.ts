@@ -14,6 +14,7 @@ import {
   restoreContent,
   saveContent,
 } from "./content-overrides";
+import { editsChanged } from "./changed";
 import { allNotes, forgetBefore, forgetNote, rememberBefore, saveNote } from "./edit-records";
 import { showEdits } from "./replay";
 import { allSavedStyles, applyStyle, forgetStyle, restoreStyle, saveStyle } from "./style-overrides";
@@ -47,14 +48,16 @@ export function currentValue(selector: string, prop: string): string | undefined
 /** Saves a value and applies it to the page, or (when `value` is undefined) removes the edit. */
 export function applyValue(change: ValueChange): void {
   const { selector, prop, value } = change;
-  if (prop === NOTE) {
-    writeNote(selector, value);
-    return;
-  }
+  if (prop === NOTE) writeNote(selector, value);
+  else applyStyleOrContent(change);
+  editsChanged();
+}
+
+function applyStyleOrContent(change: ValueChange): void {
   // An edit is made on the edited page, not on the original.
   showEdits();
-  if (value === undefined) removeValue(change);
-  else setValue({ ...change, value });
+  if (change.value === undefined) removeValue(change);
+  else setValue({ ...change, value: change.value });
 }
 
 function writeNote(selector: string, note: string | undefined): void {
