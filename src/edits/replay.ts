@@ -84,6 +84,12 @@ function isOnPage(selector: string): boolean {
   return onPage;
 }
 
+/** How many of the elements with saved edits the page has now: more of them later, on a page that draws itself late. */
+export function countEditedOnPage(): number {
+  const selectors = [...Object.keys(allSavedStyles()), ...Object.keys(allSavedContent())];
+  return selectors.filter(isOnPage).length;
+}
+
 function isMissing(edit: SeenEdit): boolean {
   return !wasSeen(edit) && isOnPage(edit.selector);
 }

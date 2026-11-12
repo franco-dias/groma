@@ -6,7 +6,8 @@
  * The edit is a content edit, like one made in the All CSS tab: saved, listed
  * in the Edits tab, undone from there. Making the element editable changes
  * its `contenteditable` and `spellcheck` for a while; both are put back
- * exactly when editing ends, however it ends.
+ * exactly when editing ends, however it ends. In a button the space bar types
+ * a space, as anywhere else, and does not press the button.
  */
 import { edit } from "../edits/changes";
 import { CONTENT } from "../edits/edit-values";
@@ -86,6 +87,16 @@ export function cancelTextEdit(): void {
   rerender();
 }
 
+/** A button, or the summary of a details: the space bar presses it, and the browser types no space in it. */
+const isPressedBySpace = (element: Element): boolean => element.closest("button, summary") !== null;
+
+/** Types the space the browser would not, and keeps the key from pressing the element. */
+function typeSpace(event: KeyboardEvent, element: HTMLElement): void {
+  event.preventDefault();
+  // Deprecated, and still the one way to type at the caret that the browser's own undo follows.
+  element.ownerDocument.execCommand("insertText", false, " ");
+}
+
 function pressKey(event: KeyboardEvent): void {
   if (!session) return;
   // Alt going down or up is the inspector's to see, or it would count as held for good.
@@ -93,6 +104,7 @@ function pressKey(event: KeyboardEvent): void {
   // Not a shortcut of the inspector or of the page: the keys belong to the text.
   event.stopPropagation();
   if (event.isComposing) return;
+  if (event.key === " " && isPressedBySpace(session.element)) typeSpace(event, session.element);
   if (event.key === "Enter") {
     event.preventDefault();
     applyTextEdit();
@@ -101,7 +113,10 @@ function pressKey(event: KeyboardEvent): void {
 }
 
 function keepKeyUp(event: KeyboardEvent): void {
-  if (session && event.key !== "Alt") event.stopPropagation();
+  if (!session || event.key === "Alt") return;
+  event.stopPropagation();
+  // A button is pressed when the space bar goes up.
+  if (event.key === " " && isPressedBySpace(session.element)) event.preventDefault();
 }
 
 /** Starts watching for what ends an edit in place; hover.ts starts an edit. */
