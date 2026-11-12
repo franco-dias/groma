@@ -876,7 +876,7 @@ kbd.ac { color:var(--color-accent-soft); }
         <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></a>
       <a href="https://www.npmjs.com/package/gromajs" data-component="NavLink" data-source="src/components/NavLink.tsx" data-props='{"external": true, "icon": "arrow-up-right"}' target="_blank" rel="noopener"><span>npm</span>
         <svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg></a>
-    <span class="lang" role="group" aria-label="Idioma" data-component="LanguageSwitch" data-source="src/components/LanguageSwitch.tsx" data-props='{"current": "pt-BR", "options": ["en", "pt-BR"]}'><a href="../" hreflang="en" data-component="LanguageOption" data-source="src/components/LanguageOption.tsx" data-props='{"lang": "en", "selected": false}' lang="en"><span>EN</span></a><a aria-current="page" href="./" hreflang="pt-BR" data-component="LanguageOption" data-source="src/components/LanguageOption.tsx" data-props='{"lang": "pt-BR", "selected": true}' lang="pt-BR"><span>PT</span></a></span>
+    <span class="seg" role="group" aria-label="Idioma" data-component="SegmentedControl" data-source="src/components/SegmentedControl.tsx" data-props='{"current": "pt-BR", "options": ["en", "pt-BR"]}'><a href="../" hreflang="en" data-component="SegmentedOption" data-source="src/components/SegmentedOption.tsx" data-props='{"lang": "en", "selected": false}' lang="en"><span>EN</span></a><a aria-current="page" href="./" hreflang="pt-BR" data-component="SegmentedOption" data-source="src/components/SegmentedOption.tsx" data-props='{"lang": "pt-BR", "selected": true}' lang="pt-BR"><span>PT</span></a></span>
     </nav>
   </div>
 </header>
@@ -1270,9 +1270,10 @@ kbd.ac { color:var(--color-accent-soft); }
       <div class="gc way" data-component="StepCard" data-source="src/components/StepCard.tsx" data-props='{"step": "03", "title": "Ou deixe o agente buscar"}'>
         <span class="num">03</span>
         <h3>Ou deixe o agente buscar</h3>
-        <p>Adicione este comando ao seu agente como servidor MCP e ele lê suas edições ao vivo, sem copiar e colar. Num app, adicione também o script da ponte.</p>
+        <p>Adicione este comando ao seu agente como servidor MCP e ele lê suas edições ao vivo, sem copiar e colar.</p>
+        <span class="seg" role="tablist" aria-label="Onde sua página roda" data-component="SegmentedControl" data-source="src/components/SegmentedControl.tsx" data-props='{"options": ["Página estática", "App em execução"]}'><button type="button" role="tab" aria-selected="{{ agStaticOn }}" sc-camel-on-click="{{ agStatic }}" data-component="SegmentedOption" data-source="src/components/SegmentedOption.tsx" data-props='{"label": "Página estática"}'><span>Página estática</span></button><button type="button" role="tab" aria-selected="{{ agAppOn }}" sc-camel-on-click="{{ agApp }}" data-component="SegmentedOption" data-source="src/components/SegmentedOption.tsx" data-props='{"label": "App em execução"}'><span>App em execução</span></button></span>
         <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "shell", "copyable": true}'><span class="code-t"><span class="k1">npx</span> gromajs <span class="k2">mcp</span></span><button type="button" class="{{ cpW4 }}" sc-camel-on-click="{{ copyW4 }}" aria-label="Copiar comando"><sc-if value="{{ w4Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w4Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
-        <div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "html", "copyable": true}'><span class="code-t"><span class="k3">&lt;</span><span class="k1">script</span> src=<span class="k2">"http://localhost:4777/bridge.js"</span><span class="k3">&gt;&lt;/</span><span class="k1">script</span><span class="k3">&gt;</span></span><button type="button" class="{{ cpW5 }}" sc-camel-on-click="{{ copyW5 }}" aria-label="Copiar tag de script"><sc-if value="{{ w5Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w5Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div>
+        <sc-if value="{{ agStaticOn }}" hint-placeholder-val="{{ true }}"><div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "shell", "copyable": true}'><span class="code-t"><span class="k1">npx</span> gromajs <span class="k2">your-page.html</span></span><button type="button" class="{{ cpW6 }}" sc-camel-on-click="{{ copyW6 }}" aria-label="Copiar comando"><sc-if value="{{ w6Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w6Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div></sc-if><sc-if value="{{ agAppOn }}" hint-placeholder-val="{{ false }}"><div class="code" data-component="CodeBlock" data-source="src/components/CodeBlock.tsx" data-props='{"language": "html", "copyable": true}'><span class="code-t"><span class="k3">&lt;</span><span class="k1">script</span> src=<span class="k2">"http://localhost:4777/bridge.js"</span><span class="k3">&gt;&lt;/</span><span class="k1">script</span><span class="k3">&gt;</span></span><button type="button" class="{{ cpW5 }}" sc-camel-on-click="{{ copyW5 }}" aria-label="Copiar tag de script"><sc-if value="{{ w5Ok }}" hint-placeholder-val="{{ false }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></sc-if><sc-if value="{{ w5Idle }}" hint-placeholder-val="{{ true }}"><svg sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg></sc-if></button></div></sc-if>
       </div>
     </div>
   </div>
@@ -1426,7 +1427,7 @@ class Component extends DCLogic {
       cvW: 0, stageW: 0,
       radIn: '12px', padIn: '10px 18px', rad: '12px', pad: '10px 18px',
       chHl: '', lk: false,
-      insp: 'bt'
+      insp: 'bt', agApp: false
     };
     this.reduced = false;
     try { this.reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
@@ -1516,6 +1517,9 @@ class Component extends DCLogic {
     this.copyW1 = function () { self.copyText(CMD, 'w1'); };
     this.copyW2 = function () { self.copyText('<script src="https://cdn.jsdelivr.net/npm/gromajs@' + window.__gromaVersion + '/dist/groma.js"></' + 'script>', 'w2'); };
     this.copyW4 = function () { self.copyText('npx gromajs mcp', 'w4'); };
+    this.copyW6 = function () { self.copyText(CMD, 'w6'); };
+    this.agStatic = function () { self.setState({ agApp: false }); };
+    this.agApp = function () { self.setState({ agApp: true }); };
     this.copyW5 = function () { self.copyText('<script src="http://localhost:4777/bridge.js"></' + 'script>', 'w5'); };
     this.copyW3 = function () { self.copyText('Groma.configure({ copyFormat: "sx" })', 'w3'); };
 
@@ -1735,6 +1739,8 @@ class Component extends DCLogic {
       cpW1: cp('w1'), w1Ok: s.copied === 'w1', w1Idle: s.copied !== 'w1', copyW1: this.copyW1,
       cpW2: cp('w2'), w2Ok: s.copied === 'w2', w2Idle: s.copied !== 'w2', copyW2: this.copyW2,
       cpW4: cp('w4'), w4Ok: s.copied === 'w4', w4Idle: s.copied !== 'w4', copyW4: this.copyW4,
+      cpW6: cp('w6'), w6Ok: s.copied === 'w6', w6Idle: s.copied !== 'w6', copyW6: this.copyW6,
+      agStaticOn: !s.agApp, agAppOn: s.agApp, agStatic: this.agStatic, agApp: this.agApp,
       cpW5: cp('w5'), w5Ok: s.copied === 'w5', w5Idle: s.copied !== 'w5', copyW5: this.copyW5,
       cpW3: cp('w3'), w3Ok: s.copied === 'w3', w3Idle: s.copied !== 'w3', copyW3: this.copyW3,
       wall: this.wall,
@@ -1805,10 +1811,14 @@ html { scrollbar-color:var(--color-accent-soft-38) var(--color-page); scrollbar-
 ::-webkit-scrollbar-thumb { background:var(--color-accent-soft-32); border-radius:999px; border:3px solid var(--color-page); }
 ::-webkit-scrollbar-thumb:hover { background:var(--color-accent); }
 
-/* Language switch in the header. */
-.lang { display:inline-flex; align-items:center; height:32px; margin-left:8px; padding:4px; border-radius:8px; border:1px solid var(--color-white-10); background:var(--color-white-02); }
-.nav .lang a { height:26px; padding:0 8px; border-radius:6px; font:500 12px/1 'Geist Mono', ui-monospace, monospace; letter-spacing:.04em; color:var(--color-text-tertiary); }
-.nav .lang a[aria-current] { color:var(--color-text-primary); background:var(--color-accent-22); box-shadow:inset 0 0 0 1px var(--color-accent-soft-40); }
+/* Segmented control: the language switch in the header, the tabs of the agent card. */
+.seg { display:inline-flex; align-items:center; gap:2px; height:32px; padding:4px; border-radius:8px; border:1px solid var(--color-white-10); background:var(--color-white-02); }
+.nav .seg { margin-left:8px; }
+.seg button, .nav .seg a { display:inline-flex; align-items:center; height:26px; padding:0 8px; border:0; border-radius:6px; background:none; font:500 12px/1 'Geist Mono', ui-monospace, monospace; letter-spacing:.04em; color:var(--color-text-tertiary); cursor:pointer; transition:color .2s, background .2s; }
+.seg button:hover { color:var(--color-text-secondary); }
+.nav .seg a[aria-current], .seg button[aria-selected="true"] { color:var(--color-text-primary); background:var(--color-accent-22); box-shadow:inset 0 0 0 1px var(--color-accent-soft-40); }
+.way .seg { align-self:flex-start; margin-top:auto; }
+.way .seg + .code { margin-top:0; }
 </style>
 <script>
   // "macOS" from userAgentData, "MacIntel" from the older navigator.platform.
