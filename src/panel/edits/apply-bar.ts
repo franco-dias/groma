@@ -34,12 +34,12 @@ function showText(panel: HTMLElement, { text, isDiscarded }: { text: string; isD
   part(panel, ".apply-text").textContent = text;
 }
 
-/** Discards the edits the bar counts, and leaves those that are on the page. */
-function discardMissing(): void {
+/** Discards the edits the bar counts, and leaves those that are on the page. `redraw` shows the bar anew when the notice ends. */
+function discardMissing(redraw: () => void): void {
   // They are removed like any edit: one step, which undo brings back.
   const missing = missingEdits();
   together(() => missing.forEach(({ selector, prop }) => removeEdit({ selector, prop: prop ?? CONTENT })));
-  noticeDiscard(missing.length);
+  noticeDiscard(missing.length, redraw);
 }
 
 function applyMissing(): void {
@@ -61,6 +61,6 @@ export function mountApplyBar(panel: HTMLElement, onChange: () => void): void {
     });
   };
   onClick("apply-edits", applyMissing);
-  onClick("discard-edits", discardMissing);
+  onClick("discard-edits", () => discardMissing(onChange));
   onClick("undo-discard", takeDiscardBack);
 }

@@ -6,7 +6,7 @@ const normalized = new Map<string, string | undefined>();
 function getColorProbe(): CanvasRenderingContext2D {
   if (probe) return probe;
   const context = document.createElement("canvas").getContext("2d");
-  if (!context) throw new Error("This browser cannot make a canvas to read colours with.");
+  if (!context) throw new Error("This browser cannot make a canvas to read colors with.");
   probe = context;
   return probe;
 }

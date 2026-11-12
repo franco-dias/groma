@@ -32,7 +32,7 @@ tools a design file used to give them.
 
 - **Browser devtools answer the wrong question.** They show computed CSS,
   hundreds of properties per element. They do not say which design token a
-  colour came from, which component an element is, whether a width is fixed
+  color came from, which component an element is, whether a width is fixed
   or fills its parent, or how far two elements are from each other.
 - **The page is the spec.** There is no separate file to read, so the
   inspection has to happen on the page.
@@ -65,7 +65,7 @@ by its edges, to check the layout at any width.
 The side panel answers five questions:
 
 - **Specs**: what do I need to build this? Size and sizing intent, a box
-  diagram, colours with their design tokens and contrast, typography,
+  diagram, colors with their design tokens and contrast, typography,
   shadows and gradients, motion, what each state (`:hover`, `:focus`…)
   changes, an image's or SVG's details, and the component the element
   belongs to. A click copies any value, "Copy CSS" copies the declared
@@ -79,7 +79,7 @@ The side panel answers five questions:
 
 ## Edit the page, then hand the edits to an agent
 
-Change the page where you see it: double-click a size, a gap, a colour or a
+Change the page where you see it: double-click a size, a gap, a color or a
 side of the box in the Specs tab, or drag a number sideways to change it;
 click the buttons that set a flex or grid container's direction and
 alignment; choose fixed, hug or fill for a width or a height. While you type
@@ -143,7 +143,7 @@ It works on a file opened from disk and on a served page, in Chrome and
 other Chromium browsers. Groma is on npm, so you can also load it from a CDN with no copy step:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/gromajs@1.0.1/dist/groma.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gromajs@1.0.2/dist/groma.js"></script>
 ```
 
 ## Learn more

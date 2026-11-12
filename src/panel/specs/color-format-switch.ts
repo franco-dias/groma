@@ -18,7 +18,7 @@ function createSegment(format: string): HTMLElement {
 export function createFormatSwitch(body: HTMLElement): HTMLElement {
   const group = h("div", "segmented color-format");
   group.setAttribute("role", "radiogroup");
-  group.setAttribute("aria-label", "Colour format");
+  group.setAttribute("aria-label", "Color format");
   group.append(...FORMAT_LABELS.map(createSegment));
   mountSegments(group, {
     current: () => options.colorFormat,

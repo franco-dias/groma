@@ -34,7 +34,7 @@ function createTokenLines(
   const similarLines = similar
     .slice(0, 2)
     .map((token) => copies(h("div", "css-var is-secondary", token), token));
-  const warning = isMissing ? [h("div", "warn-text", "Hard-coded value. No token has this colour.")] : [];
+  const warning = isMissing ? [h("div", "warn-text", "Hard-coded value. No token has this color.")] : [];
   return [...lines, ...similarLines, ...warning];
 }
 

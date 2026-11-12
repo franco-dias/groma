@@ -3,6 +3,14 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 1.0.2 (2026-11-11)
+
+- Changed: after "Discard", the bar that says how many edits were discarded,
+  with its Undo, goes after three seconds. It used to stay until the next
+  edit or pin. The Edits tab's undo still brings the edits back.
+- Changed: the panel and its reference write "color" everywhere ("Pick
+  color", "No token has this color").
+
 ## 1.0.1 (2026-11-11)
 
 - Fixed: a space typed while editing a button's text on the page was dropped

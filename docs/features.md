@@ -697,7 +697,9 @@ editable.
     are on the page. It is one step, which undo brings back; notes stay.
     The bar then stays and reads "N edits discarded" ("1 edit discarded")
     with one button, "Undo", which takes that step back and so puts the
-    edits on the page again; the bar then slides out. The notice also ends,
+    edits on the page again; the bar then slides out. The notice is there
+    for three seconds; after it the Edits tab's undo still brings the edits
+    back. It also ends sooner,
     and the bar slides out, at the user's next edit, at an undo made
     elsewhere (the Edits tab's bar, Ctrl/⌘ + Z) and when an element is
     pinned. While shut the bar is out of reach of the keyboard and screen
