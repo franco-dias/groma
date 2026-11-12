@@ -3,6 +3,15 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 1.2.1 (2026-11-12)
+
+- Fixed: the Layout block named the color token of a `border` shorthand under
+  its Border cell, which shows only width and style. On a selected element
+  whose state sets `border-color`, it named the token of the unselected
+  style. Color tokens are now left to the Colors block, which names the one
+  on screen; a token the border's width is declared with is still named.
+- Size: the gzipped script goes from 60,396 to 60,423 bytes (60.4 KB).
+
 ## 1.2.0 (2026-11-12)
 
 - Changed: each color in the Colors block reads first what it is for

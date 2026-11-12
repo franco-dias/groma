@@ -30,7 +30,7 @@ Nothing is planned after 1.0 yet.
   an order of magnitude lighter than such tools. Each change still costs as
   little as it can: reuse what the script has before adding code, keep
   strings short, and measure the gzipped size before and after
-  (`gzip -9 -c dist/groma.js | wc -c`). 1.2.0 is 60.4 KB.
+  (`gzip -9 -c dist/groma.js | wc -c`). 1.2.1 is 60.4 KB.
 - The changelog says what each release added to the size, so a feature that
   costs several KB is a decision someone saw.
 
