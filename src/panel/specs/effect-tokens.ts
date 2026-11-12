@@ -21,10 +21,10 @@ function createMatchLine(token: string): HTMLElement {
   return line;
 }
 
-/** The lines for the (up to two) tokens whose color is `color`; none for a color no token has. */
+/** The line for the token whose color is `color`, the shortest name when several hold it; none when no token has it. */
 export function createColorTokenLines(color: string, context: SpecsContext): HTMLElement[] {
   if (!isColor(color)) return [];
-  return tokensWithColor(context.computedStyle, color).slice(0, 2).map(createMatchLine);
+  return tokensWithColor(context.computedStyle, color).slice(0, 1).map(createMatchLine);
 }
 
 /** A property and the kind of token it takes, if the tokens that hold its value are to be named. */

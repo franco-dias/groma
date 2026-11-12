@@ -343,11 +343,16 @@ it (see "Editing a value" below).
 - **Effects**: after the Box, only when the element has one. Each group is a
   label and its rows:
   - **Shadow** and **Text shadow** (`box-shadow`, `text-shadow`): one row per
-    shadow, in order: a swatch of its color, `inset` when it is one,
-    `x y blur spread` in the tab's unit (a text shadow has no spread), and
-    the color in the chosen format.
+    shadow, in order: a swatch of its color, what kind it is for a box shadow
+    ("Drop shadow", "Inner shadow"), and the color in the chosen format; under
+    it, its lengths labeled in the tab's unit: `x 0`, `y 4`, `blur 12`,
+    `spread 1` (a text shadow has no spread).
   - **Filter** and **Backdrop filter**: one row per function, name and
-    argument (`blur 4px`, `brightness 1.1`).
+    argument (`blur 4px`, `brightness 1.1`), and a sentence that says what it
+    does and to what: "Blurs what is behind the element" for a backdrop
+    filter, "Changes the brightness of the element" for a filter
+    (`src/specs/filter-notes.ts`). A function it does not know (an SVG
+    `url()`) has none.
   - **Gradient** (`background-image`): one row per layer that is a gradient,
     a strip painted with the gradient itself, its kind and direction or shape
     (`linear 135deg`, `radial circle`, `conic`), and its stops as swatch,
@@ -357,7 +362,8 @@ it (see "Editing a value" below).
     value; a click on the label copies the whole property's value; a
     double-click on the label edits the whole property as text.
   - A shadow color or gradient stop that equals one of the page's color
-    tokens reads "matches token --name". A shadow that equals a shadow token
+    tokens reads "matches token --name", one token, the shortest name when
+    several hold the color. A shadow that equals a shadow token
     reads the same under the group; when the element declares the property
     with a token (`box-shadow: var(--shadow-md)`) the token's name is shown,
     as in the Layout block.
@@ -414,6 +420,13 @@ it (see "Editing a value" below).
   as text. The fields list time, timing-function and transition tokens (see
   token suggestions). A token the element declares its duration, easing or
   transition with is named under the rows, as the Layout block names tokens.
+  Under each transition a line says what starts it: the states whose rules
+  change its property, from the same rules as the States block ("Animates on
+  hover", "Animates on hover or on keyboard focus", "while pressed"), with a
+  shorthand matched by its longhands and `all` by any change; or, when no
+  state changes it, "Animates when its value changes" (a class the app
+  toggles, a script). Code: `src/specs/motion-triggers.ts`; tests:
+  `tests/specs-motion-triggers.test.ts`.
   Animations (`animation-*`) stay read-only. Code:
   `src/panel/specs/motion-block.ts`, `motion-fields.ts`, `motion-notes.ts`,
   `src/specs/motion-entries.ts`. Tests: `tests/specs-motion-tokens.test.ts`.
@@ -600,8 +613,19 @@ Tests: `tests/specs-copy-css.test.ts`, `src/specs/declarations.test.ts`.
 
 ## 7. Colors and tokens
 
-Each color is a row: swatch, value, its role (Background, Border, Text,
-Fill, Stroke, Picked).
+Each color is a row that reads first what it is for (Background, Border,
+Text, Fill, Stroke, Picked), as a label in the column the other blocks use,
+then its swatch and value. The lines under it (contrast, tokens, themes)
+sit under the value. The "Copy" hint and the "Copied" mark lie over the end
+of the line and add no width.
+
+- **Only what is on screen**: a color with no opacity at all (a border kept
+  transparent to hold its space, text painted by a gradient) is left out.
+- **The token in effect**: when two rules name two tokens for one color (a
+  `border` with `--hairline` and a selected state's `border-color` with
+  `--accent`), only the token whose value is the color on screen is named,
+  with its value in each theme. When none holds it (a token inside
+  `color-mix()`), all are named.
 
 - **Format**: a HEX | RGB | HSL switch in the block's head sets how every
   color of the Specs tab is shown (the rows, a comparison) and what a click

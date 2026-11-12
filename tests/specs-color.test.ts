@@ -3,7 +3,7 @@ import { all, clipboard, getElement, inspector, page, reset, texts, ui, wait } f
 
 /** The color row for a role ("Background", "Text"…). */
 const colorRow = (role: string): HTMLElement =>
-  all(".token-row").find((row) => row.querySelector(".role .name")?.textContent === role)!;
+  all(".token-row").find((row) => row.querySelector(".color-role")?.textContent === role)!;
 
 const valueOf = (role: string): string => colorRow(role).querySelector(".token-line .value")!.textContent!;
 

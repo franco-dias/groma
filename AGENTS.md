@@ -82,6 +82,11 @@ keeps the limits a tool can check: functions of 20 lines at most, files of
    file with nothing to load. React was considered and rejected for size;
    do not add it, or any dependency that ends up in `dist/`, without the
    owner asking.
+   Keep the script as small as it can be. There is no size ceiling, but
+   every change costs as few bytes as it can: reuse before adding, keep
+   strings short, and measure the gzipped size before and after
+   (`gzip -9 -c dist/groma.js | wc -c`). The changelog records what each
+   release adds ([docs/roadmap.md](docs/roadmap.md)).
 2. **All UI lives in the shadow root.** Create top-level nodes with
    `mount()` from `src/root.ts`. Never append inspector nodes to the page's
    DOM, and never add styles to the page.

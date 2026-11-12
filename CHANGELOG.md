@@ -3,6 +3,26 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
+## 1.2.0 (2026-11-12)
+
+- Changed: each color in the Colors block reads first what it is for
+  (Background, Border, Text…), in the label column the other blocks use, then
+  its value; the lines under it sit under the value. "Copy" and "Copied" now
+  lie over the end of the line.
+- Changed: a color row names only the token that sets the color on screen,
+  with that token's themes. When a selected state's `border-color` overrides
+  a base `border`, the base rule's token is no longer listed.
+- Changed: a color with no opacity at all (a transparent border kept for its
+  space) is left out of the Colors block.
+- Changed: a box shadow says whether it is a drop or an inner shadow, and its
+  x, y, blur and spread are labeled; a shadow color or gradient stop names one
+  token, not up to two.
+- Added: each filter and backdrop-filter function says what it does ("Blurs
+  what is behind the element").
+- Added: each transition in the Motion block says what starts it: the state
+  that changes its property ("Animates on hover"), or a change of its value.
+- Size: the gzipped script goes from 59.4 to 60.4 KB.
+
 ## 1.1.1 (2026-11-12)
 
 - Added: Esc unpins the element and closes the panel, as the last thing Esc
