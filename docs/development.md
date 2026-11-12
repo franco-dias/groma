@@ -18,7 +18,7 @@ npm install
 npm run build
 ```
 
-The build writes `dist/groma.js` (about 186 KB, 57 KB gzipped) with
+The build writes `dist/groma.js` (about 188 KB, 58 KB gzipped) with
 the styles and the panel markup inlined, plus a source map. The markup
 (`*.html`) goes in without its comments and indentation (`leanMarkup` in
 `vite.config.ts`), so comment it as freely as the code; the tests run on the

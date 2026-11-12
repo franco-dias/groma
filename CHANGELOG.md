@@ -3,7 +3,7 @@
 All notable changes to this package are recorded here. Versions follow
 [semantic versioning](https://semver.org).
 
-## Unreleased
+## 1.0.0 (2026-11-11)
 
 - New: agent bridge. `Groma.edits()` returns the text "Copy edits" writes, and
   `Groma.onEdits(listener)` calls the listener each time it changes (an edit,
@@ -22,7 +22,10 @@ All notable changes to this package are recorded here. Versions follow
 - New: [docs/contract.md](docs/contract.md) lists what is frozen from 1.0.
   Tests now pin the seven methods of `window.Groma` and the whole text of
   "Copy edits".
-- Size: `dist/groma.js` grows from 57,254 to 58,025 bytes gzipped: about 184 for the two API methods, 298 for the Vue reader, 72 for Svelte and 236 for Angular, measured one at a time (together the readers cost 587).
+- Size: the gzipped script goes from 57.3 to 58.1 KB (57,254 to 58,058
+  bytes): about 184 for the two API methods, 298 for the Vue reader, 72 for
+  Svelte and 270 for Angular, measured one at a time. The ceiling set for 1.0
+  is 60 KB.
 
 ## 0.9.0 (2026-11-11)
 
