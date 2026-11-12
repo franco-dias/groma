@@ -1,12 +1,12 @@
 /** What "Copy edits" puts on the clipboard: the edits, with what a reader needs to find each element. */
-import { config } from "../../config";
-import { CONTENT, findEdited } from "../../edits/edit-values";
-import { type ElementEdits, listEdits, type ValueEdit } from "../../edits/edit-list";
-import { formatHandoff, type HandoffElement, type HandoffValue } from "../../edits/handoff";
-import { elementName } from "../../element-name";
-import { pageAddress, pageWindow } from "../../page";
-import { tokensWithValue } from "../../specs/colors";
-import { findComponent } from "../../specs/component";
+import { config } from "../config";
+import { CONTENT, findEdited } from "./edit-values";
+import { type ElementEdits, listEdits, type ValueEdit } from "./edit-list";
+import { formatHandoff, type HandoffElement, type HandoffValue } from "./handoff";
+import { elementName } from "../element-name";
+import { pageAddress, pageWindow } from "../page";
+import { tokensWithValue } from "../specs/colors";
+import { findComponent } from "../specs/component";
 
 const MAX_TEXT_LENGTH = 80;
 
@@ -69,3 +69,6 @@ export function handoffText(): string {
     listEdits().map(describe),
   );
 }
+
+/** The text for a reader that is not asking for it with a click (`Groma.edits()`): empty when there is nothing to hand over. */
+export const handoffTextOrEmpty = (): string => (listEdits().length ? handoffText() : "");

@@ -18,6 +18,7 @@
  */
 import { startCanvas } from "./canvas/canvas";
 import { type Config, configure, configureFromScriptTag } from "./config";
+import { edits, onEdits } from "./edits/agent-api";
 import { replayOverrides } from "./edits/replay";
 import { startLauncher } from "./launcher";
 import { pinFromLink } from "./link";
@@ -43,6 +44,10 @@ export type GromaApi = {
   highlight(element: Element): void;
   /** Changes how values are copied and which tokens show a theme path (see config.ts). */
   configure(changes?: Partial<Config>): void;
+  /** The text "Copy edits" writes for the page as it is now; "" when there are no edits or notes. */
+  edits(): string;
+  /** Calls `listener` with that text each time it changes. Returns the function that stops it. */
+  onEdits(listener: (text: string) => void): () => void;
 };
 
 /** The pinned element for a host page, which expects null when nothing is pinned (the public contract). */
@@ -63,7 +68,7 @@ function start(): void {
   // which says when some are missing. A page can still call replayOverrides().
   pinFromLink();
 
-  window.Groma = { pin, pinnedElement: findOrNull, replayOverrides, highlight, configure };
+  window.Groma = { pin, pinnedElement: findOrNull, replayOverrides, highlight, configure, edits, onEdits };
   // Last: the frame's own copy of the script looks for `Groma` in this window.
   startCanvas();
 }
